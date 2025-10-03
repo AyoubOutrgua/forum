@@ -5,18 +5,17 @@
 }
 
 body {
-    background-color: brown;
+    /* background-color: brown; */
 }
 
 .container {
-    
- background-color: tomato;
- width: 40vw;
-}
-form {
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
+}
 
+form {
+    display: flex;
+    flex-direction: column;
 }
