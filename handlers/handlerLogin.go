@@ -10,7 +10,7 @@ func HanldlerLogin(w http.ResponseWriter, r *http.Request)  {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	temp, errPerse := template.ParseFiles("../templates/login.html")
+	temp, errPerse := template.ParseFiles("templates/login.html")
 	if errPerse != nil {
 		http.Error(w,"Status Not Found!",http.StatusNotFound)
 		return
