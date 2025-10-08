@@ -9,7 +9,9 @@ import (
 
 func main() {
 	http.HandleFunc("/static/", handlers.StyleFunc)
-	http.HandleFunc("/login", handlers.HanldlerLogin)
+	http.HandleFunc("/", handlers.HanldlerShowHome)
+	http.HandleFunc("/login", handlers.HanldlerShowLogin)
+	http.HandleFunc("/register", handlers.HanldlerShowRegister)
 	fmt.Println("server is runing http://localhost:8085/login")
-	http.ListenAndServe(":8085",nil)
+	http.ListenAndServe(":8085", nil)
 }
