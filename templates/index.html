@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="static/style/style.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
@@ -23,8 +23,42 @@
             <li><a href="/login" class="link btn">Login</a></li>
         </ul>
     </nav>
-    <main>
+    <main class="main-section">
+        <section class="create-post">
+            <form action="">
+                <h1 class="title-create-post">Create New Post</h1>
+                <input type="text" placeholder="Title" class="inputs title">
+                <input type="text" placeholder="Description" class="inputs description">
+                <div class="checkboxs">
+                    <input type="checkbox" name="technology" id="technology" class="checkbox">
+                    <label for="technology" class="labels">Technology</label>
+                    <input type="checkbox" name="education" id="education" class="checkbox">
+                    <label for="education" class="labels">Education</label>
+                    <input type="checkbox" name="sports" id="sports" class="checkbox">
+                    <label for="sports" class="labels">Sports</label>
+                    <input type="checkbox" name="movies" id="movies" class="checkbox">
+                    <label for="movies" class="labels">Movies</label>
+                    <input type="checkbox" name="gaming" id="gaming" class="checkbox">
+                    <label for="gaming" class="labels">Gaming</label>
+                    <input type="checkbox" name="music" id="music" class="checkbox">
+                    <label for="music" class="labels">Music</label>
+                    <input type="checkbox" name="health" id="health" class="checkbox">
+                    <label for="health" class="labels">Health</label>
+                    <input type="checkbox" name="food" id="food" class="checkbox">
+                    <label for="food" class="labels">Food</label>
+                </div>
+                <div class="upload-img">
+                    <input type="file" name="choose-file" id="choose-file" class="choose-file">
+                </div>
+                <button type="submit" class="btn btn-create-post">Create Post</button>
+            </form>
+        </section>
+        <section class="filter">
 
+        </section>
+        <section class="posts">
+
+        </section>
     </main>
 </body>
 

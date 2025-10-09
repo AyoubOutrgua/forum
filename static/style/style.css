@@ -48,7 +48,7 @@ body {
     color: var(--color-primary);
 }
 
-.menu .list .btn{
+.menu .list .btn {
     border: solid 2px var(--color-primary);
     border-radius: 1.5rem;
     padding: 5px 10px;
@@ -57,4 +57,125 @@ body {
 .menu .list .btn:hover {
     border: solid 2px var(--color-white);
     color: var(--color-primary);
+}
+
+.main-section {
+    display: flex;
+    justify-content: center;
+    /* background-color: #15AB92; */
+}
+
+.create-post {
+    display: flex;
+    justify-content: center;
+    height: auto;
+    width: 70vw;
+    border: solid 2px var(--color-secondary);
+    border-radius: 2rem;
+    margin: 4rem 0;
+    padding: 1.5rem 0;
+}
+
+.create-post form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.title-create-post {
+    font-size: 2.6rem;
+    color: var(--color-secondary);
+}
+
+.inputs {
+    height: 5rem;
+    width: 60vw;
+    border-radius: 1rem;
+    border: solid 2px var(--color-secondary);
+    margin: 0.2rem;
+    padding: 0 10px;
+    font-size: 1.6rem;
+    color: var(--color-dark);
+}
+
+.description {
+    height: 8rem;
+}
+
+.inputs:focus {
+    border: solid 2px var(--color-primary);
+    outline: none;
+}
+
+.labels {
+    padding: 10px 20px;
+    border-radius: 50px;
+    background-color: var(--color-light);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.4rem;
+    color: var(--color-dark);
+}
+
+.checkboxs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 60vw;
+    margin: 1rem 0;
+
+}
+
+.checkbox {
+    display: none;
+}
+
+.checkbox:checked+.labels {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+}
+
+.labels:hover, .btn:hover {
+    background-color: var(--color-secondary);
+}
+
+.btn {
+    padding: 10px 30px;
+    border-radius: 50px;
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.6rem;
+    border: none;
+}
+
+
+.upload-img {
+    width: 60vw;
+    border-radius: 1rem;
+    border: solid 1px var(--color-secondary);
+    margin: 0.5rem 0 1.5rem;
+    padding: 1.2rem;
+}
+
+.choose-file {
+    font-size: 1.4rem;
+    color: var(--color-dark);
+    cursor: pointer;
+}
+
+input[type="file"]::-webkit-file-upload-button {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+input[type="file"]::-webkit-file-upload-button:hover {
+  background-color: var(--color-secondary);
 }
