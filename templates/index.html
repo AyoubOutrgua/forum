@@ -19,34 +19,41 @@
             <h1 class="logo">Forum</h1>
         </a>
         <ul class="list">
-            <li><a href="/register" class="link">Register</a></li>
-            <li><a href="/login" class="link btn">Login</a></li>
+            <li><a href="/login" class="link btn">Logout</a></li>
         </ul>
     </nav>
     <main class="main-section">
         <section class="create-post">
             <form action="">
                 <h1 class="title-create-post">Create New Post</h1>
-                <input type="text" placeholder="Title" class="inputs title">
-                <input type="text" placeholder="Description" class="inputs description">
+                <input type="text" placeholder="Title" class="inputs title" required>
+                <input type="text" placeholder="Description" class="inputs description" required>
                 <div class="checkboxs">
-                    <input type="checkbox" name="technology" id="technology" class="checkbox">
-                    <label for="technology" class="labels">Technology</label>
-                    <input type="checkbox" name="education" id="education" class="checkbox">
-                    <label for="education" class="labels">Education</label>
-                    <input type="checkbox" name="sports" id="sports" class="checkbox">
-                    <label for="sports" class="labels">Sports</label>
-                    <input type="checkbox" name="movies" id="movies" class="checkbox">
-                    <label for="movies" class="labels">Movies</label>
-                    <input type="checkbox" name="gaming" id="gaming" class="checkbox">
-                    <label for="gaming" class="labels">Gaming</label>
-                    <input type="checkbox" name="music" id="music" class="checkbox">
-                    <label for="music" class="labels">Music</label>
-                    <input type="checkbox" name="health" id="health" class="checkbox">
-                    <label for="health" class="labels">Health</label>
-                    <input type="checkbox" name="food" id="food" class="checkbox">
-                    <label for="food" class="labels">Food</label>
+                    <input type="checkbox" name="technology" id="create-technology" class="category">
+                    <label for="create-technology" class="labels">Technology</label>
+
+                    <input type="checkbox" name="education" id="create-education" class="category">
+                    <label for="create-education" class="labels">Education</label>
+
+                    <input type="checkbox" name="sports" id="create-sports" class="category">
+                    <label for="create-sports" class="labels">Sports</label>
+
+                    <input type="checkbox" name="movies" id="create-movies" class="category">
+                    <label for="create-movies" class="labels">Movies</label>
+
+                    <input type="checkbox" name="gaming" id="create-gaming" class="category">
+                    <label for="create-gaming" class="labels">Gaming</label>
+
+                    <input type="checkbox" name="music" id="create-music" class="category">
+                    <label for="create-music" class="labels">Music</label>
+
+                    <input type="checkbox" name="health" id="create-health" class="category">
+                    <label for="create-health" class="labels">Health</label>
+
+                    <input type="checkbox" name="food" id="create-food" class="category">
+                    <label for="create-food" class="labels">Food</label>
                 </div>
+
                 <div class="upload-img">
                     <input type="file" name="choose-file" id="choose-file" class="choose-file">
                 </div>
@@ -54,7 +61,38 @@
             </form>
         </section>
         <section class="filter">
+            <form action="">
+                <div class="checkboxs-filter">
+                    <input type="checkbox" name="technology" id="filter-technology" class="category">
+                    <label for="filter-technology" class="labels">Technology</label>
 
+                    <input type="checkbox" name="education" id="filter-education" class="category">
+                    <label for="filter-education" class="labels">Education</label>
+
+                    <input type="checkbox" name="sports" id="filter-sports" class="category">
+                    <label for="filter-sports" class="labels">Sports</label>
+
+                    <input type="checkbox" name="movies" id="filter-movies" class="category">
+                    <label for="filter-movies" class="labels">Movies</label>
+
+                    <input type="checkbox" name="gaming" id="filter-gaming" class="category">
+                    <label for="filter-gaming" class="labels">Gaming</label>
+
+                    <input type="checkbox" name="music" id="filter-music" class="category">
+                    <label for="filter-music" class="labels">Music</label>
+
+                    <input type="checkbox" name="health" id="filter-health" class="category">
+                    <label for="filter-health" class="labels">Health</label>
+                    
+                    <input type="checkbox" name="food" id="filter-food" class="category">
+                    <label for="filter-food" class="labels">Food</label>
+                </div>
+                <div class="buttons">
+                    <button type="submit" class="btn btn-filter">Filter</button>
+                    <button type="submit" class="btn btn-my-posts">My Posts</button>
+                    <button type="submit" class="btn btn-liked-posts">Liked Posts</button>
+                </div>
+            </form>
         </section>
         <section class="posts">
 
