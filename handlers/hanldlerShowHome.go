@@ -10,10 +10,10 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Status Not Found!", http.StatusNotFound)
 		return
 	}
-	if r.Method != http.MethodGet {
+ if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
-	}
+	} 
 	temp, errPerse := template.ParseFiles("templates/index.html")
 	if errPerse != nil {
 		http.Error(w, "Status Not Found!", http.StatusNotFound)

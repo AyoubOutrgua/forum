@@ -6,10 +6,10 @@ import (
 )
 
 func HanldlerShowRegister(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodGet {
+	/* if r.Method != http.MethodGet {
 		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
-	}
+	} */
 	temp, errPerse := template.ParseFiles("templates/register.html")
 	if errPerse != nil {
 		http.Error(w, "Status Not Found!", http.StatusNotFound)

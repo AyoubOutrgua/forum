@@ -23,15 +23,15 @@
                 <h1>Hello, Welcome!</h1>
             </div>
             <div class="login">
-                <form action="">
+                <form action="/regtistartion" method="POST">
                     <label class="labels" for="username">Usename:</label>
-                    <input class="inputs input-text" type="text" name="username">
+                    <input class="inputs input-text" type="text" name="username" required>
                     <label class="labels" for="email">Email:</label>
-                    <input class="inputs input-text" type="email" name="email">
+                    <input class="inputs input-text" type="email" name="email" required>
                     <label class="labels" for="password">Password:</label>
-                    <input class="inputs input-password" type="password" name="password">
+                    <input class="inputs input-password" type="password" name="password" required>
                     <label class="labels" for="password">Password:</label>
-                    <input class="inputs input-password" type="password" name="password">
+                    <input class="inputs input-password" type="password" name="password" required>
                     <button class="btn" type="submit">Register</button>
                     <span>Already have an Account? <a href="/login">Login Here!</a></span>
                 </form>
