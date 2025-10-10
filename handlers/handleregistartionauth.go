@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"net/http"
+
 	//"regexp"
 
 	"forum/helpers"
@@ -12,6 +13,16 @@ import (
 )
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
+	cookie, errorsession := r.Cookie("session")
+	if errorsession == nil && cookie.Value != "" {
+
+		var userExists bool
+		err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
+		if err == nil && userExists {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+	}
 	if r.Method != "POST" {
 		helpers.Errorhandler(w, "statusPage.html", http.StatusMethodNotAllowed)
 		return
@@ -20,19 +31,30 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	email := r.FormValue("email")
 	username := r.FormValue("username")
 	firstpassword := r.FormValue("firstpassword")
-	fmt.Println(password,email,username,firstpassword,password)
-
-	
+	fmt.Println(password, email, username, firstpassword, password)
+	if firstpassword != password {
+		helpers.Errorhandler(w, "imatched pass", 400)
+		return
+	}
+	if password == "" || email == "" || firstpassword == "" || username == "" {
+		helpers.Errorhandler(w, "incorrect information", 400)
+		return
+	}
+	errreg := helpers.ValidateInfo(username, email, password)
+	if errreg != "" {
+		helpers.Errorhandler(w, errreg, 400)
+		return
+	}
 
 	hashPassword, Err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if Err != nil {
-		helpers.Errorhandler(w, "statusPage.html", http.StatusInternalServerError)
+		helpers.Errorhandler(w, "error generate hash pass", http.StatusInternalServerError)
 		return
 	}
 	stmt2 := `INSERT INTO users (username, email, password) VALUES (?, ?, ?);`
 	_, err := Db.Exec(stmt2, username, email, string(hashPassword))
 	if err != nil {
-		helpers.Errorhandler(w, "statusPage.html", http.StatusInternalServerError)
+		helpers.Errorhandler(w, "error db exce", http.StatusInternalServerError)
 		fmt.Println(err)
 		return
 	}
