@@ -11,16 +11,20 @@ import (
 )
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	/* if r.Method != "POST" {
+	if r.Method != "POST" {
 		helpers.Errorhandler(w, "statusPage.html", http.StatusMethodNotAllowed)
 		return
-	} */
-	//  check if the user is alrady logged in
-	/* if exists, _ := helpers.SessionChecked(w, r); exists {
-		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return
-	} */
+	}
+	cookie, errorsession := r.Cookie("session")
+	if errorsession == nil && cookie.Value != "" {
 
+		var userExists bool
+		err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
+		if err == nil && userExists {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+	}
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
@@ -44,7 +48,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(password)) != nil {
-		helpers.Errorhandler(w, "login.html", http.StatusBadRequest)
+		helpers.Errorhandler(w, "invalid user or password", http.StatusBadRequest)
 		return
 	}
 
@@ -52,7 +56,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	stmt2 := `UPDATE users SET session = ? WHERE username = ? or   email = ?`
 	_, err = Db.Exec(stmt2, sessionID, username, username)
 	if err != nil {
-		helpers.Errorhandler(w, "login.html", http.StatusInternalServerError)
+		helpers.Errorhandler(w, "error database ", http.StatusInternalServerError)
 		return
 	}
 

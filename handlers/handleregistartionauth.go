@@ -45,6 +45,27 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		helpers.Errorhandler(w, errreg, 400)
 		return
 	}
+	var existsUsername bool
+	err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE username = ?)", username).Scan(&existsUsername)
+	if err != nil {
+		helpers.Errorhandler(w, "database error", http.StatusInternalServerError)
+		return
+	}
+	if existsUsername {
+		helpers.Errorhandler(w, "username already taken", 400)
+		return
+	}
+
+	var existsEmail bool
+	err = Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = ?)", email).Scan(&existsEmail)
+	if err != nil {
+		helpers.Errorhandler(w, "database error", http.StatusInternalServerError)
+		return
+	}
+	if existsEmail {
+		helpers.Errorhandler(w, "email already used", 400)
+		return
+	}
 
 	hashPassword, Err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if Err != nil {
@@ -52,7 +73,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	stmt2 := `INSERT INTO users (username, email, password) VALUES (?, ?, ?);`
-	_, err := Db.Exec(stmt2, username, email, string(hashPassword))
+	_, err = Db.Exec(stmt2, username, email, string(hashPassword))
 	if err != nil {
 		helpers.Errorhandler(w, "error db exce", http.StatusInternalServerError)
 		fmt.Println(err)
