@@ -5,9 +5,13 @@ import (
 )
 
 func ValidateInfo(username, email, password string) string {
-	usernameRegex := regexp.MustCompile(`^[a-zA-Z0-9_]{3,20}$`)
-	if !usernameRegex.MatchString(username) {
-		return ("invalid username: must be 3-20 characters (letters, digits, underscore)")
+	ErrorMessage := ""
+	if len(email) >= 50 || len(email) <= 10 {
+		ErrorMessage = "Email must be between 5 and 50 characters"
+	} else if len(username) < 3 || len(username) > 15 {
+		ErrorMessage = "Username must be at least 3 characters"
+	} else if len(password) <= 6 || len(password) > 15 {
+		ErrorMessage = "Password must be at least 6 characters"
 	}
 
 	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
@@ -15,9 +19,5 @@ func ValidateInfo(username, email, password string) string {
 		return ("invalid email format")
 	}
 
-	passwordRegex := regexp.MustCompile(`^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$`)
-	if !passwordRegex.MatchString(password) {
-		return "invalid password: must be at least 8 chars with upper, lower, and number"
-	}
-	return ""
+	return ErrorMessage
 }

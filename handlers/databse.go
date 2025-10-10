@@ -8,7 +8,7 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var Db *sql.DB
+
 
 func DataBase() {
 	var err error

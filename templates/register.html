@@ -24,14 +24,17 @@
             </div>
             <div class="login">
                 <form action="/regtistartion" method="POST">
+                       {{if .Error}}
+                     <p style="color:red; margin-bottom:10px;font-size: large;">{{.Error}}</p>
+                      {{end}}
                     <label class="labels" for="username">Usename:</label>
                     <input class="inputs input-text" type="text" name="username" required>
                     <label class="labels" for="email">Email:</label>
                     <input class="inputs input-text" type="email" name="email" required>
                     <label class="labels" for="password">Password:</label>
-                    <input class="inputs input-password" type="password" name="firstpasspassword" required>
+                    <input class="inputs input-password" type="password" name="firstpass" required>
                     <label class="labels" for="password">Password:</label>
-                    <input class="inputs input-password" type="password" name="secondpassword" required>
+                    <input class="inputs input-password" type="password" name="secondpass" required>
                     <button class="btn" type="submit">Register</button>
                     <span>Already have an Account? <a href="/login">Login Here!</a></span>
                 </form>

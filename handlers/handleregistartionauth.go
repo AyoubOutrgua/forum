@@ -1,10 +1,9 @@
 package handlers
 
 import (
-	"fmt"
+	"database/sql"
 	"net/http"
-
-	//"regexp"
+	"strings"
 
 	"forum/helpers"
 
@@ -12,10 +11,11 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+var Db *sql.DB
+
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, errorsession := r.Cookie("session")
 	if errorsession == nil && cookie.Value != "" {
-
 		var userExists bool
 		err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
 		if err == nil && userExists {
@@ -23,69 +23,75 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+
 	if r.Method != "POST" {
-		helpers.Errorhandler(w, "statusPage.html", http.StatusMethodNotAllowed)
+		helpers.Errorhandler(w, "Method not allowed", 400)
 		return
 	}
-	password := r.FormValue("secondpassword")
-	email := r.FormValue("email")
-	username := r.FormValue("username")
-	firstpassword := r.FormValue("firstpassword")
-	fmt.Println(password, email, username, firstpassword, password)
+
+	password := r.FormValue("firstpass")
+	email := strings.TrimSpace(r.FormValue("email"))
+	username := strings.TrimSpace(r.FormValue("username"))
+	firstpassword := r.FormValue("secondpass")
 	if firstpassword != password {
-		helpers.Errorhandler(w, "imatched pass", 400)
+		helpers.Render(w, "register.html", map[string]string{"Error": "Passwords do not match"})
 		return
 	}
+
 	if password == "" || email == "" || firstpassword == "" || username == "" {
-		helpers.Errorhandler(w, "incorrect information", 400)
+		helpers.Render(w, "register.html", map[string]string{"Error": "All fields are required"})
 		return
 	}
+
 	errreg := helpers.ValidateInfo(username, email, password)
 	if errreg != "" {
-		helpers.Errorhandler(w, errreg, 400)
+		helpers.Render(w, "register.html", map[string]string{"Error": errreg})
 		return
 	}
+
 	var existsUsername bool
 	err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE username = ?)", username).Scan(&existsUsername)
 	if err != nil {
-		helpers.Errorhandler(w, "database error", http.StatusInternalServerError)
+		helpers.Errorhandler(w, "Database  error",500)
 		return
 	}
 	if existsUsername {
-		helpers.Errorhandler(w, "username already taken", 400)
+		helpers.Render(w, "register.html", map[string]string{"Error": "Username already taken"})
 		return
 	}
 
 	var existsEmail bool
 	err = Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = ?)", email).Scan(&existsEmail)
 	if err != nil {
-		helpers.Errorhandler(w, "database error", http.StatusInternalServerError)
+		helpers.Errorhandler(w, "Database error",500)
 		return
 	}
 	if existsEmail {
-		helpers.Errorhandler(w, "email already used", 400)
+		helpers.Render(w, "register.html", map[string]string{"Error": "Email already used"})
 		return
 	}
 
-	hashPassword, Err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
-	if Err != nil {
-		helpers.Errorhandler(w, "error generate hash pass", http.StatusInternalServerError)
+	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		helpers.Render(w, "register.html", map[string]string{"Error": "inxpected error please try again"})
 		return
 	}
+
 	stmt2 := `INSERT INTO users (username, email, password) VALUES (?, ?, ?);`
 	_, err = Db.Exec(stmt2, username, email, string(hashPassword))
 	if err != nil {
-		helpers.Errorhandler(w, "error db exce", http.StatusInternalServerError)
-		fmt.Println(err)
+		helpers.Errorhandler(w, "Database execution error", 500)
 		return
 	}
+
 	sessionID := uuid.New().String()
 	stmt3 := `UPDATE users SET session = ? WHERE username = ?`
 	_, err = Db.Exec(stmt3, sessionID, username)
 	if err != nil {
-		helpers.Errorhandler(w, "statusPage.html", http.StatusInternalServerError)
+		helpers.Errorhandler(w, "Database execution error", 500)
 		return
 	}
+
 	http.SetCookie(w, &http.Cookie{
 		Name:     "session",
 		Value:    sessionID,

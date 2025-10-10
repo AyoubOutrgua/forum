@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 
 	"forum/helpers"
@@ -11,13 +12,13 @@ import (
 )
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	if r.Method != "POST" {
-		helpers.Errorhandler(w, "statusPage.html", http.StatusMethodNotAllowed)
+	if r.Method != http.MethodPost {
+		helpers.Errorhandler(w, "Method not allowed", 400)
 		return
 	}
-	cookie, errorsession := r.Cookie("session")
-	if errorsession == nil && cookie.Value != "" {
-
+/* 
+	cookie, errSession := r.Cookie("session")
+	if errSession == nil && cookie.Value != "" {
 		var userExists bool
 		err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
 		if err == nil && userExists {
@@ -25,11 +26,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
+ */
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
 	if username == "" || password == "" {
-		helpers.Errorhandler(w, "login.html", http.StatusBadRequest)
+		helpers.Render(w, "login.html", map[string]string{"Error": "All fields are required"})
 		return
 	}
 
@@ -39,24 +41,23 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var hashPass string
 	err := row.Scan(&hashPass)
 	if err == sql.ErrNoRows {
-		helpers.Errorhandler(w, "login.html", http.StatusBadRequest)
+		helpers.Render(w, "login.html", map[string]string{"Error": "Invalid username or password"})
 		return
 	} else if err != nil {
-		helpers.Errorhandler(w, "statusPage.html", http.StatusInternalServerError)
-
+		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
 		return
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(password)) != nil {
-		helpers.Errorhandler(w, "invalid user or password", http.StatusBadRequest)
+		helpers.Render(w, "login.html", map[string]string{"Error": "Invalid username or password"})
 		return
 	}
 
 	sessionID := uuid.New().String()
-	stmt2 := `UPDATE users SET session = ? WHERE username = ? or   email = ?`
+	stmt2 := `UPDATE users SET session = ? WHERE username = ? OR email = ?`
 	_, err = Db.Exec(stmt2, sessionID, username, username)
 	if err != nil {
-		helpers.Errorhandler(w, "error database ", http.StatusInternalServerError)
+		helpers.Errorhandler(w, "Database update error", http.StatusInternalServerError)
 		return
 	}
 
@@ -67,6 +68,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		Path:     "/",
 		MaxAge:   3600,
 	})
-
+	fmt.Println("test here")
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

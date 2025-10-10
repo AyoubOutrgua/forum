@@ -24,6 +24,9 @@
             </div>
             <div class="login">
                 <form action="/loginauth" method="POST">
+                    {{if .Error}}
+                     <p style="color:red; margin-bottom:10px;font-size: large;">{{.Error}}</p>
+                      {{end}}
                     <label class="labels" for="username">Usename:</label>
                     <input class="inputs input-text" type="text" name="username"  required>
                     <label class="labels" for="password">Password:</label>

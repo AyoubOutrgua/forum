@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"forum/handlers"
-	// <-- Important: register sqlite3 driver
+
 )
 
 func main() {
@@ -18,6 +18,6 @@ func main() {
 	http.HandleFunc("/register", handlers.HanldlerShowRegister)
 	http.HandleFunc("/loginauth", handlers.LoginHandler)
 	http.HandleFunc("/regtistartion", handlers.RegisterHandler)
-	fmt.Println("server is runing http://localhost:8085/login")
+	fmt.Println("server is runing http://localhost:8085/")
 	http.ListenAndServe(":8085", nil)
 }
