@@ -10,6 +10,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
 
+
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        integrity="sha512-uWFS2SyMlXU1P9Uv9Z4q1XLh3QjsoZ4SB8QoX0OQH5m6goZQyA5DFmuH2gOdf5U3GVabkUqZbJKnSSCBaEVz2w=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
+
+
+
     <title>Forum</title>
 </head>
 
@@ -104,12 +112,14 @@
                     <span class="post-time">Just now</span>
                 </div>
                 <div class="body-section">
-                    <h1 class="post-title">Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title</h1>
+                    <h1 class="post-title">Title Title Title Title Title Title Title Title Title Title Title Title Title
+                        Title Title Title Title Title Title Title Title</h1>
                     <div class="body-image">
                         <img src="/static//images/image-01.jpg" alt="post image" class="post-img">
                     </div>
                     <p class="post-description">Description Description Description Description Description Description
-                        Description Description Description Description Description Description gfg dff rrd zd Description
+                        Description Description Description Description Description Description gfg dff rrd zd
+                        Description
                         Description Description</p>
                 </div>
                 <div class="category-section">
@@ -126,9 +136,40 @@
                     <span class="post-category">Sports</span>
                     <span class="post-category">Movis</span>
                 </div>
-                <div class="likes-section">
-    
+                <div class="reactions-section">
+                    <form action="">
+                        <div class="likes-section">
+                            <button type="submit" class="btn-reaction">
+                                <i class="fa-solid fa-thumbs-up icon-reaction"></i>
+                            </button>
+                            <span class="total-reactions">0</span>
+                        </div>
+                        <div class="deslikes-section">
+                            <button type="submit" class="btn-reaction">
+                                <i class="fa-solid fa-thumbs-down icon-reaction"></i>
+                            </button>
+                            <span class="total-reactions">1</span>
+                        </div>
+                        <div class="comment-section">
+                            <input type="checkbox" id="toggle-comments" hidden>
+                            <label for="toggle-comments" class="btn-reaction comment">
+                                <i class="fa-solid fa-comment icon-reaction"></i>
+                            </label>
+                            <span class="total-reactions">24</span>
+                        </div>
+                        <div class="comments-box">
+                            <form action="" class="comments-form">
+                                <img src="/static/images/user.png" alt="User Profile" class="profile-comment">
+                                <input type="text" placeholder="Title" class="input-comment" required>
+                                <input type="submit" value="Add" class="btn btn-comment">
+                            </form>
+                        </div>
+                    </form>
                 </div>
+
+
+
+
             </div>
 
             <div class="post">
@@ -140,12 +181,14 @@
                     <span class="post-time">Just now</span>
                 </div>
                 <div class="body-section">
-                    <h1 class="post-title">Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title Title</h1>
+                    <h1 class="post-title">Title Title Title Title Title Title Title Title Title Title Title Title Title
+                        Title Title Title Title Title Title Title Title</h1>
                     <!-- <div class="body-image">
                         <img src="/static//images/image-01.jpg" alt="post image" class="post-img">
                     </div> -->
                     <p class="post-description">Description Description Description Description Description Description
-                        Description Description Description Description Description Description gfg dff rrd zd Description
+                        Description Description Description Description Description Description gfg dff rrd zd
+                        Description
                         Description Description</p>
                 </div>
                 <div class="category-section">
@@ -162,21 +205,40 @@
                     <span class="post-category">Sports</span>
                     <span class="post-category">Movis</span>
                 </div>
-                <div class="likes-section">
+                <div class="reactions-section">
                     <form action="">
                         <div class="likes-section">
-
+                            <button type="submit" class="btn-reaction">
+                                <i class="fa-solid fa-thumbs-up icon-reaction"></i>
+                            </button>
+                            <span class="total-reactions">0</span>
                         </div>
                         <div class="deslikes-section">
-
+                            <button type="submit" class="btn-reaction">
+                                <i class="fa-solid fa-thumbs-down icon-reaction"></i>
+                            </button>
+                            <span class="total-reactions">1</span>
                         </div>
                         <div class="comment-section">
-                            
+                            <input type="checkbox" id="toggle-comments-2" hidden>
+                            <label for="toggle-comments-2" class="btn-reaction comment">
+                                <i class="fa-solid fa-comment icon-reaction"></i>
+                            </label>
+                            <span class="total-reactions">24</span>
+                        </div>
+                        <div class="comments-box">
+                            <div class="comments-form">
+                                <form action="">
+                                    <img src="/static/images/user.png" alt="User Profile" class="profile-comment">
+                                    <input type="text" placeholder="Title" class="input-comment" required>
+                                    <input type="submit" value="Add" class="btn btn-comment">
+                                </form>
+                            </div>
                         </div>
                     </form>
                 </div>
             </div>
-            
+
         </section>
     </main>
 </body>
