@@ -31,6 +31,7 @@
         </ul>
     </nav>
     <main class="main-section">
+        <!-- Create Post Section -->
         <section class="create-post">
             <form action="">
                 <h1 class="title-create-post">Create New Post</h1>
@@ -68,6 +69,7 @@
                 <button type="submit" class="btn btn-create-post">Create Post</button>
             </form>
         </section>
+        <!-- Filter Section -->
         <section class="filter">
             <form action="">
                 <div class="checkboxs-filter">
@@ -102,7 +104,9 @@
                 </div>
             </form>
         </section>
+        <!-- Posts Section -->
         <section class="posts">
+            <!-- Poste - 02 -->
             <div class="post">
                 <div class="top-section">
                     <div class="full-profile">
@@ -158,20 +162,31 @@
                             <span class="total-reactions">24</span>
                         </div>
                         <div class="comments-box">
-                            <form action="" class="comments-form">
+                            <div class="comments-form">
+                                <form action="">
+                                    <img src="/static/images/user.png" alt="User Profile" class="profile-comment">
+                                    <input type="text" placeholder="Title" class="input-comment" required>
+                                    <input type="submit" value="Add" class="btn btn-comment">
+                                </form>
+                            </div>
+                            <div class="comments">
                                 <img src="/static/images/user.png" alt="User Profile" class="profile-comment">
-                                <input type="text" placeholder="Title" class="input-comment" required>
-                                <input type="submit" value="Add" class="btn btn-comment">
-                            </form>
+                                <p class="comment-content">Test Contet Comments ...</p>
+                                <span class="post-time">Just now</span>
+                            </div>
+                            <!-- comment - 02 -->
+                            <div class="comments">
+                                <img src="/static/images/user.png" alt="User Profile" class="profile-comment">
+                                <p class="comment-content">Test Contet Comments ... Test Contet Comments ... Test Contet
+                                    Comments ... Test Contet Comments ... Test Contet Comments ... Test Contet Comments
+                                    ... Test Contet Comments ...</p>
+                                <span class="post-time">Just now</span>
+                            </div>
                         </div>
                     </form>
                 </div>
-
-
-
-
             </div>
-
+            <!-- Poste - 02 -->
             <div class="post">
                 <div class="top-section">
                     <div class="full-profile">

@@ -317,25 +317,16 @@ input[type="file"]::-webkit-file-upload-button:hover {
     margin: 1.5rem 0 0;
 }
 
-
-
-
-
-
-
-
-
-
-
-
 .comments-box {
-    display: block;
+    display: none;
     margin-top: 5px;
     background: var(--color-light);
     padding: 10px;
     border-radius: 8px;
     width: 100%;
 }
+
+
 
 .comment-section:has(#toggle-comments:checked)+.comments-box {
     display: block;
@@ -345,69 +336,9 @@ input[type="file"]::-webkit-file-upload-button:hover {
     display: block;
 }
 
-/* .profile-comment {
-    border: solid 1px var(--color-primary);
-    border-radius: 50%;
-}
 
-.input-comment {
-    height: 3.5rem;
-    width: 50vw;
-    border-radius: 1rem;
-    border: solid 1px var(--color-primary);
-    margin: 0.2rem;
-    padding: 0 10px;
-    font-size: 1.6rem;
-    color: var(--color-dark);
-}
-
-.comments-form {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.avatar-input {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-} */
-
-
-/* 
-.comments-form {
-    display: grid;
-    grid-template-columns: 30px 1fr 80px;
-    gap: 5px;
-}
-
-.profile-comment {
-    border: solid 1px var(--color-primary);
-    border-radius: 50%;
-}
-
-.input-comment {
-    height: 3.5rem;
-    width: 100%;
-
-    border-radius: 1rem;
-    border: solid 1px var(--color-primary);
-    margin: 0.2rem;
-    padding: 0 10px;
-    font-size: 1.6rem;
-    color: var(--color-dark);
-}
-
-.btn-comment {
-    padding: 8px 16px;
-    cursor: pointer;
-} */
-
-
-.comments-form {
-  display: grid;
-  grid-template-columns: 30px 1fr 80px;
+.comments-form, .comments {
+  display: flex;
   align-items: center;
   gap: 10px;
 }
@@ -432,4 +363,22 @@ input[type="file"]::-webkit-file-upload-button:hover {
 .btn-comment {
   padding: 8px 16px;
   cursor: pointer;
+}
+
+.input-comment:focus {
+  outline: none;
+  border-color: var(--color-dark);
+}
+
+.comments {
+    margin-top: 1rem;
+    padding: 1rem 0;
+    border-top: solid 1px var(--color-primary);
+}
+
+.comment-content {
+  width: 90%;
+  padding: 0 10px;
+  font-size: 1.6rem;
+  color: var(--color-dark);
 }
