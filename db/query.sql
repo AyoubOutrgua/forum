@@ -69,22 +69,4 @@ CREATE TABLE IF NOT EXISTS commentsLikes (
 );
 
 
-CREATE TRIGGER IF NOT EXISTS post_cleanup_trigger
-AFTER DELETE ON posts
-BEGIN
-    DELETE FROM commentsLikes WHERE commentID IN (SELECT id FROM comments WHERE postID = OLD.id);
 
-    DELETE FROM comments WHERE postID = OLD.id;
-
-    DELETE FROM likes WHERE postID = OLD.id;
-
-    DELETE FROM categories_post WHERE postID = OLD.id;
-END;
-
-
-CREATE TRIGGER IF NOT EXISTS user_cleanup_trigger
-AFTER DELETE ON users
-BEGIN
-    DELETE FROM posts WHERE userID = OLD.id;
-
-END;
