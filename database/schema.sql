@@ -12,4 +12,39 @@ CREATE TABLE IF NOT EXISTS posts(
      creationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
      FOREIGN KEY(userId) REFERENCES users(id)  
 );
-
+CREATE TABLE IF NOT EXISTS categories(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    category TEXT NOT NULL UNIQUE
+);
+CREATE TABLE IF NOT EXISTS postCategories (
+    postId INTEGER NOT NULL,
+    categoryId INTEGER NOT NULL,
+    PRIMARY KEY (postId, categoryId),
+    FOREIGN KEY (postId) REFERENCES posts(id),
+    FOREIGN KEY (categoryId) REFERENCES categories(id)
+);
+CREATE TABLE IF NOT EXISTS comments(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    comment TEXT NOT NULL,
+    postId INTEGER NOT NULL,
+    userId INTEGER NOT NULL,
+    creationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(userId) REFERENCES users(id),
+    FOREIGN KEY(postId) REFERENCES posts(id)
+);
+CREATE TABLE IF NOT EXISTS postReactions(
+    userId INTEGER NOT NULL,
+    postId INTEGER NOT NULL,
+    reaction INTEGER NOT NULL,
+    PRIMARY KEY(userId,postId),
+    FOREIGN KEY(userId) REFERENCES users(id),
+    FOREIGN KEY(postId) REFERENCES posts(id)
+);
+CREATE TABLE IF NOT EXISTS commentReactions(
+    userId INTEGER NOT NULL,
+    commentId INTEGER NOT NULL,
+    reaction INTEGER NOT NULL,
+    PRIMARY KEY(userId,commentId),
+    FOREIGN KEY(userId) REFERENCES users(id),
+    FOREIGN KEY(commentId) REFERENCES comments(id)
+);
