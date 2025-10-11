@@ -33,33 +33,33 @@
     <main class="main-section">
         <!-- Create Post Section -->
         <section class="create-post">
-            <form action="">
+            <form action="/createpost" method="post" enctype="multipart/form-data">
                 <h1 class="title-create-post">Create New Post</h1>
-                <input type="text" placeholder="Title" class="inputs title" required>
-                <input type="text" placeholder="Description" class="inputs description" required>
+                <input type="text" name="title" placeholder="Title" class="inputs title" required>
+                <input type="text" name="description" placeholder="Description" class="inputs description" required>
                 <div class="checkboxs">
-                    <input type="checkbox" name="technology" id="create-technology" class="category">
+                    <input type="checkbox" name="categories" id="create-technology" class="category">
                     <label for="create-technology" class="labels">Technology</label>
 
-                    <input type="checkbox" name="education" id="create-education" class="category">
+                    <input type="checkbox" name="categories" id="create-education" class="category">
                     <label for="create-education" class="labels">Education</label>
 
-                    <input type="checkbox" name="sports" id="create-sports" class="category">
+                    <input type="checkbox" name="categories" id="create-sports" class="category">
                     <label for="create-sports" class="labels">Sports</label>
 
-                    <input type="checkbox" name="movies" id="create-movies" class="category">
+                    <input type="checkbox" name="categories" id="create-movies" class="category">
                     <label for="create-movies" class="labels">Movies</label>
 
-                    <input type="checkbox" name="gaming" id="create-gaming" class="category">
+                    <input type="checkbox" name="categories" id="create-gaming" class="category">
                     <label for="create-gaming" class="labels">Gaming</label>
 
-                    <input type="checkbox" name="music" id="create-music" class="category">
+                    <input type="checkbox" name="categories" id="create-music" class="category">
                     <label for="create-music" class="labels">Music</label>
 
-                    <input type="checkbox" name="health" id="create-health" class="category">
+                    <input type="checkbox" name="categories" id="create-health" class="category">
                     <label for="create-health" class="labels">Health</label>
 
-                    <input type="checkbox" name="food" id="create-food" class="category">
+                    <input type="checkbox" name="categories" id="create-food" class="category">
                     <label for="create-food" class="labels">Food</label>
                 </div>
 
