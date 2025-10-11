@@ -11,11 +11,12 @@ import (
 var dataBase *sql.DB
 
 func InitDataBase() {
-	dataBase, err := sql.Open("sqlite3", "./forum.db")
+	var err error
+	dataBase, err = sql.Open("sqlite3", "./forum.db")
 	if err != nil {
 		log.Fatal("can't open/create forum.db ", err)
 	}
-	defer dataBase.Close()
+
 	schema, err := os.ReadFile("schema.sql")
 	if err != nil {
 		log.Fatal("can't read schema", err)
