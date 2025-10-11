@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"log"
+	"os"
 
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -10,16 +11,14 @@ import (
 func CreateUser() {
 	dataBase, err := sql.Open("sqlite3", "forum.db")
 	if err != nil {
-		log.Fatal()
+		log.Fatal("can't open/create forum.db ", err)
 	}
 	defer dataBase.Close()
-	usersTable := `CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    userName TEXT NOT NULL UNIQUE,
-    email TEXT NOT NULL UNIQUE ,
-    password TEXT NOT NULL
-);`
-	_, err = dataBase.Exec(usersTable)
+	schema, err := os.ReadFile("schema.sql")
+	if err != nil {
+		log.Fatal("can't read schema", err)
+	}
+	_, err = dataBase.Exec(string(schema))
 	if err != nil {
 		log.Fatal(err)
 	}
