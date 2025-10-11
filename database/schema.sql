@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS posts(
      id INTEGER PRIMARY KEY AUTOINCREMENT,
      title TEXT NOT NULL,
      post TEXT NOT NULL,
-     userId INTEGER,
+     userId INTEGER NOT NULL,
      creationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
      FOREIGN KEY(userId) REFERENCES users(id)  
 );
