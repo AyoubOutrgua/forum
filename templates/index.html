@@ -106,7 +106,7 @@
         </section>
         <!-- Posts Section -->
         <section class="posts">
-            <!-- Poste - 02 -->
+            <!-- Poste - 01 -->
             <div class="post">
                 <div class="top-section">
                     <div class="full-profile">
@@ -187,24 +187,21 @@
                 </div>
             </div>
             <!-- Poste - 02 -->
+            {{ range . }}
             <div class="post">
                 <div class="top-section">
                     <div class="full-profile">
                         <img src="/static/images/user.png" alt="User Profile" class="profile-image">
-                        <h2 class="post-username">Username</h2>
+                        <h2 class="post-username">{{ .UserName }}</h2>
                     </div>
-                    <span class="post-time">Just now</span>
+                    <span class="post-time">{{ .CreationDate }}</span>
                 </div>
                 <div class="body-section">
-                    <h1 class="post-title">Title Title Title Title Title Title Title Title Title Title Title Title Title
-                        Title Title Title Title Title Title Title Title</h1>
+                    <h1 class="post-title">{{ .Title }}</h1>
                     <!-- <div class="body-image">
                         <img src="/static//images/image-01.jpg" alt="post image" class="post-img">
                     </div> -->
-                    <p class="post-description">Description Description Description Description Description Description
-                        Description Description Description Description Description Description gfg dff rrd zd
-                        Description
-                        Description Description</p>
+                    <p class="post-description">{{ .Description }}</p>
                 </div>
                 <div class="category-section">
                     <span class="post-category">Music</span>
@@ -235,8 +232,8 @@
                             <span class="total-reactions">1</span>
                         </div>
                         <div class="comment-section">
-                            <input type="checkbox" id="toggle-comments-2" hidden>
-                            <label for="toggle-comments-2" class="btn-reaction comment">
+                            <input type="checkbox" id="toggle-comments-{{.ID}}" hidden>
+                            <label for="toggle-comments-{{.ID}}" class="btn-reaction comment">
                                 <i class="fa-solid fa-comment icon-reaction"></i>
                             </label>
                             <span class="total-reactions">24</span>
@@ -250,10 +247,17 @@
                                 </form>
                             </div>
                         </div>
+
+                        <style>
+                            .comment-section:has(#toggle-comments-{{.ID}}:checked)+.comments-box {
+                                display: block;
+                            }
+                        </style>
+
                     </form>
                 </div>
             </div>
-
+            {{ end }}
         </section>
     </main>
 </body>

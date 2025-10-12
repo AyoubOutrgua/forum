@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS posts(
      title TEXT NOT NULL,
      post TEXT NOT NULL,
      userId INTEGER,
-     creationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+     creationDate TEXT,
      FOREIGN KEY(userId) REFERENCES users(id)  
 );
 CREATE TABLE IF NOT EXISTS categories(

@@ -15,7 +15,6 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Status Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	fmt.Println("CREATE POST HANDLER")
 	errParse := r.ParseMultipartForm(10 << 20)
 	if errParse != nil {
 		http.Error(w, "Status Bad Request 1", http.StatusBadRequest)
@@ -56,15 +55,23 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Status Bad Request 7", http.StatusBadRequest)
 		return
 	}
-	timeNow := time.Now().Format("2006-01-02")
+	timeNow := time.Now().Format("2006-01-02 15:04:05")
+	fmt.Println(timeNow)
 	query := "INSERT INTO posts (title,post,userId,creationDate) VALUES (?, ?, ?, ?)"
-	// fmt.Println("------------------------\n", query, "\n***************************")
 	fmt.Println(categories)
 	database.ExecuteData(query, title[0], description[0], 2, timeNow)
 
 	// query2 := "INSERT INTO users (userName, email, password) VALUES (?, ?, ?)"
-	// name := "hamid"
-	// email := "hamid@example.com"
+	// name := "user1"
+	// email := "user1@example.com"
 	// pass := "123456"
 	// database.ExecuteData(query2, name, email, pass)
+
+	// query3 := "INSERT INTO users (userName, email, password) VALUES (?, ?, ?)"
+	// name2 := "user2"
+	// email2 := "user2@example.com"
+	// pass2 := "123456"
+	// database.ExecuteData(query3, name2, email2, pass2)
+
+	http.Redirect(w, r, "/", 303)
 }

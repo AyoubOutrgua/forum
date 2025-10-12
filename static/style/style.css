@@ -332,9 +332,9 @@ input[type="file"]::-webkit-file-upload-button:hover {
     display: block;
 }
 
-.comment-section:has(#toggle-comments-2:checked)+.comments-box {
+/* .comment-section:has(#toggle-comments-2:checked)+.comments-box {
     display: block;
-}
+} */
 
 
 .comments-form, .comments {

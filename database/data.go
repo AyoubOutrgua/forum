@@ -9,8 +9,16 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+type Post struct {
+	ID           int
+	Title        string
+	Description  string
+	UserName     string
+	CreationDate string
+}
+
 func CreateTables() {
-	database, errOpen := sql.Open("sqlite3", "forum.db")
+	database, errOpen := sql.Open("sqlite3", "database/forum.db")
 	if errOpen != nil {
 		log.Fatal("can't open/create forum.db ", errOpen)
 	}
@@ -28,7 +36,7 @@ func CreateTables() {
 }
 
 func ExecuteData(query string, args ...interface{}) {
-	database, err := sql.Open("sqlite3", "forum.db")
+	database, err := sql.Open("sqlite3", "database/forum.db")
 	if err != nil {
 		log.Fatal("can't open/create forum.db ", err)
 	}
@@ -41,8 +49,8 @@ func ExecuteData(query string, args ...interface{}) {
 	fmt.Println("Execute OK!")
 }
 
-func SelectData(query string) *sql.Rows {
-	database, err := sql.Open("sqlite3", "forum.db")
+func SelectData(query string) ([]Post, error) {
+	database, err := sql.Open("sqlite3", "database/forum.db")
 	if err != nil {
 		log.Fatal("can't open/create forum.db ", err)
 	}
@@ -53,5 +61,15 @@ func SelectData(query string) *sql.Rows {
 		panic(err)
 	}
 	defer rows.Close()
-	return rows
+
+	var posts []Post
+	for rows.Next() {
+		var p Post
+		err := rows.Scan(&p.ID, &p.Title, &p.Description, &p.UserName, &p.CreationDate)
+		if err != nil {
+			return nil, err
+		}
+		posts = append(posts, p)
+	}
+	return posts, nil
 }
