@@ -33,6 +33,16 @@ func CreateTables() {
 	if errExuc != nil {
 		log.Fatal(errExuc)
 	}
+	database.Exec(`INSERT INTO categories (category)
+	VALUES 
+	('Technology'),
+	('Education'),
+	('Sports'),
+	('Movies'),
+	('Gaming'),
+	('Music'),
+	('Health'),
+	('Food')`)
 	fmt.Println("Database Create OK")
 }
 
