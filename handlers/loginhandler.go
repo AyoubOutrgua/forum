@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 
 	"forum/helpers"
@@ -11,37 +10,39 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+
+
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		helpers.Errorhandler(w, "Method not allowed", 400)
 		return
 	}
-/* 
-	cookie, errSession := r.Cookie("session")
-	if errSession == nil && cookie.Value != "" {
-		var userExists bool
-		err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
-		if err == nil && userExists {
-			http.Redirect(w, r, "/", http.StatusSeeOther)
-			return
+	/*
+		cookie, errSession := r.Cookie("session")
+		if errSession == nil && cookie.Value != "" {
+			var userExists bool
+			err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
+			if err == nil && userExists {
+				http.Redirect(w, r, "/", http.StatusSeeOther)
+				return
+			}
 		}
-	}
- */
+	*/
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
 	if username == "" || password == "" {
-		helpers.Render(w, "login.html", map[string]string{"Error": "All fields are required"})
+		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "All fields are required"})
 		return
 	}
 
-	stmt := `SELECT password FROM users WHERE username = ? OR email = ?`
+	stmt := `SELECT password FROM users WHERE userName = ? OR email = ?`
 	row := Db.QueryRow(stmt, username, username)
 
 	var hashPass string
 	err := row.Scan(&hashPass)
 	if err == sql.ErrNoRows {
-		helpers.Render(w, "login.html", map[string]string{"Error": "Invalid username or password"})
+		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password"})
 		return
 	} else if err != nil {
 		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
@@ -49,12 +50,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(password)) != nil {
-		helpers.Render(w, "login.html", map[string]string{"Error": "Invalid username or password"})
+		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password"})
 		return
 	}
 
 	sessionID := uuid.New().String()
-	stmt2 := `UPDATE users SET session = ? WHERE username = ? OR email = ?`
+	stmt2 := `UPDATE users SET session = ? WHERE userName = ? OR email = ?`
 	_, err = Db.Exec(stmt2, sessionID, username, username)
 	if err != nil {
 		helpers.Errorhandler(w, "Database update error", http.StatusInternalServerError)
@@ -68,6 +69,6 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		Path:     "/",
 		MaxAge:   3600,
 	})
-	fmt.Println("test here")
+
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

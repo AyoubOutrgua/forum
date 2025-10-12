@@ -2,12 +2,12 @@ package handlers
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"strings"
 
 	"forum/helpers"
 
-	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -26,6 +26,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != "POST" {
 		helpers.Errorhandler(w, "Method not allowed", 400)
+		fmt.Println("test ")
 		return
 	}
 
@@ -34,71 +35,55 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	username := strings.TrimSpace(r.FormValue("username"))
 	firstpassword := r.FormValue("secondpass")
 	if firstpassword != password {
-		helpers.Render(w, "register.html", map[string]string{"Error": "Passwords do not match"})
+		helpers.Render(w, "register.html", http.StatusBadRequest, map[string]string{"Error": "Passwords do not match"})
 		return
 	}
 
 	if password == "" || email == "" || firstpassword == "" || username == "" {
-		helpers.Render(w, "register.html", map[string]string{"Error": "All fields are required"})
+		helpers.Render(w, "register.html", http.StatusBadRequest, map[string]string{"Error": "All fields are required"})
 		return
 	}
 
 	errreg := helpers.ValidateInfo(username, email, password)
 	if errreg != "" {
-		helpers.Render(w, "register.html", map[string]string{"Error": errreg})
+		helpers.Render(w, "register.html", http.StatusBadRequest, map[string]string{"Error": errreg})
 		return
 	}
 
 	var existsUsername bool
-	err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE username = ?)", username).Scan(&existsUsername)
+	err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE userName = ?)", username).Scan(&existsUsername)
 	if err != nil {
-		helpers.Errorhandler(w, "Database  error",500)
+		helpers.Errorhandler(w, "Database  error", 500)
 		return
 	}
 	if existsUsername {
-		helpers.Render(w, "register.html", map[string]string{"Error": "Username already taken"})
+		helpers.Render(w, "register.html", http.StatusBadRequest, map[string]string{"Error": "Username already taken"})
 		return
 	}
 
 	var existsEmail bool
 	err = Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = ?)", email).Scan(&existsEmail)
 	if err != nil {
-		helpers.Errorhandler(w, "Database error",500)
+		helpers.Errorhandler(w, "Database error", 500)
 		return
 	}
 	if existsEmail {
-		helpers.Render(w, "register.html", map[string]string{"Error": "Email already used"})
+		helpers.Render(w, "register.html", http.StatusBadRequest, map[string]string{"Error": "Email already used"})
 		return
 	}
 
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		helpers.Render(w, "register.html", map[string]string{"Error": "inxpected error please try again"})
+		helpers.Render(w, "register.html", http.StatusBadRequest, map[string]string{"Error": "inxpected error please try again"})
 		return
 	}
 
-	stmt2 := `INSERT INTO users (username, email, password) VALUES (?, ?, ?);`
+	stmt2 := `INSERT INTO users (userName, email, password) VALUES (?, ?, ?);`
 	_, err = Db.Exec(stmt2, username, email, string(hashPassword))
 	if err != nil {
 		helpers.Errorhandler(w, "Database execution error", 500)
 		return
 	}
 
-	sessionID := uuid.New().String()
-	stmt3 := `UPDATE users SET session = ? WHERE username = ?`
-	_, err = Db.Exec(stmt3, sessionID, username)
-	if err != nil {
-		helpers.Errorhandler(w, "Database execution error", 500)
-		return
-	}
-
-	http.SetCookie(w, &http.Cookie{
-		Name:     "session",
-		Value:    sessionID,
-		HttpOnly: true,
-		Path:     "/",
-		MaxAge:   3600,
-	})
-
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }

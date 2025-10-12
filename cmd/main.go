@@ -2,22 +2,25 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
+	"forum/database"
 	"forum/handlers"
-
+	"forum/middleware"
+	routego "forum/route.go"
 )
 
 func main() {
-	handlers.DataBase()
-	defer handlers.Db.Close()
+	database.InitDataBase()
+	defer database.CloseDataBase()
+	handlers.Db = database.DataBase
+	middleware.Db = database.DataBase
+	routego.Routing()
+	if handlers.Db == nil {
+		log.Fatal("Database not initialized!")
+	}
 
-	http.HandleFunc("/static/", handlers.StyleFunc)
-	http.HandleFunc("/", handlers.HanldlerShowHome)
-	http.HandleFunc("/login", handlers.HanldlerShowLogin)
-	http.HandleFunc("/register", handlers.HanldlerShowRegister)
-	http.HandleFunc("/loginauth", handlers.LoginHandler)
-	http.HandleFunc("/regtistartion", handlers.RegisterHandler)
 	fmt.Println("server is runing http://localhost:8085/")
 	http.ListenAndServe(":8085", nil)
 }

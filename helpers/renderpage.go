@@ -1,11 +1,13 @@
 package helpers
 
 import (
+	
 	"html/template"
 	"net/http"
 )
 
-func Render(w http.ResponseWriter, templateFile string, data interface{}) {
+func Render(w http.ResponseWriter, templateFile string,errors int , data interface{}) {
+	w.WriteHeader(errors)
 	tmpl, err := template.ParseFiles("templates/" + templateFile)
 	if err != nil {
 		http.Error(w, "Template parsing error", http.StatusInternalServerError)
@@ -14,7 +16,7 @@ func Render(w http.ResponseWriter, templateFile string, data interface{}) {
 
 	err = tmpl.Execute(w, data)
 	if err != nil {
-		http.Error(w, "Template execution error", http.StatusInternalServerError)
+		Errorhandler(w, "Template execution error", http.StatusInternalServerError)
 		return
 	}
 }
