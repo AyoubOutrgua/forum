@@ -13,21 +13,21 @@ import (
 
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	cookie, errSession := r.Cookie("session")
+	if errSession == nil && cookie.Value != "" {
+		var userExists bool
+		err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
+		if err == nil && userExists {
+			http.Redirect(w, r, "/", http.StatusSeeOther)
+			return
+		}
+	}
 	if r.Method != http.MethodPost {
 		helpers.Errorhandler(w, "Method not allowed", 400)
 		return
 	}
-	/*
-		cookie, errSession := r.Cookie("session")
-		if errSession == nil && cookie.Value != "" {
-			var userExists bool
-			err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
-			if err == nil && userExists {
-				http.Redirect(w, r, "/", http.StatusSeeOther)
-				return
-			}
-		}
-	*/
+
+	
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
