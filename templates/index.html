@@ -33,7 +33,7 @@
     <main class="main-section">
         <!-- Create Post Section -->
         <section class="create-post">
-            <form action="/createpost" method="post" enctype="multipart/form-data">
+            <form action="/createpost" method="POST" enctype="multipart/form-data">
                 <h1 class="title-create-post">Create New Post</h1>
                 <input type="text" name="title" placeholder="Title" class="inputs title" required>
                 <input type="text" name="description" placeholder="Description" class="inputs description" required>
@@ -119,7 +119,7 @@
                     <h1 class="post-title">Title Title Title Title Title Title Title Title Title Title Title Title Title
                         Title Title Title Title Title Title Title Title</h1>
                     <div class="body-image">
-                        <img src="/static//images/image-01.jpg" alt="post image" class="post-img">
+                        <img src="/static/upload/image-01.jpg" alt="post image" class="post-img">
                     </div>
                     <p class="post-description">Description Description Description Description Description Description
                         Description Description Description Description Description Description gfg dff rrd zd
@@ -198,9 +198,11 @@
                 </div>
                 <div class="body-section">
                     <h1 class="post-title">{{ .Title }}</h1>
-                    <!-- <div class="body-image">
-                        <img src="/static//images/image-01.jpg" alt="post image" class="post-img">
-                    </div> -->
+                    {{ if .ImageUrl }}
+                    <div class="body-image">
+                        <img src="{{ .ImageUrl }}" alt="post image" class="post-img">
+                    </div>
+                    {{ end }}
                     <p class="post-description">{{ .Description }}</p>
                 </div>
                 <div class="category-section">
@@ -249,7 +251,13 @@
                         </div>
 
                         <style>
-                            .comment-section:has(#toggle-comments-{{.ID}}:checked)+.comments-box {
+                            .comment-section:has(#toggle-comments- {
+                                        {
+                                        .ID
+                                    }
+                                }
+
+                                :checked)+.comments-box {
                                 display: block;
                             }
                         </style>

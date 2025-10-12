@@ -36,30 +36,40 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Status Bad Request 4", http.StatusBadRequest)
 		return
 	}
+	imagePath := ""
 	imageFile, handler, err := r.FormFile("choose-file")
 	if err != nil {
-		http.Error(w, "Status Bad Request 5", http.StatusBadRequest)
-		return
-	}
-	defer imageFile.Close()
+		if err == http.ErrMissingFile {
+			fmt.Println("No File Upload !!!!!!!!!!!!")
+		} else {
+			http.Error(w, "Status Bad Request 5", http.StatusBadRequest)
+			return
+		}
+	} else {
 
-	file, errCreate := os.Create("./upload/" + handler.Filename)
-	if errCreate != nil {
-		http.Error(w, "Status Bad Request 6", http.StatusBadRequest)
-		return
-	}
-	defer file.Close()
+		defer imageFile.Close()
 
-	_, errCopy := io.Copy(file, imageFile)
-	if errCopy != nil {
-		http.Error(w, "Status Bad Request 7", http.StatusBadRequest)
-		return
+		file, errCreate := os.Create("./static/upload/" + handler.Filename)
+		if errCreate != nil {
+			http.Error(w, "Status Bad Request 6", http.StatusBadRequest)
+			return
+		}
+		defer file.Close()
+
+		_, errCopy := io.Copy(file, imageFile)
+		if errCopy != nil {
+			http.Error(w, "Status Bad Request 7", http.StatusBadRequest)
+			return
+		}
+		imagePath = "/static/upload/" + handler.Filename
 	}
+	fmt.Println("IMAGE ::::::::::: ", imagePath)
+
 	timeNow := time.Now().Format("2006-01-02 15:04:05")
 	fmt.Println(timeNow)
-	query := "INSERT INTO posts (title,post,userId,creationDate) VALUES (?, ?, ?, ?)"
+	query := "INSERT INTO posts (title, post, imageUrl, userId, creationDate) VALUES (?, ?, ?, ?, ?)"
 	fmt.Println(categories)
-	database.ExecuteData(query, title[0], description[0], 2, timeNow)
+	database.ExecuteData(query, title[0], description[0], imagePath, 1, timeNow)
 
 	// query2 := "INSERT INTO users (userName, email, password) VALUES (?, ?, ?)"
 	// name := "user1"

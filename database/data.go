@@ -13,6 +13,7 @@ type Post struct {
 	ID           int
 	Title        string
 	Description  string
+	ImageUrl     string
 	UserName     string
 	CreationDate string
 }
@@ -65,7 +66,7 @@ func SelectData(query string) ([]Post, error) {
 	var posts []Post
 	for rows.Next() {
 		var p Post
-		err := rows.Scan(&p.ID, &p.Title, &p.Description, &p.UserName, &p.CreationDate)
+		err := rows.Scan(&p.ID, &p.Title, &p.Description, &p.ImageUrl, &p.UserName, &p.CreationDate)
 		if err != nil {
 			return nil, err
 		}

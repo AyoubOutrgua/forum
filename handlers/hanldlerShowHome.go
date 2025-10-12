@@ -22,7 +22,7 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	query := `
-			SELECT p.id, p.title, p.post, u.userName, p.creationDate
+			SELECT p.id, p.title, p.post, p.imageUrl, u.userName, p.creationDate
 			FROM posts AS p
 			INNER JOIN users AS u ON u.id = p.userId
 			ORDER BY p.creationDate DESC;

@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS posts(
      id INTEGER PRIMARY KEY AUTOINCREMENT,
      title TEXT NOT NULL,
      post TEXT NOT NULL,
+     imageUrl TEXT,
      userId INTEGER,
      creationDate TEXT,
      FOREIGN KEY(userId) REFERENCES users(id)  
