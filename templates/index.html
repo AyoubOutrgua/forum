@@ -37,30 +37,11 @@
                 <h1 class="title-create-post">Create New Post</h1>
                 <input type="text" name="title" placeholder="Title" class="inputs title" required>
                 <input type="text" name="description" placeholder="Description" class="inputs description" required>
-                <div class="checkboxs">
-                    <input type="checkbox" name="categories" id="create-technology" class="category">
-                    <label for="create-technology" class="labels">Technology</label>
-
-                    <input type="checkbox" name="categories" id="create-education" class="category">
-                    <label for="create-education" class="labels">Education</label>
-
-                    <input type="checkbox" name="categories" id="create-sports" class="category">
-                    <label for="create-sports" class="labels">Sports</label>
-
-                    <input type="checkbox" name="categories" id="create-movies" class="category">
-                    <label for="create-movies" class="labels">Movies</label>
-
-                    <input type="checkbox" name="categories" id="create-gaming" class="category">
-                    <label for="create-gaming" class="labels">Gaming</label>
-
-                    <input type="checkbox" name="categories" id="create-music" class="category">
-                    <label for="create-music" class="labels">Music</label>
-
-                    <input type="checkbox" name="categories" id="create-health" class="category">
-                    <label for="create-health" class="labels">Health</label>
-
-                    <input type="checkbox" name="categories" id="create-food" class="category">
-                    <label for="create-food" class="labels">Food</label>
+                <div class="categories">
+                    {{ range .Categories }}
+                    <input type="checkbox" name="categories" id="create-{{ .Category }}" value="{{ .ID }}" class="category">
+                    <label for="create-{{ .Category }}" class="labels">{{ .Category }}</label>
+                    {{ end }}
                 </div>
 
                 <div class="upload-img">
@@ -72,30 +53,11 @@
         <!-- Filter Section -->
         <section class="filter">
             <form action="">
-                <div class="checkboxs-filter">
-                    <input type="checkbox" name="technology" id="filter-technology" class="category">
-                    <label for="filter-technology" class="labels">Technology</label>
-
-                    <input type="checkbox" name="education" id="filter-education" class="category">
-                    <label for="filter-education" class="labels">Education</label>
-
-                    <input type="checkbox" name="sports" id="filter-sports" class="category">
-                    <label for="filter-sports" class="labels">Sports</label>
-
-                    <input type="checkbox" name="movies" id="filter-movies" class="category">
-                    <label for="filter-movies" class="labels">Movies</label>
-
-                    <input type="checkbox" name="gaming" id="filter-gaming" class="category">
-                    <label for="filter-gaming" class="labels">Gaming</label>
-
-                    <input type="checkbox" name="music" id="filter-music" class="category">
-                    <label for="filter-music" class="labels">Music</label>
-
-                    <input type="checkbox" name="health" id="filter-health" class="category">
-                    <label for="filter-health" class="labels">Health</label>
-
-                    <input type="checkbox" name="food" id="filter-food" class="category">
-                    <label for="filter-food" class="labels">Food</label>
+                <div class="categories-filter">
+                    {{ range .Categories }}
+                    <input type="checkbox" name="categories" id="create-{{ .Category }}" value="{{ .ID }}" class="category">
+                    <label for="create-{{ .Category }}" class="labels">{{ .Category }}</label>
+                    {{ end }}
                 </div>
                 <div class="buttons">
                     <button type="submit" class="btn btn-filter">Filter</button>
@@ -173,6 +135,23 @@
                                 <img src="/static/images/user.png" alt="User Profile" class="profile-comment">
                                 <p class="comment-content">Test Contet Comments ...</p>
                                 <span class="post-time">Just now</span>
+   
+                            </div>
+                            <div>
+                                <form action="" class="comment-reactions">
+                                    <div class="likes-section">
+                                    <button type="submit" class="btn-reaction">
+                                        <i class="fa-solid fa-thumbs-up icon-reaction"></i>
+                                    </button>
+                                    <span class="total-reactions">0</span>
+                                    </div>
+                                    <div class="deslikes-section">
+                                        <button type="submit" class="btn-reaction">
+                                            <i class="fa-solid fa-thumbs-down icon-reaction"></i>
+                                        </button>
+                                        <span class="total-reactions">1</span>
+                                    </div>
+                                </form>
                             </div>
                             <!-- comment - 02 -->
                             <div class="comments">
@@ -187,7 +166,7 @@
                 </div>
             </div>
             <!-- Poste - 02 -->
-            {{ range . }}
+            {{ range .Posts }}
             <div class="post">
                 <div class="top-section">
                     <div class="full-profile">

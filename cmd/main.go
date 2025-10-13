@@ -16,6 +16,6 @@ func main() {
 	http.HandleFunc("/login", handlers.HanldlerShowLogin)
 	http.HandleFunc("/register", handlers.HanldlerShowRegister)
 	http.HandleFunc("/createpost", handlers.CreatePostHandler)
-	fmt.Println("server is runing http://localhost:8085")
-	http.ListenAndServe(":8085", nil)
+	fmt.Println("server is runing http://localhost:8089")
+	http.ListenAndServe(":8089", nil)
 }

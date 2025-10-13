@@ -32,10 +32,14 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	categories, ok := r.PostForm["categories"]
+	
 	if !ok {
 		http.Error(w, "Status Bad Request 4", http.StatusBadRequest)
 		return
 	}
+	fmt.Println(categories)
+
+
 	imagePath := ""
 	imageFile, handler, err := r.FormFile("choose-file")
 	if err != nil {
@@ -68,7 +72,6 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	timeNow := time.Now().Format("2006-01-02 15:04:05")
 	fmt.Println(timeNow)
 	query := "INSERT INTO posts (title, post, imageUrl, userId, creationDate) VALUES (?, ?, ?, ?, ?)"
-	fmt.Println(categories)
 	database.ExecuteData(query, title[0], description[0], imagePath, 1, timeNow)
 
 	// query2 := "INSERT INTO users (userName, email, password) VALUES (?, ?, ?)"

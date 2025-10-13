@@ -133,8 +133,9 @@ body {
     color: var(--color-dark);
 }
 
-.checkboxs {
+.categories {
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     gap: 10px;
     width: 60vw;
@@ -207,7 +208,7 @@ input[type="file"]::-webkit-file-upload-button:hover {
     margin: 1rem 0;
 }
 
-.checkboxs-filter,
+.categories-filter,
 .buttons {
     display: flex;
     flex-wrap: wrap;
@@ -303,14 +304,14 @@ input[type="file"]::-webkit-file-upload-button:hover {
     cursor: pointer;
     transition: all 0.3s ease;
     border: none;
-
+    background-color: transparent;
 }
 
 .icon-reaction {
     font-size: 1.8rem;
 }
 
-.reactions-section form {
+.reactions-section form:first-of-type {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
@@ -381,4 +382,8 @@ input[type="file"]::-webkit-file-upload-button:hover {
   padding: 0 10px;
   font-size: 1.6rem;
   color: var(--color-dark);
+}
+
+.comment-reactions {
+    margin-top: 0 !important;
 }
