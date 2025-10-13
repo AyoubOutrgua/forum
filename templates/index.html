@@ -55,8 +55,8 @@
             <form action="">
                 <div class="categories-filter">
                     {{ range .Categories }}
-                    <input type="checkbox" name="categories" id="create-{{ .Category }}" value="{{ .ID }}" class="category">
-                    <label for="create-{{ .Category }}" class="labels">{{ .Category }}</label>
+                    <input type="checkbox" name="categories" id="filter-{{ .Category }}" value="{{ .ID }}" class="category">
+                    <label for="filter-{{ .Category }}" class="labels">{{ .Category }}</label>
                     {{ end }}
                 </div>
                 <div class="buttons">

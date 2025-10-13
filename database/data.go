@@ -104,3 +104,28 @@ func SelectAllCategories(query string) ([]tools.Category, error) {
 	}
 	return categories, nil
 }
+
+
+
+func SelectLastIdOfPosts(query string) (int, error) {
+	database, err := sql.Open("sqlite3", "database/forum.db")
+	if err != nil {
+		log.Fatal("can't open/create forum.db ", err)
+	}
+	defer database.Close()
+
+	rows, err := database.Query(query)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	var p tools.Post
+	for rows.Next() {
+		err := rows.Scan(&p.ID)
+		if err != nil {
+			return 0, err
+		}
+	}
+	return p.ID, nil
+}

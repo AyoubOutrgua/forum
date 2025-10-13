@@ -5,6 +5,8 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"slices"
+	"strconv"
 	"time"
 
 	"forum/database"
@@ -32,13 +34,22 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	categories, ok := r.PostForm["categories"]
-	
+
 	if !ok {
 		http.Error(w, "Status Bad Request 4", http.StatusBadRequest)
 		return
 	}
-	fmt.Println(categories)
-
+	if len(categories) == 0 {
+		http.Error(w, "Status Bad Request !!! madrti hta chi category !!!", http.StatusBadRequest)
+		return
+	}
+	categoriesID := []string{"1", "2", "3", "4", "5", "6", "7", "8"}
+	for _, catsID := range categories {
+		if !slices.Contains(categoriesID, catsID) {
+			http.Error(w, "Status Bad Request ----- makaynach had categories", http.StatusBadRequest)
+			return
+		}
+	}
 
 	imagePath := ""
 	imageFile, handler, err := r.FormFile("choose-file")
@@ -71,8 +82,23 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 	timeNow := time.Now().Format("2006-01-02 15:04:05")
 	fmt.Println(timeNow)
-	query := "INSERT INTO posts (title, post, imageUrl, userId, creationDate) VALUES (?, ?, ?, ?, ?)"
-	database.ExecuteData(query, title[0], description[0], imagePath, 1, timeNow)
+	queryInsertPost := "INSERT INTO posts (title, post, imageUrl, userId, creationDate) VALUES (?, ?, ?, ?, ?)"
+	userID := 2
+	database.ExecuteData(queryInsertPost, title[0], description[0], imagePath, userID, timeNow)
+
+	lastPostID, err := database.SelectLastIdOfPosts("SELECT id FROM posts ORDER BY creationDate DESC LIMIT 1;")
+	fmt.Println("lastPostID :*******//////*******///// :", lastPostID)
+
+	queryInsertCategory := "INSERT INTO postCategories (postId, categoryId) VALUES (?, ?)"
+
+	for _, catID := range categories {
+		categoryID, err := strconv.Atoi(catID)
+		if err != nil {
+			fmt.Println("ERROR ATOI : ", err)
+			return
+		}
+		database.ExecuteData(queryInsertCategory, lastPostID, categoryID)
+	}
 
 	// query2 := "INSERT INTO users (userName, email, password) VALUES (?, ?, ?)"
 	// name := "user1"
