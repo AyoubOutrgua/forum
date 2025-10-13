@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -26,7 +25,6 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method != "POST" {
 		helpers.Errorhandler(w, "Method not allowed", 400)
-		fmt.Println("test ")
 		return
 	}
 
