@@ -46,7 +46,7 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	// }
 	posts := helpers.GetAllPosts(w)
 	categories := helpers.GetAllCategories(w)
-	var index tools.Insex
+	var index tools.Index
 	index.Posts = posts
 	index.Categories = categories
 

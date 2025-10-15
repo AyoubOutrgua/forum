@@ -185,8 +185,10 @@
                     <p class="post-description">{{ .Description }}</p>
                 </div>
                 <div class="category-section">
-                    <span class="post-category">Music</span>
-                    <span class="post-category">Sports</span>
+                    {{ range .Categories }}
+                    <span class="post-category">{{ . }}</span>
+                    {{ end }}
+                    <!-- <span class="post-category">Sports</span>
                     <span class="post-category">Movis</span>
                     <span class="post-category">Music</span>
                     <span class="post-category">Sports</span>
@@ -196,7 +198,7 @@
                     <span class="post-category">Movis</span>
                     <span class="post-category">Music</span>
                     <span class="post-category">Sports</span>
-                    <span class="post-category">Movis</span>
+                    <span class="post-category">Movis</span> -->
                 </div>
                 <div class="reactions-section">
                     <form action="">

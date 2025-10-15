@@ -7,6 +7,7 @@ type Post struct {
 	ImageUrl     string
 	UserName     string
 	CreationDate string
+	Categories   []string
 }
 
 type Category struct {
@@ -14,7 +15,12 @@ type Category struct {
 	Category string
 }
 
-type Insex struct {
+// type PostCategory struct {
+// 	PostID       int
+// 	CategoryID int
+// }
+
+type Index struct {
 	Posts      []Post
 	Categories []Category
 }
