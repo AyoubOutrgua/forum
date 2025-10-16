@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -24,8 +23,6 @@ func RateLimitPost(next http.HandlerFunc) http.HandlerFunc {
 			if err1 != nil || err2 != nil {
 			}
 			dif := dateNowTime.Sub(firstDateTime).Minutes()
-			fmt.Println("LEN DATES:", len(dates))
-			fmt.Println("DIF", dif)
 			if len(dates) == 5 && dif <= 1 {
 				http.Error(w, "Ktbti posts bzaf !!!!!!!!", http.StatusBadRequest)
 			}

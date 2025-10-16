@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"forum/database"
+	"forum/helpers"
 )
 
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
@@ -57,10 +58,21 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		if err != http.ErrMissingFile {
 			http.Error(w, "Status Bad Request 5", http.StatusBadRequest)
 			return
-		} 
+		}
 	} else {
 
 		defer imageFile.Close()
+
+		if !helpers.IsImage(handler.Filename) {
+			http.Error(w, "Status Bad Request Hadi machi image ext!!!", http.StatusBadRequest)
+			return
+		}
+
+		const maxSize = 2 * 1024 * 1024
+		if handler.Size > maxSize {
+			http.Error(w, "Image too large (max 2MB)", http.StatusBadRequest)
+			return
+		}
 
 		file, errCreate := os.Create("./static/upload/" + handler.Filename)
 		if errCreate != nil {
