@@ -78,8 +78,6 @@ func SelectAllPosts(query string) ([]tools.Post, error) {
 	return posts, nil
 }
 
-
-
 func SelectAllCategories(query string) ([]tools.Category, error) {
 	database, err := sql.Open("sqlite3", "database/forum.db")
 	if err != nil {
@@ -105,8 +103,6 @@ func SelectAllCategories(query string) ([]tools.Category, error) {
 	return categories, nil
 }
 
-
-
 func SelectLastIdOfPosts(query string) (int, error) {
 	database, err := sql.Open("sqlite3", "database/forum.db")
 	if err != nil {
@@ -114,20 +110,12 @@ func SelectLastIdOfPosts(query string) (int, error) {
 	}
 	defer database.Close()
 
-	rows, err := database.Query(query)
+	var lastID int
+	err = database.QueryRow(query).Scan(&lastID)
 	if err != nil {
 		panic(err)
 	}
-	defer rows.Close()
-
-	var p tools.Post
-	for rows.Next() {
-		err := rows.Scan(&p.ID)
-		if err != nil {
-			return 0, err
-		}
-	}
-	return p.ID, nil
+	return lastID, nil
 }
 
 func SelectPostCategories(query string, id int) []int {
@@ -152,4 +140,43 @@ func SelectPostCategories(query string, id int) []int {
 		categories = append(categories, cat)
 	}
 	return categories
+}
+
+func SelectDateOfLast5Posts(query string, id int) []string {
+	database, err := sql.Open("sqlite3", "database/forum.db")
+	if err != nil {
+		log.Fatal("can't open/create forum.db ", err)
+	}
+	defer database.Close()
+
+	var dates []string
+	rows, err := database.Query(query, id)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	for rows.Next() {
+		var date string
+		err := rows.Scan(&date)
+		if err != nil {
+			panic(err)
+		}
+		dates = append(dates, date)
+	}
+	return dates
+}
+
+func CountPostsBetweenTimes(query string, id int, dateCreation string, timeNow string) int {
+	database, err := sql.Open("sqlite3", "database/forum.db")
+	if err != nil {
+		log.Fatal("can't open/create forum.db ", err)
+	}
+	defer database.Close()
+
+	var numberOfPosts int
+	err = database.QueryRow(query, id, dateCreation, timeNow).Scan(&numberOfPosts)
+	if err != nil {
+		panic(err)
+	}
+	return numberOfPosts
 }

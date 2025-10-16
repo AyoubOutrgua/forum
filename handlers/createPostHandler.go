@@ -10,9 +10,15 @@ import (
 	"time"
 
 	"forum/database"
+	"forum/middleware"
 )
 
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
+	checkerLimit := middleware.RateLimitPost()
+	if checkerLimit {
+		http.Error(w, "baraka postiti bzaf !!!!!!!!!!!!", http.StatusMethodNotAllowed)
+		return
+	}
 	if r.Method != http.MethodPost {
 		http.Error(w, "Status Method Not Allowed", http.StatusMethodNotAllowed)
 		return
@@ -78,16 +84,17 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		imagePath = "/static/upload/" + handler.Filename
 	}
-	fmt.Println("IMAGE ::::::::::: ", imagePath)
 
 	timeNow := time.Now().Format("2006-01-02 15:04:05")
-	fmt.Println(timeNow)
 	queryInsertPost := "INSERT INTO posts (title, post, imageUrl, userId, creationDate) VALUES (?, ?, ?, ?, ?)"
 	userID := 2
 	database.ExecuteData(queryInsertPost, title[0], description[0], imagePath, userID, timeNow)
 
 	lastPostID, err := database.SelectLastIdOfPosts("SELECT id FROM posts ORDER BY creationDate DESC LIMIT 1;")
-	fmt.Println("lastPostID :*******//////*******///// :", lastPostID)
+	if err != nil {
+		fmt.Println("ERROR : ", err)
+		return
+	}
 
 	queryInsertCategory := "INSERT INTO postCategories (postId, categoryId) VALUES (?, ?)"
 
