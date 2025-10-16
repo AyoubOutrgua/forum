@@ -6,6 +6,7 @@ import (
 
 	"forum/database"
 	"forum/handlers"
+	"forum/middleware"
 )
 
 func main() {
@@ -15,7 +16,7 @@ func main() {
 	http.HandleFunc("/", handlers.HanldlerShowHome)
 	http.HandleFunc("/login", handlers.HanldlerShowLogin)
 	http.HandleFunc("/register", handlers.HanldlerShowRegister)
-	http.HandleFunc("/createpost", handlers.CreatePostHandler)
+	http.HandleFunc("/createpost", middleware.RateLimitPost(handlers.CreatePostHandler))
 	fmt.Println("server is runing http://localhost:8089")
 	http.ListenAndServe(":8089", nil)
 }

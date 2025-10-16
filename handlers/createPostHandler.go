@@ -10,15 +10,9 @@ import (
 	"time"
 
 	"forum/database"
-	"forum/middleware"
 )
 
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
-	checkerLimit := middleware.RateLimitPost()
-	if checkerLimit {
-		http.Error(w, "baraka postiti bzaf !!!!!!!!!!!!", http.StatusMethodNotAllowed)
-		return
-	}
 	if r.Method != http.MethodPost {
 		http.Error(w, "Status Method Not Allowed", http.StatusMethodNotAllowed)
 		return
@@ -60,12 +54,10 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	imagePath := ""
 	imageFile, handler, err := r.FormFile("choose-file")
 	if err != nil {
-		if err == http.ErrMissingFile {
-			fmt.Println("No File Upload !!!!!!!!!!!!")
-		} else {
+		if err != http.ErrMissingFile {
 			http.Error(w, "Status Bad Request 5", http.StatusBadRequest)
 			return
-		}
+		} 
 	} else {
 
 		defer imageFile.Close()

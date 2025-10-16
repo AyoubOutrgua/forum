@@ -50,7 +50,6 @@ func ExecuteData(query string, args ...interface{}) {
 	if errExuc != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Execute OK!")
 }
 
 func SelectAllPosts(query string) ([]tools.Post, error) {
@@ -142,7 +141,7 @@ func SelectPostCategories(query string, id int) []int {
 	return categories
 }
 
-func SelectDateOfLast5Posts(query string, id int) []string {
+func SelectLastDates(query string, id int) []string {
 	database, err := sql.Open("sqlite3", "database/forum.db")
 	if err != nil {
 		log.Fatal("can't open/create forum.db ", err)
@@ -164,19 +163,4 @@ func SelectDateOfLast5Posts(query string, id int) []string {
 		dates = append(dates, date)
 	}
 	return dates
-}
-
-func CountPostsBetweenTimes(query string, id int, dateCreation string, timeNow string) int {
-	database, err := sql.Open("sqlite3", "database/forum.db")
-	if err != nil {
-		log.Fatal("can't open/create forum.db ", err)
-	}
-	defer database.Close()
-
-	var numberOfPosts int
-	err = database.QueryRow(query, id, dateCreation, timeNow).Scan(&numberOfPosts)
-	if err != nil {
-		panic(err)
-	}
-	return numberOfPosts
 }
