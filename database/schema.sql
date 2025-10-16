@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS posts(
      post TEXT NOT NULL,
      imageUrl TEXT,
      userId INTEGER NOT NULL,
-     creationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+     creationDate TEXT,
      FOREIGN KEY(userId) REFERENCES users(id)  
 );
 CREATE TABLE IF NOT EXISTS categories(
