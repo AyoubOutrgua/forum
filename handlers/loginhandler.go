@@ -13,6 +13,9 @@ import (
 
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	if Db == nil{
+		helpers.Errorhandler(w ,"Database error",500)
+	}
 	cookie, errSession := r.Cookie("session")
 	if errSession == nil && cookie.Value != "" {
 		var userExists bool

@@ -28,9 +28,9 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	password := r.FormValue("firstpass")
-	email := strings.TrimSpace(r.FormValue("email"))
 	username := strings.TrimSpace(r.FormValue("username"))
+	email := strings.TrimSpace(r.FormValue("email"))
+	password := r.FormValue("firstpass")
 	firstpassword := r.FormValue("secondpass")
 	if firstpassword != password {
 		helpers.Render(w, "register.html", http.StatusBadRequest, map[string]string{"Error": "Passwords do not match"})
