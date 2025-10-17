@@ -1,16 +1,14 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 	"net/http"
 	"strconv"
 	"text/template"
 	"time"
-
+	"database/sql"
 	_ "github.com/mattn/go-sqlite3"
 )
-
 
 type Comment struct {
 	Text     string
@@ -21,45 +19,22 @@ type Comment struct {
 	Dislikes int
 }
 
-var Comments []Comment
-
-func initDB() *sql.DB {
-	db, err := sql.Open("sqlite3", "./forum.db")
-	if err != nil {
-		panic(err)
-	}
-
-	createTable := `
-	CREATE TABLE IF NOT EXISTS comments (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		text TEXT,
-		author TEXT,
-		post_id INTEGER,
-		date TEXT,
-		likes INTEGER,
-		dislikes INTEGER
-	);`
-
-	_, err = db.Exec(createTable)
-	if err != nil {
-		panic(err)
-	}
-
-	return db
-}
-
 func main() {
-	db := initDB()
+	// On se connecte à la base SQLite existante
+	db, err := sql.Open("sqlite3", "./file.db")
+	if err != nil {
+		panic("Erreur lors de l'ouverture de file.db : " + err.Error())
+	}
 	defer db.Close()
 
+	// Route principale
 	http.HandleFunc("/home", func(w http.ResponseWriter, r *http.Request) {
 		Home(w, r, db)
 	})
 
-	fmt.Println("http://localhost:8080/home")
+	fmt.Println("Serveur lancé sur : http://localhost:8080/home")
 	http.ListenAndServe(":8080", nil)
 }
-
 func Home(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	switch r.Method {
 	case http.MethodPost:
@@ -82,7 +57,7 @@ func Home(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 			return
 		}
 
-		date := time.Now().Format("2006-01-02 15:04:05")
+		date := time.Now().Format("2006-01-02 15:04")
 
 		_, err = db.Exec(`
 			INSERT INTO comments (text, author, post_id, date, likes, dislikes)
@@ -100,7 +75,7 @@ func Home(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 	case http.MethodGet:
 		rows, err := db.Query("SELECT text, author, post_id, date, likes, dislikes FROM comments")
 		if err != nil {
-			http.Error(w, "500 internal server error: lecture échouée", http.StatusInternalServerError)
+			http.Error(w, "500 internal server error: lecture échouée: "+err.Error(), http.StatusInternalServerError)
 			return
 		}
 		defer rows.Close()
@@ -123,8 +98,3 @@ func Home(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
 	}
 }
-
-/*
-now := time.Now()
-formatted := now.Format("2006-01-02 15:04:05")
-*/
