@@ -11,22 +11,25 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-func CreateTables() {
-	database, errOpen := sql.Open("sqlite3", "database/forum.db")
+var DataBase *sql.DB
+
+func InitDataBase() {
+	var errOpen error
+	DataBase, errOpen = sql.Open("sqlite3", "database/forum.db")
 	if errOpen != nil {
 		log.Fatal("can't open/create forum.db ", errOpen)
 	}
-	defer database.Close()
 
 	schema, errRead := os.ReadFile("database/schema.sql")
 	if errRead != nil {
 		log.Fatal("can't read schema ", errRead)
 	}
-	_, errExuc := database.Exec(string(schema))
+	_, errExuc := DataBase.Exec(string(schema))
 	if errExuc != nil {
 		log.Fatal(errExuc)
 	}
-	database.Exec(`INSERT INTO categories (category)
+
+	DataBase.Exec(`INSERT INTO categories (category)
 	VALUES 
 	('Technology'),
 	('Education'),
@@ -36,30 +39,25 @@ func CreateTables() {
 	('Music'),
 	('Health'),
 	('Food')`)
-	fmt.Println("Database Create OK")
+	fmt.Println("The database was created successfully.")
+}
+
+func CloseDataBase() error {
+	if DataBase != nil {
+		return DataBase.Close()
+	}
+	return nil
 }
 
 func ExecuteData(query string, args ...interface{}) {
-	database, err := sql.Open("sqlite3", "database/forum.db")
-	if err != nil {
-		log.Fatal("can't open/create forum.db ", err)
-	}
-	defer database.Close()
-
-	_, errExuc := database.Exec(query, args...)
+	_, errExuc := DataBase.Exec(query, args...)
 	if errExuc != nil {
-		log.Fatal(err)
+		log.Fatal(errExuc)
 	}
 }
 
 func SelectAllPosts(query string) ([]tools.Post, error) {
-	database, err := sql.Open("sqlite3", "database/forum.db")
-	if err != nil {
-		log.Fatal("can't open/create forum.db ", err)
-	}
-	defer database.Close()
-
-	rows, err := database.Query(query)
+	rows, err := DataBase.Query(query)
 	if err != nil {
 		panic(err)
 	}
@@ -78,13 +76,7 @@ func SelectAllPosts(query string) ([]tools.Post, error) {
 }
 
 func SelectAllCategories(query string) ([]tools.Category, error) {
-	database, err := sql.Open("sqlite3", "database/forum.db")
-	if err != nil {
-		log.Fatal("can't open/create forum.db ", err)
-	}
-	defer database.Close()
-
-	rows, err := database.Query(query)
+	rows, err := DataBase.Query(query)
 	if err != nil {
 		panic(err)
 	}
@@ -103,14 +95,8 @@ func SelectAllCategories(query string) ([]tools.Category, error) {
 }
 
 func SelectLastIdOfPosts(query string) (int, error) {
-	database, err := sql.Open("sqlite3", "database/forum.db")
-	if err != nil {
-		log.Fatal("can't open/create forum.db ", err)
-	}
-	defer database.Close()
-
 	var lastID int
-	err = database.QueryRow(query).Scan(&lastID)
+	err := DataBase.QueryRow(query).Scan(&lastID)
 	if err != nil {
 		panic(err)
 	}
@@ -118,13 +104,7 @@ func SelectLastIdOfPosts(query string) (int, error) {
 }
 
 func SelectPostCategories(query string, id int) []int {
-	database, err := sql.Open("sqlite3", "database/forum.db")
-	if err != nil {
-		log.Fatal("can't open/create forum.db ", err)
-	}
-	defer database.Close()
-
-	rows, err := database.Query(query, id)
+	rows, err := DataBase.Query(query, id)
 	if err != nil {
 		panic(err)
 	}
@@ -142,14 +122,8 @@ func SelectPostCategories(query string, id int) []int {
 }
 
 func SelectLastDates(query string, id int) []string {
-	database, err := sql.Open("sqlite3", "database/forum.db")
-	if err != nil {
-		log.Fatal("can't open/create forum.db ", err)
-	}
-	defer database.Close()
-
 	var dates []string
-	rows, err := database.Query(query, id)
+	rows, err := DataBase.Query(query, id)
 	if err != nil {
 		panic(err)
 	}
