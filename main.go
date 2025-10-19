@@ -21,11 +21,11 @@ type Comment struct {
 
 func main() {
 	// On se connecte à la base SQLite existante
-	db, err := sql.Open("sqlite3", "./file.db")
+	db, err := sql.Open("sqlite3", "./file.db") // sqlite3 is a driver (motrjim) , sql open 
 	if err != nil {
 		panic("Erreur lors de l'ouverture de file.db : " + err.Error())
 	}
-	defer db.Close()
+	defer db.Close() // kanssedo l connexion li mabin go u file.db 
 
 	// Route principale
 	http.HandleFunc("/home", func(w http.ResponseWriter, r *http.Request) {
@@ -59,11 +59,12 @@ func Home(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 
 		date := time.Now().Format("2006-01-02 15:04")
 
+		// Insérer un commentaire dans la table "comments" de la DB en toute sécurité
 		_, err = db.Exec(`
-			INSERT INTO comments (text, author, post_id, date, likes, dislikes)
+			INSERT INTO comments (text, author, post_id, date, likes, dislikes) 
 			VALUES (?, ?, ?, ?, ?, ?)`,
 			text, author, postId, date, likes, dislikes,
-		)
+		) 
 		if err != nil {
 			http.Error(w, "500 internal server error: insertion échouée", http.StatusInternalServerError)
 			return
@@ -73,7 +74,7 @@ func Home(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		return
 
 	case http.MethodGet:
-		rows, err := db.Query("SELECT text, author, post_id, date, likes, dislikes FROM comments")
+		rows, err := db.Query("SELECT text, author, post_id, date, likes, dislikes FROM comments") //This is the line that "brings back" everything we have stored in the DB to use in our program.
 		if err != nil {
 			http.Error(w, "500 internal server error: lecture échouée: "+err.Error(), http.StatusInternalServerError)
 			return
@@ -81,12 +82,12 @@ func Home(w http.ResponseWriter, r *http.Request, db *sql.DB) {
 		defer rows.Close()
 
 		var comments []Comment
-		for rows.Next() {
+		for rows.Next() { // like we have 3 rows if we are in the first one rows.next = true 
 			var c Comment
-			rows.Scan(&c.Text, &c.Author, &c.PostID, &c.Date, &c.Likes, &c.Dislikes)
+			rows.Scan(&c.Text, &c.Author, &c.PostID, &c.Date, &c.Likes, &c.Dislikes) //copie les valeurs de la row de la DB dans la struct Go.
 			comments = append(comments, c)
 		}
-
+		// If I change the order in the SELECT, I must also change the order of the variables in Scan, otherwise I will have data in the wrong columns.
 		tmpl, err := template.ParseFiles("templates/index.html")
 		if err != nil {
 			http.Error(w, "500 internal server error: template introuvable", http.StatusInternalServerError)
