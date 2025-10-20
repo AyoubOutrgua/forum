@@ -23,4 +23,9 @@ type Category struct {
 type Index struct {
 	Posts      []Post
 	Categories []Category
+	LoggedIn PageData
+}
+
+type PageData struct {
+	LoggedIn bool
 }

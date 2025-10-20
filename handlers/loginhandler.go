@@ -12,13 +12,13 @@ import (
 )
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	if database.DB == nil {
+	if database.DataBase == nil {
 		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
 	}
 	cookie, errSession := r.Cookie("session")
 	if errSession == nil && cookie.Value != "" {
 		var userExists bool
-		err := database.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
+		err := database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
 		if err == nil && userExists {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
@@ -45,7 +45,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		stmt := `SELECT password FROM users WHERE userName = ? OR email = ?`
-		row := database.DB.QueryRow(stmt, username, username)
+		row := database.DataBase.QueryRow(stmt, username, username)
 
 		var hashPass string
 		err := row.Scan(&hashPass)
@@ -67,7 +67,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 		sessionID := uuid.New().String()
 		stmt2 := `UPDATE users SET session = ? WHERE userName = ? OR email = ?`
-		_, err = database.DB.Exec(stmt2, sessionID, username, username)
+		_, err = database.DataBase.Exec(stmt2, sessionID, username, username)
 		if err != nil {
 			helpers.Errorhandler(w, "Database update error", http.StatusInternalServerError)
 			return

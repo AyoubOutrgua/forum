@@ -14,7 +14,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	cookie, errorsession := r.Cookie("session")
 	if errorsession == nil && cookie.Value != "" {
 		var userExists bool
-		err := database.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
+		err := database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
 		if err == nil && userExists {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
@@ -56,7 +56,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		var existsUsername bool
-		err := database.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE userName = ?)", username).Scan(&existsUsername)
+		err := database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE userName = ?)", username).Scan(&existsUsername)
 		if err != nil {
 			helpers.Errorhandler(w, "Database  error", http.StatusInternalServerError)
 			return
@@ -68,7 +68,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		var existsEmail bool
-		err = database.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = ?)", email).Scan(&existsEmail)
+		err = database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = ?)", email).Scan(&existsEmail)
 		if err != nil {
 			helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
 			return
@@ -86,7 +86,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		stmt2 := `INSERT INTO users (userName, email, password) VALUES (?, ?, ?);`
-		_, err = database.DB.Exec(stmt2, username, email, string(hashPassword))
+		_, err = database.DataBase.Exec(stmt2, username, email, string(hashPassword))
 		if err != nil {
 			helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
 			return

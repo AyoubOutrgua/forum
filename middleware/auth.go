@@ -11,7 +11,7 @@ func RedirectIfLoggedIn(next http.HandlerFunc) http.HandlerFunc {
 		cookie, err := r.Cookie("session")
 		if err == nil && cookie.Value != "" {
 			var userExists bool
-			err := database.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
+			err := database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
 			if err == nil && userExists {
 				http.Redirect(w, r, "/", http.StatusSeeOther)
 				return
