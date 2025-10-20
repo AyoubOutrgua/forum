@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"time"
 
+	"forum/database"
 	"forum/helpers"
 )
 
@@ -19,7 +20,7 @@ func LogOutHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = Db.Exec("UPDATE users SET session = NULL WHERE session = ?", cookie.Value)
+	_, err = database.DB.Exec("UPDATE users SET session = NULL WHERE session = ?", cookie.Value)
 	if err != nil {
 		helpers.Errorhandler(w, "Database error while logging out", http.StatusInternalServerError)
 		return

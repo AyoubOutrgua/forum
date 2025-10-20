@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"net/http"
 
+	"forum/database"
 	"forum/helpers"
 )
 
@@ -25,7 +26,7 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	cookie, errSession := r.Cookie("session")
 	if errSession == nil && cookie.Value != "" {
 		var userExists bool
-		err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
+		err := database.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
 		if err == nil && userExists {
 			loggedIn = true
 		}

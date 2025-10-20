@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
+	"forum/database"
 	"forum/helpers"
 
 	"github.com/google/uuid"
@@ -11,13 +12,13 @@ import (
 )
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	if Db == nil {
+	if database.DB == nil {
 		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
 	}
 	cookie, errSession := r.Cookie("session")
 	if errSession == nil && cookie.Value != "" {
 		var userExists bool
-		err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
+		err := database.DB.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
 		if err == nil && userExists {
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return
@@ -37,12 +38,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	stmt := `SELECT password FROM users WHERE userName = ? OR email = ?`
-	row := Db.QueryRow(stmt, username, username)
+	row := database.DB.QueryRow(stmt, username, username)
 
 	var hashPass string
 	err := row.Scan(&hashPass)
 	if err == sql.ErrNoRows {
-		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "<h1>test<h1>"})
+		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password"})
 		return
 	} else if err != nil {
 		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
@@ -50,13 +51,13 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(password)) != nil {
-		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "<h1>test<h1>"})
+		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password"})
 		return
 	}
 
 	sessionID := uuid.New().String()
 	stmt2 := `UPDATE users SET session = ? WHERE userName = ? OR email = ?`
-	_, err = Db.Exec(stmt2, sessionID, username, username)
+	_, err = database.DB.Exec(stmt2, sessionID, username, username)
 	if err != nil {
 		helpers.Errorhandler(w, "Database update error", http.StatusInternalServerError)
 		return

@@ -8,11 +8,11 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var DataBase *sql.DB
+var DB *sql.DB
 
 func InitDataBase() {
 	var err error
-	DataBase, err = sql.Open("sqlite3", "./database/forum.db")
+	DB, err = sql.Open("sqlite3", "./database/forum.db")
 	if err != nil {
 		log.Fatal("can't open/create forum.db ", err)
 	}
@@ -22,12 +22,12 @@ func InitDataBase() {
 		log.Fatal("can't read schema", err)
 	}
 
-	_, err = DataBase.Exec(string(schema))
+	_, err = DB.Exec(string(schema))
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	_, err = DataBase.Exec("PRAGMA foreign_keys = ON")
+	_, err = DB.Exec("PRAGMA foreign_keys = ON")
 	if err != nil {
 		log.Fatal("can't enable foreign keys,", err)
 	}
@@ -40,8 +40,8 @@ func InsertUser(dataBase *sql.DB, username, email, password string) error {
 }
 
 func CloseDataBase() error {
-	if DataBase != nil {
-		return DataBase.Close()
+	if DB != nil {
+		return DB.Close()
 	}
 	return nil
 }
