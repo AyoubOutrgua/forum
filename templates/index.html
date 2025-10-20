@@ -27,8 +27,17 @@
             <h1 class="logo">Forum</h1>
         </a>
         <ul class="list">
-            <li><a href="/login" class="link btn">Logout</a></li>
-        </ul>
+{{if .LoggedIn}}
+<form action="/logout" method="POST" style="display:inline;">
+    <button type="submit" class="link btn">Logout</button>
+</form>
+{{else}}
+    <li><a href="/register" class="link">Register</a></li>
+    <li><a href="/login" class="link btn">Login</a></li>
+{{end}}
+
+</ul>
+
     </nav>
     <main class="main-section">
         <!-- Create Post Section -->

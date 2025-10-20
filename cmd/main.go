@@ -3,15 +3,14 @@ package main
 import (
 	"fmt"
 	"net/http"
-
-	"forum/handlers"
+	"forum/database"
+	routego "forum/route.go"
 )
 
 func main() {
-	http.HandleFunc("/static/", handlers.StyleFunc)
-	http.HandleFunc("/", handlers.HanldlerShowHome)
-	http.HandleFunc("/login", handlers.HanldlerShowLogin)
-	http.HandleFunc("/register", handlers.HanldlerShowRegister)
-	fmt.Println("server is runing http://localhost:8085/login")
+	database.InitDataBase()
+	defer database.CloseDataBase()
+	routego.Routing()
+	fmt.Println("server is runing http://localhost:8085/")
 	http.ListenAndServe(":8085", nil)
 }
