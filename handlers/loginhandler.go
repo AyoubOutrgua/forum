@@ -24,52 +24,64 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-	if r.Method != http.MethodPost {
-		helpers.Errorhandler(w, "Method not allowed", http.StatusBadRequest)
+	if r.Method == http.MethodGet {
+		flash := helpers.GetFlash(w, r)
+		data := map[string]string{
+			"Error":    flash.Message,
+			"Username": flash.Username,
+			"email":    "",
+		}
+
+		helpers.Render(w, "login.html", http.StatusOK, data)
 		return
 	}
+	if r.Method == http.MethodPost {
 
-	username := r.FormValue("username")
-	password := r.FormValue("password")
+		username := r.FormValue("username")
+		password := r.FormValue("password")
 
-	if username == "" || password == "" {
-		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "All fields are required"})
-		return
+		if username == "" || password == "" {
+			helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "All fields are required", "Username": username})
+			return
+		}
+		stmt := `SELECT password FROM users WHERE userName = ? OR email = ?`
+		row := database.DB.QueryRow(stmt, username, username)
+
+		var hashPass string
+		err := row.Scan(&hashPass)
+		if err == sql.ErrNoRows {
+			helpers.SetFlash(w, "Invalid username or password", "", username)
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			return
+		} else if err != nil {
+			helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
+			return
+		}
+
+		if bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(password)) != nil {
+			helpers.SetFlash(w, "Invalid username or password", "", username)
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+
+			return
+		}
+
+		sessionID := uuid.New().String()
+		stmt2 := `UPDATE users SET session = ? WHERE userName = ? OR email = ?`
+		_, err = database.DB.Exec(stmt2, sessionID, username, username)
+		if err != nil {
+			helpers.Errorhandler(w, "Database update error", http.StatusInternalServerError)
+			return
+		}
+
+		http.SetCookie(w, &http.Cookie{
+			Name:     "session",
+			Value:    sessionID,
+			HttpOnly: true,
+			Path:     "/",
+			MaxAge:   3600,
+		})
+
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+
 	}
-
-	stmt := `SELECT password FROM users WHERE userName = ? OR email = ?`
-	row := database.DB.QueryRow(stmt, username, username)
-
-	var hashPass string
-	err := row.Scan(&hashPass)
-	if err == sql.ErrNoRows {
-		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password"})
-		return
-	} else if err != nil {
-		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
-		return
-	}
-
-	if bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(password)) != nil {
-		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password"})
-		return
-	}
-
-	sessionID := uuid.New().String()
-	stmt2 := `UPDATE users SET session = ? WHERE userName = ? OR email = ?`
-	_, err = database.DB.Exec(stmt2, sessionID, username, username)
-	if err != nil {
-		helpers.Errorhandler(w, "Database update error", http.StatusInternalServerError)
-		return
-	}
-
-	http.SetCookie(w, &http.Cookie{
-		Name:     "session",
-		Value:    sessionID,
-		HttpOnly: true,
-		Path:     "/",
-		MaxAge:   3600,
-	})
-
-	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

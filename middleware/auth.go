@@ -6,7 +6,6 @@ import (
 	"forum/database"
 )
 
-// var Db *sql.DB
 func RedirectIfLoggedIn(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("session")

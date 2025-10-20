@@ -23,14 +23,14 @@
                 <h1>Hello, Welcome!</h1>
             </div>
             <div class="login">
-                <form action="/regtistartion" method="POST">
+                <form action="/register" method="POST">
                        {{if .Error}}
                      <p style="color:red; margin-bottom:10px;font-size: large;">{{.Error}}</p>
                       {{end}}
                     <label class="labels" type="username">Usename:</label>
-                    <input class="inputs input-text" type="text" name="username" required>
+                    <input class="inputs input-text" type="text" name="username"  value="{{.Username}}"  required>
                     <label class="labels" type="email">Email:</label>
-                    <input class="inputs input-text" type="email" name="email" required>
+                    <input class="inputs input-text" type="email" name="email" value="{{.email}}" required>
                     <label class="labels" type="password">Password:</label>
                     <input class="inputs input-password" type="password" name="firstpass" required>
                     <label class="labels" type="password">Password:</label>

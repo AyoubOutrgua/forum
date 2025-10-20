@@ -2,16 +2,16 @@ CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     userName TEXT NOT NULL UNIQUE,
     email TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL,
-    session TEXT DEFAULT NULL
+    password TEXT NOT NULL
+    session TEXT DEFAULT NULL,
 );
-
 CREATE TABLE IF NOT EXISTS posts(
      id INTEGER PRIMARY KEY AUTOINCREMENT,
      title TEXT NOT NULL,
      post TEXT NOT NULL,
+     imageUrl TEXT,
      userId INTEGER NOT NULL,
-     creationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+     creationDate TEXT,
      FOREIGN KEY(userId) REFERENCES users(id)  
 );
 CREATE TABLE IF NOT EXISTS categories(
@@ -41,7 +41,8 @@ CREATE TABLE IF NOT EXISTS postReactions(
     PRIMARY KEY(userId,postId),
     FOREIGN KEY(userId) REFERENCES users(id),
     FOREIGN KEY(postId) REFERENCES posts(id)
-);
+); 
+
 CREATE TABLE IF NOT EXISTS commentReactions(
     userId INTEGER NOT NULL,
     commentId INTEGER NOT NULL,
