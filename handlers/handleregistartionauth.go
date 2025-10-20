@@ -23,7 +23,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	if r.Method != "POST" {
+	if r.Method != http.MethodPost {
 		helpers.Errorhandler(w, "Method not allowed", 400)
 		return
 	}
@@ -51,7 +51,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	var existsUsername bool
 	err := Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE userName = ?)", username).Scan(&existsUsername)
 	if err != nil {
-		helpers.Errorhandler(w, "Database  error", 500)
+		helpers.Errorhandler(w, "Database  error", http.StatusInternalServerError)
 		return
 	}
 	if existsUsername {
@@ -62,7 +62,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	var existsEmail bool
 	err = Db.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = ?)", email).Scan(&existsEmail)
 	if err != nil {
-		helpers.Errorhandler(w, "Database error", 500)
+		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
 		return
 	}
 	if existsEmail {
@@ -79,7 +79,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	stmt2 := `INSERT INTO users (userName, email, password) VALUES (?, ?, ?);`
 	_, err = Db.Exec(stmt2, username, email, string(hashPassword))
 	if err != nil {
-		helpers.Errorhandler(w, "Database execution error", 500)
+		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
 		return
 	}
 

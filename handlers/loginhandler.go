@@ -10,11 +10,9 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-
-
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	if Db == nil{
-		helpers.Errorhandler(w ,"Database error",500)
+	if Db == nil {
+		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
 	}
 	cookie, errSession := r.Cookie("session")
 	if errSession == nil && cookie.Value != "" {
@@ -26,11 +24,10 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if r.Method != http.MethodPost {
-		helpers.Errorhandler(w, "Method not allowed", 400)
+		helpers.Errorhandler(w, "Method not allowed", http.StatusBadRequest)
 		return
 	}
 
-	
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
@@ -45,7 +42,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var hashPass string
 	err := row.Scan(&hashPass)
 	if err == sql.ErrNoRows {
-		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password"})
+		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "<h1>test<h1>"})
 		return
 	} else if err != nil {
 		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
@@ -53,7 +50,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(password)) != nil {
-		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password"})
+		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "<h1>test<h1>"})
 		return
 	}
 
