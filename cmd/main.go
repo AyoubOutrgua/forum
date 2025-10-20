@@ -11,6 +11,7 @@ func main() {
 	database.InitDataBase()
 	defer database.CloseDataBase()
 	routego.Routing()
-	fmt.Println("server is runing http://localhost:8085/")
+	fmt.Println("server is runing http://localhost:8085")
+	
 	http.ListenAndServe(":8085", nil)
 }
