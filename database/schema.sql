@@ -3,13 +3,7 @@ CREATE TABLE IF NOT EXISTS users (
     userName TEXT NOT NULL UNIQUE,
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL
-);
-CREATE TABLE IF NOT EXISTS sessions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    sessionToken TEXT NOT NULL UNIQUE,
-    userId INTEGER NOT NULL,
-    FOREIGN KEY(userId) REFERENCES users(id),
-    UNIQUE(userId, sessionToken)
+    session DEFAULT UNIQUE,
 );
 CREATE TABLE IF NOT EXISTS posts(
      id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -47,7 +41,8 @@ CREATE TABLE IF NOT EXISTS postReactions(
     PRIMARY KEY(userId,postId),
     FOREIGN KEY(userId) REFERENCES users(id),
     FOREIGN KEY(postId) REFERENCES posts(id)
-);
+); 
+
 CREATE TABLE IF NOT EXISTS commentReactions(
     userId INTEGER NOT NULL,
     commentId INTEGER NOT NULL,
