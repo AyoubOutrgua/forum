@@ -20,12 +20,12 @@ type Category struct {
 // 	CategoryID int
 // }
 
-type Index struct {
+type PageData struct {
 	Posts      []Post
 	Categories []Category
-	LoggedIn PageData
+	IdLogin IdLogin
 }
 
-type PageData struct {
+type IdLogin struct {
 	LoggedIn bool
 }

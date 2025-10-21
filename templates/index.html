@@ -27,20 +27,21 @@
             <h1 class="logo">Forum</h1>
         </a>
         <ul class="list">
-{{if .LoggedIn}}
-<form action="/logout" method="POST" style="display:inline;">
-    <button type="submit" class="link btn">Logout</button>
-</form>
-{{else}}
-    <li><a href="/register" class="link">Register</a></li>
-    <li><a href="/login" class="link btn">Login</a></li>
-{{end}}
-
-</ul>
-
+            {{ if .IdLogin.LoggedIn }}
+                <li>
+                    <form action="/logout" method="POST">
+                        <button type="submit" class="link btn">Logout</button>
+                    </form>
+                </li>
+            {{ else }}
+                <li><a href="/register" class="link">Register</a></li>
+                <li><a href="/login" class="link btn">Login</a></li>
+            {{ end }}
+        </ul>
     </nav>
     <main class="main-section">
         <!-- Create Post Section -->
+        {{ if .IdLogin.LoggedIn }}
         <section class="create-post">
             <form action="/createpost" method="POST" enctype="multipart/form-data">
                 <h1 class="title-create-post">Create New Post</h1>
@@ -59,6 +60,7 @@
                 <button type="submit" class="btn btn-create-post">Create Post</button>
             </form>
         </section>
+        {{ end }}
         <!-- Filter Section -->
         <section class="filter">
             <form action="">
@@ -69,9 +71,11 @@
                     {{ end }}
                 </div>
                 <div class="buttons">
-                    <button type="submit" class="btn btn-filter">Filter</button>
+                    {{ if .IdLogin.LoggedIn }}
                     <button type="submit" class="btn btn-my-posts">My Posts</button>
                     <button type="submit" class="btn btn-liked-posts">Liked Posts</button>
+                    {{ end }}
+                    <button type="submit" class="btn btn-filter">Filter</button>
                 </div>
             </form>
         </section>
@@ -200,6 +204,7 @@
                 </div>
                 <div class="reactions-section">
                     <form action="">
+                        <input type="hidden" name="userID" value="{{ .ID }}">
                         <div class="likes-section">
                             <button type="submit" class="btn-reaction">
                                 <i class="fa-solid fa-thumbs-up icon-reaction"></i>

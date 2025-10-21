@@ -4,12 +4,10 @@ import (
 	"html/template"
 	"net/http"
 
+	"forum/database"
 	"forum/helpers"
 	"forum/tools"
-	"forum/database"
 )
-
-
 
 func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	loggedIn := false
@@ -30,7 +28,8 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 			loggedIn = true
 		}
 	}
-	data := tools.PageData{LoggedIn: loggedIn}
+	data := tools.IdLogin{LoggedIn: loggedIn}
+
 	temp, errPerse := template.ParseFiles("templates/index.html")
 	if errPerse != nil {
 		helpers.Errorhandler(w, "Status Not Found!", http.StatusNotFound)
@@ -38,12 +37,12 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	}
 	posts := helpers.GetAllPosts(w)
 	categories := helpers.GetAllCategories(w)
-	var index tools.Index
-	index.Posts = posts
-	index.Categories = categories
-	index.LoggedIn = data
+	var pageData tools.PageData
+	pageData.Posts = posts
+	pageData.Categories = categories
+	pageData.IdLogin = data
 
-	errExec := temp.Execute(w, index)
+	errExec := temp.Execute(w, pageData)
 	if errExec != nil {
 		http.Error(w, "Status Internal Server Error!!!!!", http.StatusInternalServerError)
 	}
