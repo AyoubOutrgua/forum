@@ -2,6 +2,7 @@ package database
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"os"
 
@@ -33,12 +34,18 @@ func InitDataBase() {
 	if err != nil {
 		log.Fatal("can't enable foreign keys,", err)
 	}
-}
 
-func InsertUser(dataBase *sql.DB, username, email, password string) error {
-	query := `INSERT INTO users (userName, email, password) VALUES (?, ?, ?)`
-	_, err := dataBase.Exec(query, username, email, password)
-	return err
+	DataBase.Exec(`INSERT INTO categories (category)
+	VALUES 
+	('Technology'),
+	('Education'),
+	('Sports'),
+	('Movies'),
+	('Gaming'),
+	('Music'),
+	('Health'),
+	('Food')`)
+	fmt.Println("The database was created successfully.")
 }
 
 func CloseDataBase() error {
@@ -136,4 +143,13 @@ func SelectLastDates(query string, id int) []string {
 		dates = append(dates, date)
 	}
 	return dates
+}
+
+func SelectUserID(query string, cookieID string) int {
+	var userID int
+	err := DataBase.QueryRow(query, cookieID).Scan(&userID)
+	if err != nil {
+		panic(err)
+	}
+	return userID
 }

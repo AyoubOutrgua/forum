@@ -24,6 +24,14 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	cookie, errSession := r.Cookie("session")
+	if errSession != nil || cookie.Value == "" {
+		fmt.Println("Error session makaynach 2")
+	}
+	cookieID := cookie.Value
+
+	userID := helpers.GetUserID(cookieID)
+
 	title, ok := r.PostForm["title"]
 	if !ok {
 		http.Error(w, "Status Bad Request 2", http.StatusBadRequest)
@@ -91,7 +99,6 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 	timeNow := time.Now().Format("2006-01-02 15:04:05")
 	queryInsertPost := "INSERT INTO posts (title, post, imageUrl, userId, creationDate) VALUES (?, ?, ?, ?, ?)"
-	userID := 2
 	database.ExecuteData(queryInsertPost, title[0], description[0], imagePath, userID, timeNow)
 
 	lastPostID, err := database.SelectLastIdOfPosts("SELECT id FROM posts ORDER BY creationDate DESC LIMIT 1;")
@@ -111,17 +118,5 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		database.ExecuteData(queryInsertCategory, lastPostID, categoryID)
 	}
 
-	// query2 := "INSERT INTO users (userName, email, password) VALUES (?, ?, ?)"
-	// name := "user1"
-	// email := "user1@example.com"
-	// pass := "123456"
-	// database.ExecuteData(query2, name, email, pass)
-
-	// query3 := "INSERT INTO users (userName, email, password) VALUES (?, ?, ?)"
-	// name2 := "user2"
-	// email2 := "user2@example.com"
-	// pass2 := "123456"
-	// database.ExecuteData(query3, name2, email2, pass2)
-
-	http.Redirect(w, r, "/", 303)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

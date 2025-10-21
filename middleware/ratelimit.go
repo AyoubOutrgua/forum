@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 	"sync"
@@ -83,12 +82,10 @@ func RateLimitLoginMiddleware(manager *RateLimiterManager, next http.HandlerFunc
 			ip := GetUserIP(r)
 
 			if !manager.Check(ip) {
-				fmt.Println("test")
 				helpers.Errorhandler(w, "To many requests slow down", http.StatusTooManyRequests)
 				return
 			}
 		}
-		fmt.Println("test 2")
 		next.ServeHTTP(w, r)
 	}
 }

@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -10,7 +11,15 @@ import (
 func RateLimitPost(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		timeNow := time.Now().Format("2006-01-02 15:04:05")
-		userID := 2
+
+		cookie, errSession := r.Cookie("session")
+		if errSession != nil || cookie.Value == "" {
+			fmt.Println("Error session makaynach 1")
+		}
+		cookieID := cookie.Value
+
+		userID := helpers.GetUserID(cookieID)
+
 		dates := helpers.GetLastPostDates(userID)
 		firstDate := ""
 		if len(dates) > 1 {

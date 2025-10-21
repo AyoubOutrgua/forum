@@ -2,16 +2,21 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+
 	"forum/database"
-	routego "forum/route.go"
+	"forum/routing"
 )
 
 func main() {
 	database.InitDataBase()
 	defer database.CloseDataBase()
-	routego.Routing()
+	routing.Routing()
 	fmt.Println("server is runing http://localhost:8085")
-	
-	http.ListenAndServe(":8085", nil)
+
+	err := http.ListenAndServe(":8085", nil)
+	if err != nil {
+		log.Fatalln("Error !")
+	}
 }

@@ -1,4 +1,4 @@
-package routego
+package routing
 
 import (
 	"net/http"
@@ -16,6 +16,6 @@ func Routing() {
 	http.HandleFunc("/register", middleware.RateLimitLoginMiddleware(registerLimiter, handlers.RegisterHandler))
 	http.HandleFunc("/static/", handlers.StyleFunc)
 	http.HandleFunc("/", handlers.HanldlerShowHome)
-	http.HandleFunc("/logout",handlers.LogOutHandler)
-
+	http.HandleFunc("/createpost", middleware.RateLimitPost(handlers.CreatePostHandler))
+	http.HandleFunc("/logout", handlers.LogOutHandler)
 }
