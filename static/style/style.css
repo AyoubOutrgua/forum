@@ -387,3 +387,13 @@ input[type="file"]::-webkit-file-upload-button:hover {
 .comment-reactions {
     margin-top: 0 !important;
 }
+
+/* Active state for reactions */
+.btn-reaction.active {
+    color: #007bff;
+    background-color: #e7f3ff;
+}
+
+.btn-reaction.active i {
+    color: #007bff;
+}
