@@ -188,59 +188,63 @@
                     </div>
                     <span class="post-time">{{ .CreationDate }}</span>
                 </div>
+    
                 <div class="body-section">
                     <h1 class="post-title">{{ .Title }}</h1>
                     {{ if .ImageUrl }}
                     <div class="body-image">
-                        <img src="{{ .ImageUrl }}" alt="post image" class="post-img">
+                         <img src="{{ .ImageUrl }}" alt="post image" class="post-img">
                     </div>
                     {{ end }}
-                    <p class="post-description">{{ .Description }}</p>
+                     <p class="post-description">{{ .Description }}</p>
                 </div>
+    
                 <div class="category-section">
                     {{ range .Categories }}
                     <span class="post-category">{{ . }}</span>
                     {{ end }}
                 </div>
-                <div class="reactions-section">
-                    <form action="">
-                        <input type="hidden" name="userID" value="{{ .ID }}">
+    
+                 <div class="reactions-section">
+                    <form action="/reaction" method="post">
+                        <input type="hidden" name="postId" value="{{ .ID }}">
+            
+                        {{ $stats := index $.ReactionStats .ID }}
+                        {{ $userReaction := index $.UserReactions .ID }}
+            
+                        <!-- Likes -->
                         <div class="likes-section">
-                            <button type="submit" class="btn-reaction">
-                                <i class="fa-solid fa-thumbs-up icon-reaction"></i>
+                            <button type="submit" class="btn-reaction {{ if eq $userReaction 1 }}active{{ end }}" 
+                        name="reaction" value="1">
+                            <i class="fa-solid fa-thumbs-up icon-reaction"></i>
                             </button>
-                            <span class="total-reactions">0</span>
+                            <span class="total-reactions">{{ $stats.LikesCount }}</span>
                         </div>
+            
+                        <!-- Dislikes -->
                         <div class="deslikes-section">
-                            <button type="submit" class="btn-reaction">
-                                <i class="fa-solid fa-thumbs-down icon-reaction"></i>
+                            <button type="submit" class="btn-reaction {{ if eq $userReaction -1 }}active{{ end }}" 
+                        name="reaction" value="-1">
+                            <i class="fa-solid fa-thumbs-down icon-reaction"></i>
                             </button>
-                            <span class="total-reactions">1</span>
+                            <span class="total-reactions">{{ $stats.DislikesCount }}</span>
                         </div>
+            
+                        <!-- Comments -->
                         <div class="comment-section">
                             <input type="checkbox" id="toggle-comments-{{.ID}}" hidden>
                             <label for="toggle-comments-{{.ID}}" class="btn-reaction comment">
-                                <i class="fa-solid fa-comment icon-reaction"></i>
+                            <i class="fa-solid fa-comment icon-reaction"></i>
                             </label>
-                            <span class="total-reactions">24</span>
+                            <span class="total-reactions">0</span>
                         </div>
-                        <div class="comments-box">
-                            <div class="comments-form">
-                                <form action="">
-                                    <img src="/static/images/user.png" alt="User Profile" class="profile-comment">
-                                    <input type="text" placeholder="Title" class="input-comment" required>
-                                    <input type="submit" value="Add" class="btn btn-comment">
-                                </form>
-                            </div>
-                        </div>
-
-                        <style>
-                            .comment-section:has(#toggle-comments-{{.ID}}:checked)+.comments-box {
-                                display: block;
-                            }
-                        </style>
-
                     </form>
+        
+                    <style>
+                        .comment-section:has(#toggle-comments-{{.ID}}:checked) + .comments-box {
+                        display: block;
+                        }
+                    </style>
                 </div>
             </div>
             {{ end }}
