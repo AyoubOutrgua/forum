@@ -18,4 +18,5 @@ func Routing() {
 	http.HandleFunc("/", handlers.HanldlerShowHome)
 	http.HandleFunc("/createpost", middleware.RateLimitPost(handlers.CreatePostHandler))
 	http.HandleFunc("/logout", handlers.LogOutHandler)
+	http.HandleFunc("/reaction", handlers.ReactionHandler)
 }
