@@ -27,7 +27,7 @@
             <h1 class="logo">Forum</h1>
         </a>
         <ul class="list">
-            {{ if .IdLogin.LoggedIn }}
+            {{ if .IsLogin.LoggedIn }}
                 <li>
                     <form action="/logout" method="POST">
                         <button type="submit" class="link btn">Logout</button>
@@ -41,7 +41,7 @@
     </nav>
     <main class="main-section">
         <!-- Create Post Section -->
-        {{ if .IdLogin.LoggedIn }}
+        {{ if .IsLogin.LoggedIn }}
         <section class="create-post">
             <form action="/createpost" method="POST" enctype="multipart/form-data">
                 <h1 class="title-create-post">Create New Post</h1>
@@ -71,7 +71,7 @@
                     {{ end }}
                 </div>
                 <div class="buttons">
-                    {{ if .IdLogin.LoggedIn }}
+                    {{ if .IsLogin.LoggedIn }}
                     <button type="submit" class="btn btn-my-posts">My Posts</button>
                     <button type="submit" class="btn btn-liked-posts">Liked Posts</button>
                     {{ end }}

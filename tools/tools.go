@@ -20,12 +20,21 @@ type Category struct {
 // 	CategoryID int
 // }
 
+type ReactionStats struct {
+	PostID        int
+	LikesCount    int
+	DislikesCount int
+}
+
 type PageData struct {
 	Posts      []Post
 	Categories []Category
 	IdLogin IdLogin
+	ReactionStats map[int]ReactionStats 
+	UserReactions map[int]int 
 }
 
 type IdLogin struct {
 	LoggedIn bool
+	UserID   int 
 }

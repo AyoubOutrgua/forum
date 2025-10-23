@@ -391,7 +391,7 @@ input[type="file"]::-webkit-file-upload-button:hover {
 /* Active state for reactions */
 .btn-reaction.active {
     color: #007bff;
-    background-color: #e7f3ff;
+    background-color: transparent;
 }
 
 .btn-reaction.active i {
