@@ -2,40 +2,54 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Forum - Post principal</title>
+    <title>Forum - Posts & Comments</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; }
-        .comment { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; }
-        .meta { font-size: 0.9em; color: #555; }
-        form textarea { width: 100%; height: 60px; }
-        form input { margin-bottom: 5px; }
-        button { padding: 5px 10px; }
+        .post { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; }
+        .post-title { font-weight: bold; font-size: 1.2em; }
+        .post-meta { font-size: 0.9em; color: #555; margin-bottom: 10px; }
+        .comment { border-top: 1px solid #ddd; padding: 10px; margin-top: 5px; }
+        .comment-meta { font-size: 0.8em; color: #666; }
+        form textarea { width: 100%; height: 50px; margin-top: 5px; }
+        form input, form button { margin-top: 5px; }
     </style>
 </head>
 <body>
-    <h1>Mon post principal 📝</h1>
+    <h1>Forum - Tous les posts</h1>
 
-    <h3>Commentaires :</h3>
-    {{if .Comments}}
-        {{range .Comments}}
-            <div class="comment">
-                <p><strong>{{.Author}}</strong> (Post: {{.PostID}}) le {{.Date}}</p>
-                <p>{{.Text}}</p>
-                <p class="meta">👍 {{.Likes}} | 👎 {{.Dislikes}}</p>
+    {{if .Posts}}
+        {{range .Posts}}
+            <div class="post">
+                <div class="post-title">{{.Title}}</div>
+                <div class="post-meta">Par {{.Author}} le {{.Date}}</div>
+                <div class="post-content">{{.Content}}</div>
+
+                <h4>Commentaires :</h4>
+                {{if .Comments}}
+                    {{range .Comments}}
+                        <div class="comment">
+                            <div class="comment-meta">{{.Author}} le {{.Date}}</div>
+                            <div class="comment-text">{{.Text}}</div>
+                            <div class="comment-meta">👍 {{.Likes}} | 👎 {{.Dislikes}}</div>
+                        </div>
+                    {{end}}
+                {{else}}
+                    <p><em>Aucun commentaire pour ce post.</em></p>
+                {{end}}
+
+                <h4>Ajouter un commentaire :</h4>
+                <form method="POST" action="/home">
+                    <input type="hidden" name="postId" value="{{.ID}}">
+                    <input type="text" name="author" placeholder="Votre nom" required><br>
+                    <textarea name="text" placeholder="Écris ton commentaire..." required></textarea><br>
+                    <input type="number" name="like" value="0" hidden>
+                    <input type="number" name="deslike" value="0" hidden>
+                    <button type="submit">Envoyer</button>
+                </form>
             </div>
         {{end}}
     {{else}}
-        <p><em>Aucun commentaire pour le moment...</em></p>
+        <p><em>Aucun post disponible.</em></p>
     {{end}}
-
-    <h3>Ajouter un commentaire :</h3>
-    <form method="POST" action="/home">
-        <input type="text" name="author" placeholder="Votre nom" required><br>
-        <input type="number" name="postId" placeholder="ID du post" required><br>
-        <textarea name="text" placeholder="Écris ton commentaire ici..." required></textarea><br>
-        <input type="number" name="like" placeholder="Nombre de likes" value="0" required>
-        <input type="number" name="deslike" placeholder="Nombre de dislikes" value="0" required><br>
-        <button type="submit">Envoyer</button>
-    </form>
 </body>
 </html>
