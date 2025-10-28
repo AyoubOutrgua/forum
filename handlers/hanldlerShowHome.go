@@ -3,7 +3,6 @@ package handlers
 import (
 	"html/template"
 	"net/http"
-
 	"forum/database"
 	"forum/helpers"
 	"forum/tools"
@@ -11,6 +10,8 @@ import (
 
 func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	loggedIn := false
+	var userID int = 0  
+	
 	if r.URL.Path != "/" {
 		helpers.Errorhandler(w, "Status Not Found!", http.StatusNotFound)
 		return
@@ -19,29 +20,43 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 		helpers.Errorhandler(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
-
+	
 	cookie, errSession := r.Cookie("session")
 	if errSession == nil && cookie.Value != "" {
 		var userExists bool
 		err := database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
 		if err == nil && userExists {
 			loggedIn = true
+			database.DataBase.QueryRow("SELECT id FROM users WHERE session = ?", cookie.Value).Scan(&userID)
 		}
 	}
-	data := tools.IdLogin{LoggedIn: loggedIn}
-
+	
+	data := tools.IdLogin{LoggedIn: loggedIn, UserID: userID} 
+	
 	temp, errPerse := template.ParseFiles("templates/index.html")
 	if errPerse != nil {
 		helpers.Errorhandler(w, "Status Not Found!", http.StatusNotFound)
 		return
 	}
+	
 	posts := helpers.GetAllPosts(w)
 	categories := helpers.GetAllCategories(w)
+	reactionStats := helpers.GetAllReactionStats(w)          
+	userReactions := helpers.GetUserPostReactions(w, userID)
+
+	for i := range posts {
+		comments, _ := database.SelectCommentsByPostID(posts[i].ID)
+		posts[i].Comments = comments
+		posts[i].CommentCount = database.CountCommentsByPostID(posts[i].ID)
+	}
+	
 	var pageData tools.PageData
 	pageData.Posts = posts
 	pageData.Categories = categories
 	pageData.IdLogin = data
-
+	pageData.ReactionStats = reactionStats   
+	pageData.UserReactions = userReactions   
+	
 	errExec := temp.Execute(w, pageData)
 	if errExec != nil {
 		http.Error(w, "Status Internal Server Error!!!!!", http.StatusInternalServerError)

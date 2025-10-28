@@ -153,3 +153,39 @@ func SelectUserID(query string, cookieID string) int {
 	}
 	return userID
 }
+
+// Select comments dial post m3ayen
+func SelectCommentsByPostID(postID int) ([]tools.Comment, error) {
+    query := `
+        SELECT c.id, c.comment, c.postId, c.userId, u.userName, c.creationDate 
+        FROM comments c
+        JOIN users u ON c.userId = u.id
+        WHERE c.postId = ?
+        ORDER BY c.creationDate DESC
+    `
+    
+    rows, err := DataBase.Query(query, postID)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+    
+    var comments []tools.Comment
+    for rows.Next() {
+        var c tools.Comment
+        err := rows.Scan(&c.ID, &c.CommentText, &c.PostID, &c.UserID, &c.UserName, &c.CreationDate)
+        if err != nil {
+            return nil, err
+        }
+        comments = append(comments, c)
+    }
+    return comments, nil
+}
+
+// Get total number of comments
+func CountCommentsByPostID(postID int) int {
+    var count int
+    query := "SELECT COUNT(*) FROM comments WHERE postId = ?"
+    DataBase.QueryRow(query, postID).Scan(&count)
+    return count
+}
