@@ -27,14 +27,25 @@ type ReactionStats struct {
 }
 
 type PageData struct {
-	Posts      []Post
-	Categories []Category
-	IdLogin IdLogin
-	ReactionStats map[int]ReactionStats 
-	UserReactions map[int]int 
+	Posts         []Post
+	Categories    []Category
+	IdLogin       IdLogin
+	ReactionStats map[int]ReactionStats
+	UserReactions map[int]int
+	Comment       map[int][]Comment
+	ConnectUserName string
 }
 
 type IdLogin struct {
 	LoggedIn bool
-	UserID   int 
+	UserID   int
+}
+
+type Comment struct {
+	ID           int
+	CommentText  string
+	PostID       int
+	UserID       int
+	UserName     string
+	CreationDate string
 }
