@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,6 +20,7 @@
 
     <title>Forum</title>
 </head>
+
 <body>
     <nav class="menu">
         <a href="/" class="link">
@@ -26,14 +28,14 @@
         </a>
         <ul class="list">
             {{ if .IdLogin.LoggedIn }}
-                <li>
-                    <form action="/logout" method="POST">
-                        <button type="submit" class="link btn">Logout</button>
-                    </form>
-                </li>
+            <li>
+                <form action="/logout" method="POST">
+                    <button type="submit" class="link btn">Logout</button>
+                </form>
+            </li>
             {{ else }}
-                <li><a href="/register" class="link">Register</a></li>
-                <li><a href="/login" class="link btn">Login</a></li>
+            <li><a href="/register" class="link">Register</a></li>
+            <li><a href="/login" class="link btn">Login</a></li>
             {{ end }}
         </ul>
     </nav>
@@ -47,11 +49,11 @@
                 <input type="text" name="description" placeholder="Description" class="inputs description" required>
                 <div class="categories">
                     {{ range .Categories }}
-                    <input type="checkbox" name="categories" id="create-{{ .Category }}" value="{{ .ID }}" class="category">
+                    <input type="checkbox" name="categories" id="create-{{ .Category }}" value="{{ .ID }}"
+                        class="category">
                     <label for="create-{{ .Category }}" class="labels">{{ .Category }}</label>
                     {{ end }}
                 </div>
-
                 <div class="upload-img">
                     <input type="file" name="choose-file" id="choose-file" class="choose-file">
                 </div>
@@ -64,7 +66,8 @@
             <form action="">
                 <div class="categories-filter">
                     {{ range .Categories }}
-                    <input type="checkbox" name="categories" id="filter-{{ .Category }}" value="{{ .ID }}" class="category">
+                    <input type="checkbox" name="categories" id="filter-{{ .Category }}" value="{{ .ID }}"
+                        class="category">
                     <label for="filter-{{ .Category }}" class="labels">{{ .Category }}</label>
                     {{ end }}
                 </div>
@@ -79,104 +82,7 @@
         </section>
         <!-- Posts Section -->
         <section class="posts">
-            <!-- Poste - 01 -->
-            <div class="post">
-                <div class="top-section">
-                    <div class="full-profile">
-                        <img src="/static/images/user.png" alt="User Profile" class="profile-image">
-                        <h2 class="post-username">Username</h2>
-                    </div>
-                    <span class="post-time">Just now</span>
-                </div>
-                <div class="body-section">
-                    <h1 class="post-title">Title Title Title Title Title Title Title Title Title Title Title Title Title
-                        Title Title Title Title Title Title Title Title</h1>
-                    <div class="body-image">
-                        <img src="/static/upload/image-01.jpg" alt="post image" class="post-img">
-                    </div>
-                    <p class="post-description">Description Description Description Description Description Description
-                        Description Description Description Description Description Description gfg dff rrd zd
-                        Description
-                        Description Description</p>
-                </div>
-                <div class="category-section">
-                    <span class="post-category">Music</span>
-                    <span class="post-category">Sports</span>
-                    <span class="post-category">Movis</span>
-                    <span class="post-category">Music</span>
-                    <span class="post-category">Sports</span>
-                    <span class="post-category">Movis</span>
-                    <span class="post-category">Music</span>
-                    <span class="post-category">Sports</span>
-                    <span class="post-category">Movis</span>
-                    <span class="post-category">Music</span>
-                    <span class="post-category">Sports</span>
-                    <span class="post-category">Movis</span>
-                </div>
-                <div class="reactions-section">
-                    <form action="">
-                        <div class="likes-section">
-                            <button type="submit" class="btn-reaction">
-                                <i class="fa-solid fa-thumbs-up icon-reaction"></i>
-                            </button>
-                            <span class="total-reactions">0</span>
-                        </div>
-                        <div class="deslikes-section">
-                            <button type="submit" class="btn-reaction">
-                                <i class="fa-solid fa-thumbs-down icon-reaction"></i>
-                            </button>
-                            <span class="total-reactions">1</span>
-                        </div>
-                        <div class="comment-section">
-                            <input type="checkbox" id="toggle-comments" hidden>
-                            <label for="toggle-comments" class="btn-reaction comment">
-                                <i class="fa-solid fa-comment icon-reaction"></i>
-                            </label>
-                            <span class="total-reactions">24</span>
-                        </div>
-                        <div class="comments-box">
-                            <div class="comments-form">
-                                <form action="">
-                                    <img src="/static/images/user.png" alt="User Profile" class="profile-comment">
-                                    <input type="text" placeholder="Title" class="input-comment" required>
-                                    <input type="submit" value="Add" class="btn btn-comment">
-                                </form>
-                            </div>
-                            <div class="comments">
-                                <img src="/static/images/user.png" alt="User Profile" class="profile-comment">
-                                <p class="comment-content">Test Contet Comments ...</p>
-                                <span class="post-time">Just now</span>
-   
-                            </div>
-                            <div>
-                                <form action="" class="comment-reactions">
-                                    <div class="likes-section">
-                                    <button type="submit" class="btn-reaction">
-                                        <i class="fa-solid fa-thumbs-up icon-reaction"></i>
-                                    </button>
-                                    <span class="total-reactions">0</span>
-                                    </div>
-                                    <div class="deslikes-section">
-                                        <button type="submit" class="btn-reaction">
-                                            <i class="fa-solid fa-thumbs-down icon-reaction"></i>
-                                        </button>
-                                        <span class="total-reactions">1</span>
-                                    </div>
-                                </form>
-                            </div>
-                            <!-- comment - 02 -->
-                            <div class="comments">
-                                <img src="/static/images/user.png" alt="User Profile" class="profile-comment">
-                                <p class="comment-content">Test Contet Comments ... Test Contet Comments ... Test Contet
-                                    Comments ... Test Contet Comments ... Test Contet Comments ... Test Contet Comments
-                                    ... Test Contet Comments ...</p>
-                                <span class="post-time">Just now</span>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-            <!-- Poste - 02 -->
+            <!-- Poste -->
             {{ range .Posts }}
             <div class="post">
                 <div class="top-section">
@@ -186,67 +92,105 @@
                     </div>
                     <span class="post-time">{{ .CreationDate }}</span>
                 </div>
-    
                 <div class="body-section">
                     <h1 class="post-title">{{ .Title }}</h1>
                     {{ if .ImageUrl }}
                     <div class="body-image">
-                         <img src="{{ .ImageUrl }}" alt="post image" class="post-img">
+                        <img src="{{ .ImageUrl }}" alt="post image" class="post-img">
                     </div>
                     {{ end }}
-                     <p class="post-description">{{ .Description }}</p>
+                    <p class="post-description">{{ .Description }}</p>
                 </div>
-    
                 <div class="category-section">
                     {{ range .Categories }}
                     <span class="post-category">{{ . }}</span>
                     {{ end }}
                 </div>
-    
-                 <div class="reactions-section">
+                <div class="reactions-section">
                     <form action="/reaction" method="post">
                         <input type="hidden" name="postId" value="{{ .ID }}">
-            
                         {{ $stats := index $.ReactionStats .ID }}
                         {{ $userReaction := index $.UserReactions .ID }}
-            
                         <!-- Likes -->
                         <div class="likes-section">
-                            <button type="submit" class="btn-reaction {{ if eq $userReaction 1 }}active{{ end }}" 
-                        name="reaction" value="1">
-                            <i class="fa-solid fa-thumbs-up icon-reaction"></i>
+                            <button type="submit" class="btn-reaction {{ if eq $userReaction 1 }}active{{ end }}"
+                                name="reaction" value="1">
+                                <i class="fa-solid fa-thumbs-up icon-reaction"></i>
                             </button>
                             <span class="total-reactions">{{ $stats.LikesCount }}</span>
                         </div>
-            
                         <!-- Dislikes -->
                         <div class="deslikes-section">
-                            <button type="submit" class="btn-reaction {{ if eq $userReaction -1 }}active{{ end }}" 
-                        name="reaction" value="-1">
-                            <i class="fa-solid fa-thumbs-down icon-reaction"></i>
+                            <button type="submit" class="btn-reaction {{ if eq $userReaction -1 }}active{{ end }}"
+                                name="reaction" value="-1">
+                                <i class="fa-solid fa-thumbs-down icon-reaction"></i>
                             </button>
                             <span class="total-reactions">{{ $stats.DislikesCount }}</span>
-                        </div>
-            
-                        <!-- Comments -->
-                        <div class="comment-section">
-                            <input type="checkbox" id="toggle-comments-{{.ID}}" hidden>
-                            <label for="toggle-comments-{{.ID}}" class="btn-reaction comment">
-                            <i class="fa-solid fa-comment icon-reaction"></i>
-                            </label>
-                            <span class="total-reactions">0</span>
-                        </div>
+                        </div>       
                     </form>
-        
+                    <!-- Comments -->
+                    <div class="comment-section">
+                        <input type="checkbox" id="toggle-comments-{{.ID}}" hidden>
+                        <label for="toggle-comments-{{.ID}}" class="btn-reaction comment">
+                            <i class="fa-solid fa-comment icon-reaction"></i>
+                        </label>
+                        {{ $comments := index $.Comment .ID }}
+                        <span class="total-reactions">{{ len $comments}}</span>
+                    </div>
+                    <div></div>
+                    <div class="comments-box">
+                        {{ if $.IdLogin.LoggedIn }}
+                        <div class="comments-form">
+                            <form action="/createcomment" method="POST">
+                                <input type="hidden" name="postId" value="{{ .ID }}">
+                                <img src="/static/images/user.png" alt="User Profile" class="profile-comment">
+                                <span class="username"> {{ $.ConnectUserName }} </span>
+                                <input type="text" name="comment" placeholder="Your comment here..." class="input-comment" required>
+                                <input type="submit" value="Add" class="btn btn-comment">
+                            </form>
+                        </div>
+                        {{ end }}
+                        {{ range $comments }}
+                        <div class="comments">
+                            <img src="/static/images/user.png" alt="User Profile" class="profile-comment">
+                            <span class="username"> {{ .UserName }} </span>
+                            <p class="comment-content">{{ .CommentText }}</p>
+                            <span class="post-time">{{ .CreationDate }}</span>
+                        </div>
+                        <div>
+                            <form action="" class="comment-reactions">
+                                <div class="likes-section">
+                                    <button type="submit" class="btn-reaction">
+                                        <i class="fa-solid fa-thumbs-up icon-reaction"></i>
+                                    </button>
+                                    <span class="total-reactions">0</span>
+                                </div>
+                                <div class="deslikes-section">
+                                    <button type="submit" class="btn-reaction">
+                                        <i class="fa-solid fa-thumbs-down icon-reaction"></i>
+                                    </button>
+                                    <span class="total-reactions">0</span>
+                                </div>
+                            </form>
+                        </div>
+                        {{ end }}
+                    </div>
                     <style>
-                        .comment-section:has(#toggle-comments-{{.ID}}:checked) + .comments-box {
+                        .comment-section:has(#toggle-comments-{{.ID}}:checked) ~ .comments-box {
                         display: block;
+                        width: 100%;
                         }
                     </style>
                 </div>
             </div>
             {{ end }}
+            {{ if eq (len .Posts) 0 }}
+            <div>
+                <p class="noPosts">Oops! No posts yet… 📝</p>
+            </div>
+            {{ end }}
         </section>
     </main>
 </body>
+
 </html>
