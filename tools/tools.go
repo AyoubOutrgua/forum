@@ -8,7 +8,7 @@ type Post struct {
 	UserName     string
 	CreationDate string
 	Categories   []string
-	Comments     []Comment  // Zid hadi
+	Comments     []Comment  
     CommentCount int
 }
 
@@ -28,6 +28,14 @@ type ReactionStats struct {
 	DislikesCount int
 }
 
+type Comment struct {
+	ID           int
+	CommentText  string
+	PostID       int
+	UserID       int
+	UserName     string
+	CreationDate string
+}
 type PageData struct {
 	Posts      []Post
 	Categories []Category
@@ -39,13 +47,4 @@ type PageData struct {
 type IdLogin struct {
 	LoggedIn bool
 	UserID   int 
-}
-
-type Comment struct {
-    ID           int
-    CommentText  string
-    PostID       int
-    UserID       int
-    UserName     string
-    CreationDate string
 }

@@ -43,6 +43,7 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	categories := helpers.GetAllCategories(w)
 	reactionStats := helpers.GetAllReactionStats(w)          
 	userReactions := helpers.GetUserPostReactions(w, userID)
+	
 
 	for i := range posts {
 		comments, _ := database.SelectCommentsByPostID(posts[i].ID)
@@ -55,7 +56,8 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	pageData.Categories = categories
 	pageData.IdLogin = data
 	pageData.ReactionStats = reactionStats   
-	pageData.UserReactions = userReactions   
+	pageData.UserReactions = userReactions 
+	
 	
 	errExec := temp.Execute(w, pageData)
 	if errExec != nil {
