@@ -153,3 +153,23 @@ func SelectUserID(query string, cookieID string) int {
 	}
 	return userID
 }
+
+
+func SelectAllComments(query string) (map[int][]tools.Comment, error) {
+	rows, err := DataBase.Query(query)
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+
+	comments := make(map[int][]tools.Comment)
+	for rows.Next() {
+		var c tools.Comment
+		err := rows.Scan(&c.ID, &c.CommentText, &c.PostID, &c.UserID, &c.UserName, &c.CreationDate)
+		if err != nil {
+			return nil, err
+		}
+		comments[c.PostID] = append(comments[c.PostID], c)
+	}
+	return comments, nil
+}
