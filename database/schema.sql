@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS comments(
     comment TEXT NOT NULL,
     postId INTEGER NOT NULL,
     userId INTEGER NOT NULL,
-    creationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    creationDate TEXT,
     FOREIGN KEY(userId) REFERENCES users(id),
     FOREIGN KEY(postId) REFERENCES posts(id)
 );
