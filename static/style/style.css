@@ -238,7 +238,6 @@ input[type="file"]::-webkit-file-upload-button:hover {
 .category-section,
 .reactions-section {
     margin: 0 2rem;
-    /* background-color: violet; */
 }
 
 .post-img {
@@ -311,16 +310,25 @@ input[type="file"]::-webkit-file-upload-button:hover {
     font-size: 1.8rem;
 }
 
-.reactions-section form:first-of-type {
+.reactions-section {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     margin: 1.5rem 0 0;
 }
+.reactions-section form {
+    gap: 1rem;
+    display: flex;
+    margin-left: 2rem;
+}
+.parent > form,
+.parent > div:nth-child(2) {
+  flex: 0 0 auto;
+}
 
 .comments-box {
     display: none;
-    margin-top: 5px;
+    margin: 5px 2rem;
     background: var(--color-light);
     padding: 10px;
     border-radius: 8px;
@@ -340,6 +348,7 @@ input[type="file"]::-webkit-file-upload-button:hover {
 
 .comments-form, .comments {
   display: flex;
+  /* flex-wrap: wrap; */
   align-items: center;
   gap: 10px;
 }
@@ -350,10 +359,12 @@ input[type="file"]::-webkit-file-upload-button:hover {
   border: solid 1px var(--color-primary);
   border-radius: 50%;
 }
-
+.username {
+  font-size: 1.5rem;
+}
 .input-comment {
   height: 3.5rem;
-  width: 100%;
+  width: 90%;
   border-radius: 1rem;
   border: solid 1px var(--color-primary);
   padding: 0 10px;
@@ -388,7 +399,6 @@ input[type="file"]::-webkit-file-upload-button:hover {
     margin-top: 0 !important;
 }
 
-/* Active state for reactions */
 .btn-reaction.active {
     color: #007bff;
     background-color: transparent;
@@ -396,4 +406,9 @@ input[type="file"]::-webkit-file-upload-button:hover {
 
 .btn-reaction.active i {
     color: #007bff;
+}
+
+.noPosts {
+    font-size: 1.6rem;
+    text-align: center;
 }
