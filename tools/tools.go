@@ -8,7 +8,7 @@ type Post struct {
 	UserName     string
 	CreationDate string
 	Categories   []string
-	Comments     []Comment  
+	Comments     []Comment  //
     CommentCount int
 }
 
