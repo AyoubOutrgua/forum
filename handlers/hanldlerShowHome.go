@@ -41,16 +41,18 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	
 	posts := helpers.GetAllPosts(w)
 	categories := helpers.GetAllCategories(w)
-	reactionStats := helpers.GetAllReactionStats(w)          
-	userReactions := helpers.GetUserPostReactions(w, userID) 
-	
+	reactionStats := helpers.GetAllReactionStats(w)
+	userReactions := helpers.GetUserPostReactions(w, userID)
+	comments := helpers.GetAllComments(w)
+
 	var pageData tools.PageData
 	pageData.Posts = posts
 	pageData.Categories = categories
 	pageData.IdLogin = data
-	pageData.ReactionStats = reactionStats   
-	pageData.UserReactions = userReactions   
-	
+	pageData.ReactionStats = reactionStats
+	pageData.UserReactions = userReactions
+	pageData.Comment = comments
+
 	errExec := temp.Execute(w, pageData)
 	if errExec != nil {
 		http.Error(w, "Status Internal Server Error!!!!!", http.StatusInternalServerError)
