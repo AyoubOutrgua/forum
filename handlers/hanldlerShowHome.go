@@ -3,6 +3,7 @@ package handlers
 import (
 	"html/template"
 	"net/http"
+
 	"forum/database"
 	"forum/helpers"
 	"forum/tools"
@@ -10,8 +11,8 @@ import (
 
 func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	loggedIn := false
-	var userID int = 0  
-	
+	var userID int = 0
+
 	if r.URL.Path != "/" {
 		helpers.Errorhandler(w, "Status Not Found!", http.StatusNotFound)
 		return
@@ -20,7 +21,7 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 		helpers.Errorhandler(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	
+
 	cookie, errSession := r.Cookie("session")
 	if errSession == nil && cookie.Value != "" {
 		var userExists bool
@@ -30,20 +31,21 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 			database.DataBase.QueryRow("SELECT id FROM users WHERE session = ?", cookie.Value).Scan(&userID)
 		}
 	}
-	
-	data := tools.IdLogin{LoggedIn: loggedIn, UserID: userID} 
-	
+
+	data := tools.IdLogin{LoggedIn: loggedIn, UserID: userID}
+
 	temp, errPerse := template.ParseFiles("templates/index.html")
 	if errPerse != nil {
 		helpers.Errorhandler(w, "Status Not Found!", http.StatusNotFound)
 		return
 	}
-	
+
 	posts := helpers.GetAllPosts(w)
 	categories := helpers.GetAllCategories(w)
 	reactionStats := helpers.GetAllReactionStats(w)
 	userReactions := helpers.GetUserPostReactions(w, userID)
 	comments := helpers.GetAllComments(w)
+	connectUserName := helpers.GetConnectUserName(w, userID)
 
 	var pageData tools.PageData
 	pageData.Posts = posts
@@ -52,6 +54,7 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	pageData.ReactionStats = reactionStats
 	pageData.UserReactions = userReactions
 	pageData.Comment = comments
+	pageData.ConnectUserName = connectUserName
 
 	errExec := temp.Execute(w, pageData)
 	if errExec != nil {

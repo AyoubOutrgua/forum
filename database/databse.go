@@ -154,7 +154,6 @@ func SelectUserID(query string, cookieID string) int {
 	return userID
 }
 
-
 func SelectAllComments(query string) (map[int][]tools.Comment, error) {
 	rows, err := DataBase.Query(query)
 	if err != nil {
@@ -172,4 +171,13 @@ func SelectAllComments(query string) (map[int][]tools.Comment, error) {
 		comments[c.PostID] = append(comments[c.PostID], c)
 	}
 	return comments, nil
+}
+
+func SelectUserName(query string, userId int) (string, error) {
+	userName := ""
+	err := DataBase.QueryRow(query, userId).Scan(&userName)
+	if err != nil {
+		return "", err
+	}
+	return userName, nil
 }
