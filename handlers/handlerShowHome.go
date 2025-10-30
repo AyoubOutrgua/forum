@@ -46,6 +46,8 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	userReactions := helpers.GetUserPostReactions(w, userID)
 	comments := helpers.GetAllComments(w)
 	connectUserName := helpers.GetConnectUserName(w, userID)
+	commentReactionStats := helpers.GetAllCommentReactionStats(w)
+	userCommentReactions := helpers.GetUserCommentReactions(w, userID)
 
 	var pageData tools.PageData
 	pageData.Posts = posts
@@ -55,6 +57,8 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	pageData.UserReactions = userReactions
 	pageData.Comment = comments
 	pageData.ConnectUserName = connectUserName
+	pageData.CommentReactionStats = commentReactionStats
+	pageData.UserCommentReactions = userCommentReactions
 
 	errExec := temp.Execute(w, pageData)
 	if errExec != nil {

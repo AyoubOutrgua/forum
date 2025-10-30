@@ -126,7 +126,7 @@
                                 <i class="fa-solid fa-thumbs-down icon-reaction"></i>
                             </button>
                             <span class="total-reactions">{{ $stats.DislikesCount }}</span>
-                        </div>       
+                        </div>
                     </form>
                     <!-- Comments -->
                     <div class="comment-section">
@@ -145,7 +145,8 @@
                                 <input type="hidden" name="postId" value="{{ .ID }}">
                                 <img src="/static/images/user.png" alt="User Profile" class="profile-comment">
                                 <span class="username"> {{ $.ConnectUserName }} </span>
-                                <input type="text" name="comment" placeholder="Your comment here..." class="input-comment" required>
+                                <input type="text" name="comment" placeholder="Your comment here..."
+                                    class="input-comment" required>
                                 <input type="submit" value="Add" class="btn btn-comment">
                             </form>
                         </div>
@@ -157,19 +158,27 @@
                             <p class="comment-content">{{ .CommentText }}</p>
                             <span class="post-time">{{ .CreationDate }}</span>
                         </div>
-                        <div>
-                            <form action="" class="comment-reactions">
+                        <div id="comment-reactions-{{ .ID }}">
+                            {{ $commentStats := index $.CommentReactionStats .ID }}
+                            {{ $myReaction := index $.UserCommentReactions .ID }}
+
+                            <form action="/comment-reaction" method="post" class="comment-reactions">
+                                <input type="hidden" name="commentId" value="{{ .ID }}">
+
                                 <div class="likes-section">
-                                    <button type="submit" class="btn-reaction">
+                                    <button type="submit" class="btn-reaction {{ if eq $myReaction 1 }}active{{ end }}"
+                                        name="reaction" value="1">
                                         <i class="fa-solid fa-thumbs-up icon-reaction"></i>
                                     </button>
-                                    <span class="total-reactions">0</span>
+                                    <span class="total-reactions">{{ $commentStats.LikesCount }}</span>
                                 </div>
+
                                 <div class="deslikes-section">
-                                    <button type="submit" class="btn-reaction">
+                                    <button type="submit" class="btn-reaction {{ if eq $myReaction -1 }}active{{ end }}"
+                                        name="reaction" value="-1">
                                         <i class="fa-solid fa-thumbs-down icon-reaction"></i>
                                     </button>
-                                    <span class="total-reactions">0</span>
+                                    <span class="total-reactions">{{ $commentStats.DislikesCount }}</span>
                                 </div>
                             </form>
                         </div>
