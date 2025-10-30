@@ -27,7 +27,7 @@
             <h1 class="logo">Forum</h1>
         </a>
         <ul class="list">
-            {{ if .IdLogin.LoggedIn }}
+            {{ if .IsLogin.LoggedIn }}
             <li>
                 <form action="/logout" method="POST">
                     <button type="submit" class="link btn">Logout</button>
@@ -41,7 +41,7 @@
     </nav>
     <main class="main-section">
         <!-- Create Post Section -->
-        {{ if .IdLogin.LoggedIn }}
+        {{ if .IsLogin.LoggedIn }}
         <section class="create-post">
             <form action="/createpost" method="POST" enctype="multipart/form-data">
                 <h1 class="title-create-post">Create New Post</h1>
@@ -72,7 +72,7 @@
                     {{ end }}
                 </div>
                 <div class="buttons">
-                    {{ if .IdLogin.LoggedIn }}
+                    {{ if .IsLogin.LoggedIn }}
                     <button type="submit" class="btn btn-my-posts">My Posts</button>
                     <button type="submit" class="btn btn-liked-posts">Liked Posts</button>
                     {{ end }}
@@ -139,7 +139,7 @@
                     </div>
                     <div></div>
                     <div class="comments-box">
-                        {{ if $.IdLogin.LoggedIn }}
+                        {{ if $.IsLogin.LoggedIn }}
                         <div class="comments-form">
                             <form action="/createcomment" method="POST">
                                 <input type="hidden" name="postId" value="{{ .ID }}">
@@ -172,6 +172,11 @@
                                     <span class="total-reactions">0</span>
                                 </div>
                             </form>
+                        </div>
+                        {{ end }}
+                        {{ if eq (len $comments) 0 }}
+                        <div>
+                            <p class="noComments">Oops! No Comments yet… 📝</p>
                         </div>
                         {{ end }}
                     </div>

@@ -408,7 +408,7 @@ input[type="file"]::-webkit-file-upload-button:hover {
     color: #007bff;
 }
 
-.noPosts {
+.noPosts, .noComments {
     font-size: 1.6rem;
     text-align: center;
 }
