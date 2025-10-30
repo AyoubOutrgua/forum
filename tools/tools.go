@@ -34,6 +34,8 @@ type PageData struct {
 	UserReactions map[int]int
 	Comment       map[int][]Comment
 	ConnectUserName string
+	CommentReactionStats   map[int]CommentReactionStats 
+	UserCommentReactions   map[int]int
 }
 
 type IdLogin struct {
@@ -48,4 +50,10 @@ type Comment struct {
 	UserID       int
 	UserName     string
 	CreationDate string
+}
+
+type CommentReactionStats struct {
+	CommentID     int
+	LikesCount    int
+	DislikesCount int
 }
