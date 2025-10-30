@@ -15,11 +15,6 @@ type Category struct {
 	Category string
 }
 
-// type PostCategory struct {
-// 	PostID       int
-// 	CategoryID int
-// }
-
 type ReactionStats struct {
 	PostID        int
 	LikesCount    int
@@ -29,14 +24,14 @@ type ReactionStats struct {
 type PageData struct {
 	Posts         []Post
 	Categories    []Category
-	IdLogin       IdLogin
+	IsLogin       IsLogin
 	ReactionStats map[int]ReactionStats
 	UserReactions map[int]int
 	Comment       map[int][]Comment
 	ConnectUserName string
 }
 
-type IdLogin struct {
+type IsLogin struct {
 	LoggedIn bool
 	UserID   int
 }

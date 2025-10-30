@@ -32,7 +32,7 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	data := tools.IdLogin{LoggedIn: loggedIn, UserID: userID}
+	data := tools.IsLogin{LoggedIn: loggedIn, UserID: userID}
 
 	temp, errPerse := template.ParseFiles("templates/index.html")
 	if errPerse != nil {
@@ -50,7 +50,7 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	var pageData tools.PageData
 	pageData.Posts = posts
 	pageData.Categories = categories
-	pageData.IdLogin = data
+	pageData.IsLogin = data
 	pageData.ReactionStats = reactionStats
 	pageData.UserReactions = userReactions
 	pageData.Comment = comments
