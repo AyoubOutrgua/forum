@@ -1,6 +1,10 @@
 package helpers
 
-import "forum/database"
+import (
+	"net/http"
+
+	"forum/database"
+)
 
 func GetLastPostDates(userID int) []string {
 	dateQuery := `
@@ -11,6 +15,10 @@ func GetLastPostDates(userID int) []string {
 			LIMIT 5;
 			`
 
-	dates := database.SelectLastDates(dateQuery, userID)
+	dates, err := database.SelectLastDates(dateQuery, userID)
+	if err != nil {
+		Errorhandler(nil, "Status Internal Server Error", http.StatusInternalServerError)
+		return nil
+	}
 	return dates
 }

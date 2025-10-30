@@ -14,7 +14,7 @@ func GetConnectUserName(w http.ResponseWriter, userId int) string {
 			`
 	connectUserName, errSelect := database.SelectUserName(userNameQuery, userId)
 	if errSelect != nil {
-		// http.Error(w, "------------- ERROR USER NAME--------------!", http.StatusNotFound)
+		// Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
 		return ""
 	}
 	return connectUserName

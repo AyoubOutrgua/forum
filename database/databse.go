@@ -13,7 +13,7 @@ import (
 
 var DataBase *sql.DB
 
-func InitDataBase() {
+func InitDataBase() error {
 	var err error
 	DataBase, err = sql.Open("sqlite3", "./database/forum.db")
 	if err != nil {
@@ -32,10 +32,10 @@ func InitDataBase() {
 
 	_, err = DataBase.Exec("PRAGMA foreign_keys = ON")
 	if err != nil {
-		log.Fatal("can't enable foreign keys,", err)
+		return err
 	}
 
-	DataBase.Exec(`INSERT INTO categories (category)
+	_, err = DataBase.Exec(`INSERT INTO categories (category)
 	VALUES 
 	('Technology'),
 	('Education'),
@@ -45,7 +45,11 @@ func InitDataBase() {
 	('Music'),
 	('Health'),
 	('Food')`)
+	if err != nil {
+		return err
+	}
 	fmt.Println("The database was created successfully.")
+	return nil
 }
 
 func CloseDataBase() error {
@@ -55,17 +59,18 @@ func CloseDataBase() error {
 	return nil
 }
 
-func ExecuteData(query string, args ...interface{}) {
+func ExecuteData(query string, args ...interface{}) error {
 	_, errExuc := DataBase.Exec(query, args...)
 	if errExuc != nil {
-		log.Fatal(errExuc)
+		return errExuc
 	}
+	return nil
 }
 
 func SelectAllPosts(query string) ([]tools.Post, error) {
 	rows, err := DataBase.Query(query)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -84,7 +89,7 @@ func SelectAllPosts(query string) ([]tools.Post, error) {
 func SelectAllCategories(query string) ([]tools.Category, error) {
 	rows, err := DataBase.Query(query)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -104,15 +109,15 @@ func SelectLastIdOfPosts(query string) (int, error) {
 	var lastID int
 	err := DataBase.QueryRow(query).Scan(&lastID)
 	if err != nil {
-		panic(err)
+		return 0, err
 	}
 	return lastID, nil
 }
 
-func SelectPostCategories(query string, id int) []int {
+func SelectPostCategories(query string, id int) ([]int, error) {
 	rows, err := DataBase.Query(query, id)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer rows.Close()
 	categories := []int{}
@@ -120,44 +125,44 @@ func SelectPostCategories(query string, id int) []int {
 		var cat int
 		err := rows.Scan(&cat)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 		categories = append(categories, cat)
 	}
-	return categories
+	return categories, nil
 }
 
-func SelectLastDates(query string, id int) []string {
+func SelectLastDates(query string, id int) ([]string, error) {
 	var dates []string
 	rows, err := DataBase.Query(query, id)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer rows.Close()
 	for rows.Next() {
 		var date string
 		err := rows.Scan(&date)
 		if err != nil {
-			panic(err)
+			return nil, err
 		}
 		dates = append(dates, date)
 	}
-	return dates
+	return dates, nil
 }
 
-func SelectUserID(query string, cookieID string) int {
+func SelectUserID(query string, cookieID string) (int, error) {
 	var userID int
 	err := DataBase.QueryRow(query, cookieID).Scan(&userID)
 	if err != nil {
-		panic(err)
+		return 0, err
 	}
-	return userID
+	return userID, nil
 }
 
 func SelectAllComments(query string) (map[int][]tools.Comment, error) {
 	rows, err := DataBase.Query(query)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	defer rows.Close()
 

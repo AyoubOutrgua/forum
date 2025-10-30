@@ -14,7 +14,7 @@ func GetAllCategories(w http.ResponseWriter) []tools.Category {
 			`
 	categories, errSelect := database.SelectAllCategories(categoriesQuery)
 	if errSelect != nil {
-		http.Error(w, "------------- ERROR --------------!", http.StatusNotFound)
+		Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
 		return nil
 	}
 	return categories

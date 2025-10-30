@@ -16,7 +16,7 @@ func GetAllComments(w http.ResponseWriter) map[int][]tools.Comment {
 			`
 	comments, errSelect := database.SelectAllComments(commentsQuery)
 	if errSelect != nil {
-		http.Error(w, "------------- ERROR --------------!", http.StatusNotFound)
+		Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
 		return nil
 	}
 	return comments

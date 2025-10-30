@@ -62,6 +62,6 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 
 	errExec := temp.Execute(w, pageData)
 	if errExec != nil {
-		http.Error(w, "Status Internal Server Error!!!!!", http.StatusInternalServerError)
+		http.Error(w, "Status Internal Server Error", http.StatusInternalServerError)
 	}
 }

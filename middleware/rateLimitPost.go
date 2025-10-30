@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -14,7 +13,8 @@ func RateLimitPost(next http.HandlerFunc) http.HandlerFunc {
 
 		cookie, errSession := r.Cookie("session")
 		if errSession != nil || cookie.Value == "" {
-			fmt.Println("Error session makaynach 1")
+			http.Redirect(w, r, "/login", http.StatusSeeOther)
+			return
 		}
 		cookieID := cookie.Value
 
