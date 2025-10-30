@@ -26,7 +26,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 	cookie, errSession := r.Cookie("session")
 	if errSession != nil || cookie.Value == "" {
-		fmt.Println("Error session makaynach 2")
+		return
 	}
 	cookieID := cookie.Value
 
@@ -42,10 +42,15 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Status Bad Request 3", http.StatusBadRequest)
 		return
 	}
+	if len(title[0]) == 0 || len(description[0]) == 0 || len(title[0]) > 100 || len(description[0]) > 1000 {
+		http.Error(w, "Status Bad Request 4 len !", http.StatusBadRequest)
+		return
+	}
 	categories, ok := r.PostForm["categories"]
 
 	if !ok {
-		http.Error(w, "Status Bad Request 4", http.StatusBadRequest)
+		http.Error(w, "Status Bad Request 5", http.StatusBadRequest)
+
 		return
 	}
 	if len(categories) == 0 {
