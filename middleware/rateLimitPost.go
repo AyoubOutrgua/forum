@@ -9,8 +9,6 @@ import (
 
 func RateLimitPost(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		timeNow := time.Now().Format("2006-01-02 15:04:05")
-
 		cookie, errSession := r.Cookie("session")
 		if errSession != nil || cookie.Value == "" {
 			http.Redirect(w, r, "/login", http.StatusSeeOther)
@@ -21,21 +19,16 @@ func RateLimitPost(next http.HandlerFunc) http.HandlerFunc {
 		userID := helpers.GetUserID(cookieID)
 
 		dates := helpers.GetLastPostDates(userID)
-		firstDate := ""
-		if len(dates) > 1 {
-			firstDate = dates[len(dates)-1]
+		if len(dates) == 5 {
+			firstDateTime, _ := time.Parse("2006-01-02 15:04:05", dates[len(dates)-1])
+			dateNowTime := time.Now()
+
+			if dateNowTime.Sub(firstDateTime).Minutes() <= 1 {
+				helpers.Errorhandler(w, "Status Too Many Requests", http.StatusTooManyRequests)
+				return
+			}
 		}
 
-		if firstDate != "" {
-			firstDateTime, err1 := time.Parse("2006-01-02 15:04:05", firstDate)
-			dateNowTime, err2 := time.Parse("2006-01-02 15:04:05", timeNow)
-			if err1 != nil || err2 != nil {
-			}
-			dif := dateNowTime.Sub(firstDateTime).Minutes()
-			if len(dates) == 5 && dif <= 1 {
-				http.Error(w, "Ktbti posts bzaf !!!!!!!!", http.StatusBadRequest)
-			}
-		}
 		next.ServeHTTP(w, r)
 	}
 }
