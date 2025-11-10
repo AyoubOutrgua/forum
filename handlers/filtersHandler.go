@@ -74,7 +74,7 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if len(catStrs) == 0 {
-		http.Error(w, "category_id or categories query parameter required", http.StatusBadRequest)
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 
@@ -86,14 +86,15 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		v, err := strconv.Atoi(s)
 		if err != nil {
-			http.Error(w, "invalid category id", http.StatusBadRequest)
+			helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 			return
 		}
 		ids = append(ids, v)
 	}
 	if len(ids) == 0 {
-		http.Error(w, "no valid category ids provided", http.StatusBadRequest)
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
+
 	}
 	inList := make([]string, len(ids))
 	for i, id := range ids {
