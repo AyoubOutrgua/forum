@@ -14,6 +14,7 @@ import (
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	if database.DataBase == nil {
 		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
+		return
 	}
 	cookie, errSession := r.Cookie("session")
 	if errSession == nil && cookie.Value != "" {
@@ -32,7 +33,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			"email":    "",
 		}
 
-		helpers.Render(w, "login.html", http.StatusOK, data)
+		helpers.Render(w, "login.html", data)
 		return
 	}
 	if r.Method == http.MethodPost {
@@ -41,7 +42,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		password := r.FormValue("password")
 
 		if username == "" || password == "" {
-			helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "All fields are required", "Username": username})
+			w.WriteHeader(http.StatusUnauthorized)
+			helpers.Render(w, "login.html", map[string]string{"Error": "All fields are required", "Username": username})
 			return
 		}
 		stmt := `SELECT password FROM users WHERE userName = ? OR email = ?`

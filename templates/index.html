@@ -4,20 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/style/style.css">
+    <link rel="stylesheet" href="/static/style/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
         rel="stylesheet">
-
-
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
-        integrity="sha512-uWFS2SyMlXU1P9Uv9Z4q1XLh3QjsoZ4SB8QoX0OQH5m6goZQyA5DFmuH2gOdf5U3GVabkUqZbJKnSSCBaEVz2w=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" /> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
-
-
-
     <title>Forum</title>
 </head>
 
@@ -45,8 +37,8 @@
         <section class="create-post">
             <form action="/createpost" method="POST" enctype="multipart/form-data">
                 <h1 class="title-create-post">Create New Post</h1>
-                <input type="text" name="title" placeholder="Title" class="inputs title" maxlength="100" required>
-                <input type="text" name="description" placeholder="Description" class="inputs description" maxlength="1000" required>
+                <input type="text" name="title" placeholder="Title" class="inputs title" required>
+                <input type="text" name="description" placeholder="Description" class="inputs description" required>
                 <div class="categories">
                     {{ range .Categories }}
                     <input type="checkbox" name="categories" id="create-{{ .Category }}" value="{{ .ID }}"
@@ -61,25 +53,50 @@
             </form>
         </section>
         {{ end }}
-        <!-- Filter Section -->
-        <section class="filter">
-            <form action="">
+
+        <!-- Filter Section  -->
+             <section class="filter">
+            <form action="/filter/category" method="get" class="filter-form">
                 <div class="categories-filter">
                     {{ range .Categories }}
-                    <input type="checkbox" name="categories" id="filter-{{ .Category }}" value="{{ .ID }}"
-                        class="category">
-                    <label for="filter-{{ .Category }}" class="labels">{{ .Category }}</label>
+                    <input type="checkbox" name="categories" id="filter-{{ .ID }}" value="{{ .ID }}" class="category">
+                    <label for="filter-{{ .ID }}" class="labels">{{ .Category }}</label>
                     {{ end }}
                 </div>
+
                 <div class="buttons">
                     {{ if .IsLogin.LoggedIn }}
-                    <button type="submit" class="btn btn-my-posts">My Posts</button>
-                    <button type="submit" class="btn btn-liked-posts">Liked Posts</button>
+                    <button formaction="/filter/author" formmethod="get" name="author_id" value="{{ .IsLogin.UserID }}" class="btn btn-my-posts">My Posts</button>
+                    <button formaction="/filter/liked" formmethod="get" name="user_id" value="{{ .IsLogin.UserID }}" class="btn btn-liked-posts">Liked Posts</button>
                     {{ end }}
                     <button type="submit" class="btn btn-filter">Filter</button>
                 </div>
             </form>
         </section>
+
+                <form action="/filter/author" method="get" class="filter-form">
+                    <label>Posts by author (id)</label>
+                    {{ if .IsLogin.LoggedIn }}
+                        <input type="hidden" name="author_id" value="{{ .IsLogin.UserID }}">
+                        <button type="submit" class="btn btn-my-posts">My Posts</button>
+                    {{ else }}
+                        <input type="number" name="author_id" placeholder="author id">
+                        <button type="submit" class="btn btn-my-posts">Filter</button>
+                    {{ end }}
+                </form>
+                <form action="/filter/liked" method="get" class="filter-form">
+                    <label>Posts liked by user</label>
+                    {{ if .IsLogin.LoggedIn }}
+                        <input type="hidden" name="user_id" value="{{ .IsLogin.UserID }}">
+                        <button type="submit" class="btn btn-liked-posts">Liked Posts</button>
+                    {{ else }}
+                        <input type="number" name="user_id" placeholder="user id">
+                        <button type="submit" class="btn btn-liked-posts">Filter</button>
+                    {{ end }}
+                </form>
+            </div>
+        </section>
+
         <!-- Posts Section -->
         <section class="posts">
             <!-- Poste -->
@@ -189,12 +206,6 @@
                         </div>
                         {{ end }}
                     </div>
-                    <style>
-                        .comment-section:has(#toggle-comments-{{.ID}}:checked) ~ .comments-box {
-                        display: block;
-                        width: 100%;
-                        }
-                    </style>
                 </div>
             </div>
             {{ end }}

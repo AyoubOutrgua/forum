@@ -20,4 +20,7 @@ func Routing() {
 	http.HandleFunc("/logout", handlers.LogOutHandler)
 	http.HandleFunc("/reaction", handlers.ReactionHandler)
 	http.HandleFunc("/comment-reaction", handlers.CommentReactionHandler)
+	http.HandleFunc("/filter/author", handlers.FilterByAuthorHandler)
+	http.HandleFunc("/filter/category", handlers.FilterByCategoryHandler)
+	http.HandleFunc("/filter/liked", handlers.FilterByLikedHandler)
 }

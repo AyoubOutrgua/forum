@@ -28,7 +28,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 			"Username": flash.Username,
 			"email":    flash.Email,
 		}
-		helpers.Render(w, "register.html", http.StatusOK, data)
+		helpers.Render(w, "register.html", data)
 		return
 	}
 	if r.Method == http.MethodPost {
@@ -83,6 +83,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			helpers.SetFlash(w, "Unexpected error please try again", email, username)
 			http.Redirect(w, r, "/register", http.StatusSeeOther)
+			return
 		}
 
 		stmt2 := `INSERT INTO users (userName, email, password) VALUES (?, ?, ?);`

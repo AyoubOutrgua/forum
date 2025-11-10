@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"html/template"
 	"net/http"
 
 	"forum/database"
@@ -11,7 +10,7 @@ import (
 
 func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	loggedIn := false
-	var userID int = 0
+	var userID int
 
 	if r.URL.Path != "/" {
 		helpers.Errorhandler(w, "Status Not Found!", http.StatusNotFound)
@@ -32,13 +31,7 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	data := tools.IsLogin{LoggedIn: loggedIn, UserID: userID}
-
-	temp, errPerse := template.ParseFiles("templates/index.html")
-	if errPerse != nil {
-		helpers.Errorhandler(w, "Status Not Found!", http.StatusNotFound)
-		return
-	}
+	dataIsLogin := tools.IsLogin{LoggedIn: loggedIn, UserID: userID}
 
 	posts := helpers.GetAllPosts(w)
 	categories := helpers.GetAllCategories(w)
@@ -52,16 +45,12 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	var pageData tools.PageData
 	pageData.Posts = posts
 	pageData.Categories = categories
-	pageData.IsLogin = data
+	pageData.IsLogin = dataIsLogin
 	pageData.ReactionStats = reactionStats
 	pageData.UserReactions = userReactions
 	pageData.Comment = comments
 	pageData.ConnectUserName = connectUserName
 	pageData.CommentReactionStats = commentReactionStats
 	pageData.UserCommentReactions = userCommentReactions
-
-	errExec := temp.Execute(w, pageData)
-	if errExec != nil {
-		http.Error(w, "Status Internal Server Error", http.StatusInternalServerError)
-	}
+	helpers.RenderPage(w, r, "index.html", pageData)
 }

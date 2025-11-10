@@ -19,7 +19,6 @@ func Errorhandler(w http.ResponseWriter, errors string, er int) {
 		return
 	}
 
-	w.WriteHeader(er)
 	if execErr := tmpl.Execute(w, myMap); execErr != nil {
 		http.Error(w, "500 Internal Server Error (exec error)", http.StatusInternalServerError)
 	}
