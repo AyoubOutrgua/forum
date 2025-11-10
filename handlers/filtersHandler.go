@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -39,10 +38,11 @@ func FilterByAuthorHandler(w http.ResponseWriter, r *http.Request) {
 
 	posts, err := database.SelectAllPosts(q)
 	if err != nil {
-		log.Println("FilterByAuthorHandler:", err)
 		helpers.Errorhandler(w, "internal error", http.StatusInternalServerError)
 		return
 	}
+	helpers.GetPostCategories(w, posts)
+
 	reactionStats := helpers.GetAllReactionStats(w)
 	userReactions := helpers.GetUserPostReactions(w, userID)
 	comments := helpers.GetAllComments(w)
@@ -115,10 +115,11 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
 
 	posts, err := database.SelectAllPosts(q)
 	if err != nil {
-		log.Println("FilterByCategoryHandler: PostsByCategory query:", err)
 		helpers.Errorhandler(w, "internal error", http.StatusInternalServerError)
 		return
 	}
+	helpers.GetPostCategories(w, posts)
+
 	loggedIn := false
 	var userID int
 	if cookie, err := r.Cookie("session"); err == nil && cookie.Value != "" {
@@ -180,10 +181,10 @@ func FilterByLikedHandler(w http.ResponseWriter, r *http.Request) {
 
 	posts, err := database.SelectAllPosts(q)
 	if err != nil {
-		log.Println("FilterByLikedHandler:", err)
 		helpers.Errorhandler(w, "internal error", http.StatusInternalServerError)
 		return
 	}
+	helpers.GetPostCategories(w, posts)
 
 	reactionStats := helpers.GetAllReactionStats(w)
 	userReactions := helpers.GetUserPostReactions(w, userID)
