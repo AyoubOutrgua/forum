@@ -11,6 +11,15 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
     <title>Forum</title>
+  <style>
+      input.toggle-comments { position: absolute; left: -9999px; }
+      .comments-box { display: none; }
+      .comments-box .comments { display: block; } 
+      input.toggle-comments:checked + .comments-box {
+        display: block;
+        width: 100%;
+      }
+    </style>
 </head>
 
 <body>
@@ -74,26 +83,7 @@
             </form>
         </section>
 
-                <form action="/filter/author" method="get" class="filter-form">
-                    <label>Posts by author (id)</label>
-                    {{ if .IsLogin.LoggedIn }}
-                        <input type="hidden" name="author_id" value="{{ .IsLogin.UserID }}">
-                        <button type="submit" class="btn btn-my-posts">My Posts</button>
-                    {{ else }}
-                        <input type="number" name="author_id" placeholder="author id">
-                        <button type="submit" class="btn btn-my-posts">Filter</button>
-                    {{ end }}
-                </form>
-                <form action="/filter/liked" method="get" class="filter-form">
-                    <label>Posts liked by user</label>
-                    {{ if .IsLogin.LoggedIn }}
-                        <input type="hidden" name="user_id" value="{{ .IsLogin.UserID }}">
-                        <button type="submit" class="btn btn-liked-posts">Liked Posts</button>
-                    {{ else }}
-                        <input type="number" name="user_id" placeholder="user id">
-                        <button type="submit" class="btn btn-liked-posts">Filter</button>
-                    {{ end }}
-                </form>
+               
             </div>
         </section>
 
@@ -147,14 +137,15 @@
                     </form>
                     <!-- Comments -->
                     <div class="comment-section">
-                        <input type="checkbox" id="toggle-comments-{{.ID}}" hidden>
                         <label for="toggle-comments-{{.ID}}" class="btn-reaction comment">
                             <i class="fa-solid fa-comment icon-reaction"></i>
                         </label>
                         {{ $comments := index $.Comment .ID }}
-                        <span class="total-reactions">{{ len $comments}}</span>
+                        <span class="total-reactions">{{ len $comments }}</span>
                     </div>
-                    <div></div>
+
+                    <input type="checkbox" id="toggle-comments-{{.ID}}" class="toggle-comments">
+
                     <div class="comments-box">
                         {{ if $.IsLogin.LoggedIn }}
                         <div class="comments-form">
@@ -175,34 +166,10 @@
                             <p class="comment-content">{{ .CommentText }}</p>
                             <span class="post-time">{{ .CreationDate }}</span>
                         </div>
-                        <div id="comment-reactions-{{ .ID }}">
-                            {{ $commentStats := index $.CommentReactionStats .ID }}
-                            {{ $myReaction := index $.UserCommentReactions .ID }}
-
-                            <form action="/comment-reaction" method="post" class="comment-reactions">
-                                <input type="hidden" name="commentId" value="{{ .ID }}">
-
-                                <div class="likes-section">
-                                    <button type="submit" class="btn-reaction {{ if eq $myReaction 1 }}active{{ end }}"
-                                        name="reaction" value="1">
-                                        <i class="fa-solid fa-thumbs-up icon-reaction"></i>
-                                    </button>
-                                    <span class="total-reactions">{{ $commentStats.LikesCount }}</span>
-                                </div>
-
-                                <div class="deslikes-section">
-                                    <button type="submit" class="btn-reaction {{ if eq $myReaction -1 }}active{{ end }}"
-                                        name="reaction" value="-1">
-                                        <i class="fa-solid fa-thumbs-down icon-reaction"></i>
-                                    </button>
-                                    <span class="total-reactions">{{ $commentStats.DislikesCount }}</span>
-                                </div>
-                            </form>
-                        </div>
                         {{ end }}
                         {{ if eq (len $comments) 0 }}
                         <div>
-                            <p class="noComments">No Comments yet… 📝</p>
+                            <p class="noComments"> No Comments yet… 📝</p>
                         </div>
                         {{ end }}
                     </div>
