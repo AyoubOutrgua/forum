@@ -11,15 +11,6 @@
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" />
     <title>Forum</title>
-  <style>
-      input.toggle-comments { position: absolute; left: -9999px; }
-      .comments-box { display: none; }
-      .comments-box .comments { display: block; } 
-      input.toggle-comments:checked + .comments-box {
-        display: block;
-        width: 100%;
-      }
-    </style>
 </head>
 
 <body>
@@ -46,8 +37,8 @@
         <section class="create-post">
             <form action="/createpost" method="POST" enctype="multipart/form-data">
                 <h1 class="title-create-post">Create New Post</h1>
-                <input type="text" name="title" placeholder="Title" class="inputs title" required>
-                <input type="text" name="description" placeholder="Description" class="inputs description" required>
+                <input type="text" name="title" placeholder="Title" class="inputs title" maxlength="100" required>
+                <input type="text" name="description" placeholder="Description" class="inputs description" maxlength="1000" required>
                 <div class="categories">
                     {{ range .Categories }}
                     <input type="checkbox" name="categories" id="create-{{ .Category }}" value="{{ .ID }}"
@@ -64,7 +55,7 @@
         {{ end }}
 
         <!-- Filter Section  -->
-             <section class="filter">
+        <section class="filter">
             <form action="/filter/category" method="get" class="filter-form">
                 <div class="categories-filter">
                     {{ range .Categories }}
@@ -75,19 +66,21 @@
 
                 <div class="buttons">
                     {{ if .IsLogin.LoggedIn }}
-                    <button formaction="/filter/author" formmethod="get" name="author_id" value="{{ .IsLogin.UserID }}" class="btn btn-my-posts">My Posts</button>
-                    <button formaction="/filter/liked" formmethod="get" name="user_id" value="{{ .IsLogin.UserID }}" class="btn btn-liked-posts">Liked Posts</button>
+                    <button formaction="/filter/author" formmethod="get" name="author_id" value="{{ .IsLogin.UserID }}"
+                        class="btn btn-my-posts">My Posts</button>
+                    <button formaction="/filter/liked" formmethod="get" name="user_id" value="{{ .IsLogin.UserID }}"
+                        class="btn btn-liked-posts">Liked Posts</button>
                     {{ end }}
                     <button type="submit" class="btn btn-filter">Filter</button>
                 </div>
             </form>
         </section>
 
-               
-            </div>
+
+        </div>
         </section>
 
-        <!-- Posts Section -->
+         <!-- Posts Section -->
         <section class="posts">
             <!-- Poste -->
             {{ range .Posts }}
@@ -137,15 +130,14 @@
                     </form>
                     <!-- Comments -->
                     <div class="comment-section">
+                        <input type="checkbox" id="toggle-comments-{{.ID}}" hidden>
                         <label for="toggle-comments-{{.ID}}" class="btn-reaction comment">
                             <i class="fa-solid fa-comment icon-reaction"></i>
                         </label>
                         {{ $comments := index $.Comment .ID }}
-                        <span class="total-reactions">{{ len $comments }}</span>
+                        <span class="total-reactions">{{ len $comments}}</span>
                     </div>
-
-                    <input type="checkbox" id="toggle-comments-{{.ID}}" class="toggle-comments">
-
+                    <div></div>
                     <div class="comments-box">
                         {{ if $.IsLogin.LoggedIn }}
                         <div class="comments-form">
@@ -166,13 +158,42 @@
                             <p class="comment-content">{{ .CommentText }}</p>
                             <span class="post-time">{{ .CreationDate }}</span>
                         </div>
+                        <div id="comment-reactions-{{ .ID }}">
+                            {{ $commentStats := index $.CommentReactionStats .ID }}
+                            {{ $myReaction := index $.UserCommentReactions .ID }}
+
+                            <form action="/comment-reaction" method="post" class="comment-reactions">
+                                <input type="hidden" name="commentId" value="{{ .ID }}">
+
+                                <div class="likes-section">
+                                    <button type="submit" class="btn-reaction {{ if eq $myReaction 1 }}active{{ end }}"
+                                        name="reaction" value="1">
+                                        <i class="fa-solid fa-thumbs-up icon-reaction"></i>
+                                    </button>
+                                    <span class="total-reactions">{{ $commentStats.LikesCount }}</span>
+                                </div>
+
+                                <div class="deslikes-section">
+                                    <button type="submit" class="btn-reaction {{ if eq $myReaction -1 }}active{{ end }}"
+                                        name="reaction" value="-1">
+                                        <i class="fa-solid fa-thumbs-down icon-reaction"></i>
+                                    </button>
+                                    <span class="total-reactions">{{ $commentStats.DislikesCount }}</span>
+                                </div>
+                            </form>
+                        </div>
                         {{ end }}
                         {{ if eq (len $comments) 0 }}
                         <div>
-                            <p class="noComments"> No Comments yet… 📝</p>
+                            <p class="noComments">No Comments yet… 📝</p>
                         </div>
                         {{ end }}
                     </div>
+                    <style>
+                        .comment-section:has(#toggle-comments-{{.ID}}:checked) ~ .comments-box {
+                        display: block;
+                        }
+                    </style>
                 </div>
             </div>
             {{ end }}
