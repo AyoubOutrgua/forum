@@ -793,7 +793,10 @@ body {
     .comment-reactions {
         margin-left: 0;
     }
+
+   
 }
+
 
 @media (max-width: 480px) {
     .menu {
@@ -816,3 +819,4 @@ body {
         width: 100%;
     }
 }
+

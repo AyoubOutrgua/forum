@@ -1,6 +1,4 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
 /* ==================== CSS VARIABLES ==================== */
 :root {
     font-size: 10px;
@@ -42,14 +40,12 @@
     --transition-fast: 0.3s;
     --transition-medium: 0.5s;
 }
-
 /* ==================== RESET ==================== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
-
 body {
     font-family: var(--font-family);
     font-size: var(--font-size-base);
@@ -59,7 +55,6 @@ body {
     display: flex;
     flex-direction: column;
 }
-
 /* ==================== NAVBAR ==================== */
 .navbar {
     position: fixed;
@@ -72,7 +67,6 @@ body {
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(56, 189, 248, 0.1);
 }
-
 .home-link {
     display: inline-flex;
     align-items: center;
@@ -87,11 +81,9 @@ body {
     border: 1px solid rgba(56, 189, 248, 0.2);
     transition: all var(--transition-fast);
 }
-
 .home-link i {
     font-size: var(--font-size-lg);
 }
-
 .home-link:hover {
     background: rgba(56, 189, 248, 0.1);
     border-color: var(--accent-cyan);
@@ -99,7 +91,6 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px var(--accent-cyan-glow);
 }
-
 /* ==================== MAIN CONTAINER ==================== */
 .container {
     position: relative;
@@ -110,7 +101,6 @@ body {
     padding: calc(var(--space-xl) + 6rem) var(--space-md) var(--space-xl);
     overflow: hidden;
 }
-
 /* ==================== FORM WRAPPER ==================== */
 .form-wrapper {
     position: relative;
@@ -127,7 +117,6 @@ body {
     padding: var(--space-xl);
     z-index: 10;
 }
-
 /* ==================== INFO TEXT ==================== */
 .info-text {
     display: flex;
@@ -137,7 +126,6 @@ body {
     background: linear-gradient(135deg, rgba(56, 189, 248, 0.05) 0%, transparent 100%);
     border-radius: var(--space-xs);
 }
-
 .info-text h2 {
     font-size: var(--font-size-3xl);
     line-height: 1.2;
@@ -150,13 +138,11 @@ body {
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
-
 .info-text p {
     font-size: var(--font-size-lg);
     color: var(--white-90);
     line-height: 1.6;
 }
-
 /* ==================== FORM BOX ==================== */
 .form-box {
     display: flex;
@@ -164,7 +150,6 @@ body {
     justify-content: center;
     padding: var(--space-lg);
 }
-
 .form-box h1 {
     font-size: var(--font-size-xl);
     text-align: center;
@@ -174,7 +159,6 @@ body {
     letter-spacing: 0.1rem;
     color: var(--accent-cyan);
 }
-
 /* ==================== ERROR MESSAGE ==================== */
 .error-message {
     display: flex;
@@ -188,19 +172,18 @@ body {
     color: var(--error-red);
     font-size: var(--font-size-sm);
     font-weight: 500;
-}
 
+}
 .error-message i {
     font-size: var(--font-size-lg);
 }
-
+ 
 /* ==================== INPUT BOX ==================== */
 .input-box {
     position: relative;
     width: 100%;
     margin-bottom: var(--space-lg);
 }
-
 .input-box input {
     width: 100%;
     height: 5rem;
@@ -214,12 +197,10 @@ body {
     font-weight: 500;
     transition: all var(--transition-fast);
 }
-
 .input-box input:focus,
 .input-box input:valid {
     border-bottom-color: var(--accent-cyan);
 }
-
 .input-box label {
     position: absolute;
     top: 50%;
@@ -230,7 +211,6 @@ body {
     pointer-events: none;
     transition: all var(--transition-fast);
 }
-
 .input-box input:focus ~ label,
 .input-box input:valid ~ label {
     top: -1rem;
@@ -238,7 +218,6 @@ body {
     color: var(--accent-cyan);
     font-weight: 600;
 }
-
 .input-box i {
     position: absolute;
     top: 50%;
@@ -248,12 +227,10 @@ body {
     color: var(--white-80);
     transition: color var(--transition-fast);
 }
-
 .input-box input:focus ~ i,
 .input-box input:valid ~ i {
     color: var(--accent-cyan);
 }
-
 /* ==================== BUTTON ==================== */
 .btn {
     position: relative;
@@ -277,7 +254,6 @@ body {
     overflow: hidden;
     transition: all var(--transition-fast);
 }
-
 .btn::before {
     content: '';
     position: absolute;
@@ -288,38 +264,31 @@ body {
     background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
     transition: left var(--transition-medium);
 }
-
 .btn:hover::before {
     left: 100%;
 }
-
 .btn:hover {
     background: var(--accent-cyan);
     color: var(--primary-dark);
     box-shadow: 0 0 2rem var(--accent-cyan-glow);
     transform: translateY(-2px);
 }
-
 .btn i {
     font-size: 2rem;
     transition: transform var(--transition-fast);
 }
-
 .btn:hover i {
     transform: translateX(5px);
 }
-
 /* ==================== LOGIN/REGISTER LINK ==================== */
 .logreg-link {
     text-align: center;
     margin-top: var(--space-md);
 }
-
 .logreg-link p {
     font-size: var(--font-size-sm);
     color: var(--white-80);
 }
-
 .logreg-link a {
     color: var(--accent-cyan);
     text-decoration: none;
@@ -327,13 +296,11 @@ body {
     margin-left: 0.5rem;
     transition: all var(--transition-fast);
 }
-
 .logreg-link a:hover {
     text-decoration: underline;
     text-shadow: 0 0 1rem var(--accent-cyan-glow);
     color: var(--white);
 }
-
 /* ==================== BACKGROUND ANIMATIONS ==================== */
 .bg-animate,
 .bg-animate2 {
@@ -343,7 +310,6 @@ body {
     border-radius: 20%;
     opacity: 0.08;
 }
-
 .bg-animate {
     top: -20%;
     right: -15%;
@@ -352,7 +318,6 @@ body {
     transform: rotate(25deg);
     animation: float 8s ease-in-out infinite;
 }
-
 .bg-animate2 {
     bottom: -20%;
     left: -15%;
@@ -361,7 +326,6 @@ body {
     transform: rotate(-25deg);
     animation: float 10s ease-in-out infinite reverse;
 }
-
 @keyframes float {
     0%, 100% {
         transform: rotate(25deg) translateY(0);
@@ -370,20 +334,17 @@ body {
         transform: rotate(25deg) translateY(-30px);
     }
 }
-
 /* ==================== ENTRANCE ANIMATIONS ==================== */
 .fade-in {
     animation: fadeIn 0.8s ease-out forwards;
     animation-delay: var(--delay);
     opacity: 0;
 }
-
 .slide-in {
     animation: slideIn 0.8s ease-out forwards;
     animation-delay: var(--delay);
     opacity: 0;
 }
-
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -394,7 +355,6 @@ body {
         transform: translateY(0);
     }
 }
-
 @keyframes slideIn {
     from {
         opacity: 0;
@@ -405,7 +365,6 @@ body {
         transform: translateX(0);
     }
 }
-
 /* ==================== RESPONSIVE ==================== */
 @media (max-width: 992px) {
     :root {
@@ -414,10 +373,21 @@ body {
     
     .form-wrapper {
         min-height: 50rem;
+        padding: 0;
+        grid-template-columns: 40% 60%;
+        justify-content: center;
+        gap: 0;
+        width: 80%;
+    }
+    .info-text h2 {
+        font-size: 3.5rem;
+    }
+    .info-text p {
+        font-size: 1.5rem;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px) and (min-width: 481px) {
     :root {
         font-size: 10px;
     }
@@ -431,9 +401,12 @@ body {
     }
     
     .form-wrapper {
-        grid-template-columns: 1fr;
+        grid-template-columns: 80%;
         padding: var(--space-lg) var(--space-md);
         min-height: auto;
+        justify-content: center;
+        width: 65%;
+        margin: 0 auto;
     }
     
     .info-text {
@@ -457,9 +430,25 @@ body {
 @media (max-width: 480px) {
     .form-wrapper {
         padding: var(--space-md);
+        grid-template-columns: 1fr;
+        min-height: auto;
+        width: 100%;
+    }
+    
+    .info-text {
+        display: none;
+    }
+    
+    .form-box {
+        padding: var(--space-md) 0;
     }
     
     .form-box h1 {
         font-size: var(--font-size-lg);
+    }
+    
+    .bg-animate,
+    .bg-animate2 {
+        opacity: 0.05;
     }
 }
