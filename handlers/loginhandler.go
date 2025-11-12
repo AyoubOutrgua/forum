@@ -18,7 +18,9 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
 	}
 	if r.Method != http.MethodPost {
+		fmt.Println("test")
 		helpers.Errorhandler(w, "page not found", http.StatusNotFound)
+		return
 	}
 	username := r.FormValue("username")
 	password := r.FormValue("password")

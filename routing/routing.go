@@ -20,8 +20,11 @@ func Routing() {
 	// manager := middleware.NewRateLimiterManager(10, 1*time.Minute)
 	// registerLimiter := middleware.NewRateLimiterManager(10, 1*time.Minute)
 	http.HandleFunc("/createcomment", middleware.RateLimitMiddleware(rateLimiterComment, handlers.CreateCommentHandler))
-	http.HandleFunc("/login", middleware.RateLimitMiddleware(rateLimiterLogin, handlers.LoginHandler))
-	http.HandleFunc("/register", middleware.RateLimitMiddleware(rateLimiterRegister, handlers.RegisterHandler))
+	http.HandleFunc("/loginAuth", middleware.RateLimitMiddleware(rateLimiterLogin, handlers.LoginHandler))
+	http.HandleFunc("/login", handlers.Showloginhandler)
+
+	http.HandleFunc("/registerAuth", middleware.RateLimitMiddleware(rateLimiterRegister, handlers.RegisterHandler))
+	http.HandleFunc("/register", handlers.Showregister)
 	http.HandleFunc("/static/", handlers.StyleFunc)
 	http.HandleFunc("/", middleware.RateLimitMiddleware(rateLimiterRefresh, handlers.HanldlerShowHome))
 	http.HandleFunc("/createpost", middleware.RateLimitMiddleware(rateLimiterPost, handlers.CreatePostHandler))

@@ -6,7 +6,8 @@ import (
 	"net/http"
 )
 
-func Render(w http.ResponseWriter, templateFile string, data interface{}) {
+func Render(w http.ResponseWriter, templateFile string,status int, data interface{}) {
+	w.WriteHeader(status)
 	tmpl, err := template.ParseFiles("templates/" + templateFile)
 	if err != nil {
 		http.Error(w, "Template parsing error", http.StatusInternalServerError)
@@ -19,6 +20,6 @@ func Render(w http.ResponseWriter, templateFile string, data interface{}) {
 	}
 }
 
-func RenderPage(w http.ResponseWriter, r *http.Request, templateFile string, data interface{}) {
-	Render(w, templateFile, data)
-}
+// func RenderPage(w http.ResponseWriter, r *http.Request, templateFile string, data interface{}) {
+// 	Render(w, templateFile, data)
+// }
