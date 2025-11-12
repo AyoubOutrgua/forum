@@ -24,6 +24,9 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cookieValue := helpers.GetCookieValue(w, r)
+	if cookieValue == "" {
+		return
+	}
 
 	userID := helpers.GetUserID(cookieValue)
 

@@ -15,6 +15,9 @@ func LogOutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	cookieValue := helpers.GetCookieValue(w, r)
+	if cookieValue == "" {
+		return
+	}
 
 	_, err := database.DataBase.Exec("UPDATE users SET session = NULL WHERE session = ?", cookieValue)
 	if err != nil {

@@ -17,6 +17,9 @@ func CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 
 	// Check if user is logged in
 	cookieValue := helpers.GetCookieValue(w, r)
+	if cookieValue == "" {
+		return
+	}
 
 	// Get user ID
 	userID, errSelect := database.SelectUserID("SELECT id FROM users WHERE session = ?", cookieValue)
