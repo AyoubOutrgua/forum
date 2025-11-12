@@ -20,7 +20,7 @@ func LogOutHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_, err = database.DataBase.Exec("UPDATE users SET session = NULL WHERE session = ?", cookie.Value)
+	_, err = database.DataBase.Exec("UPDATE users SET session = NULL, dateexpired = NULL WHERE session = ?", cookie.Value)
 	if err != nil {
 		helpers.Errorhandler(w, "Database error while logging out", http.StatusInternalServerError)
 		return
