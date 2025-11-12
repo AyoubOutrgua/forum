@@ -76,12 +76,7 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
         helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
         return
     }
-		for _, id := range ids {
-		if id < 1 || id > 8 {
-			helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
-			return
-		}
-	}
+	
 
     ids := []int{}
     for _, s := range catStrs {
@@ -101,6 +96,12 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
         return
 
     }
+		for _, id := range ids {
+		if id < 1 || id > 8 {
+			helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+			return
+		}
+	}
     inList := make([]string, len(ids))
     for i, id := range ids {
         inList[i] = strconv.Itoa(id)
