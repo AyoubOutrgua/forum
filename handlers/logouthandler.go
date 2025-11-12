@@ -14,13 +14,12 @@ func LogOutHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie, err := r.Cookie("session")
-	if err != nil || cookie.Value == "" {
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	cookieValue := helpers.GetCookieValue(w, r)
+	if cookieValue == "" {
 		return
 	}
 
-	_, err = database.DataBase.Exec("UPDATE users SET session = NULL, dateexpired = NULL WHERE session = ?", cookie.Value)
+	_, err := database.DataBase.Exec("UPDATE users SET session = NULL WHERE session = ?", cookieValue)
 	if err != nil {
 		helpers.Errorhandler(w, "Database error while logging out", http.StatusInternalServerError)
 		return

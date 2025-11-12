@@ -132,24 +132,6 @@ func SelectPostCategories(query string, id int) ([]int, error) {
 	return categories, nil
 }
 
-func SelectLastDates(query string, id int) ([]string, error) {
-	var dates []string
-	rows, err := DataBase.Query(query, id)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	for rows.Next() {
-		var date string
-		err := rows.Scan(&date)
-		if err != nil {
-			return nil, err
-		}
-		dates = append(dates, date)
-	}
-	return dates, nil
-}
-
 func SelectUserID(query string, cookieID string) (int, error) {
 	var userID int
 	err := DataBase.QueryRow(query, cookieID).Scan(&userID)

@@ -23,14 +23,12 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	cookie, errSession := r.Cookie("session")
-	if errSession != nil || cookie.Value == "" {
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	cookieValue := helpers.GetCookieValue(w, r)
+	if cookieValue == "" {
 		return
 	}
-	cookieID := cookie.Value
 
-	userID := helpers.GetUserID(cookieID)
+	userID := helpers.GetUserID(cookieValue)
 
 	title, ok := r.PostForm["title"]
 	if !ok {

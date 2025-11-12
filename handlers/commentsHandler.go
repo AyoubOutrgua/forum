@@ -16,14 +16,13 @@ func CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check if user is logged in
-	cookie, err := r.Cookie("session")
-	if err != nil {
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	cookieValue := helpers.GetCookieValue(w, r)
+	if cookieValue == "" {
 		return
 	}
 
 	// Get user ID
-	userID, errSelect := database.SelectUserID("SELECT id FROM users WHERE session = ?", cookie.Value)
+	userID, errSelect := database.SelectUserID("SELECT id FROM users WHERE session = ?", cookieValue)
 	if errSelect != nil {
 		helpers.Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
 		return
