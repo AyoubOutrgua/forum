@@ -135,18 +135,18 @@ body {
     margin: 0 auto;
     padding: var(--space-xl) var(--space-md);
     display: grid;
-    grid-template-columns: 1fr;
+     grid-template-columns: 1fr;
     grid-template-areas: 
         "create"
         "content";
-    gap: var(--space-xl);
+    gap: var(--space-xl); 
 }
 
 @media (min-width: 992px) {
     .main-section {
         grid-template-columns: 30rem 1fr;
         grid-template-areas: 
-            "create create"
+            "filter create"
             "filter posts";
         gap: var(--space-xl);
     }
@@ -793,10 +793,7 @@ body {
     .comment-reactions {
         margin-left: 0;
     }
-
-   
 }
-
 
 @media (max-width: 480px) {
     .menu {
@@ -819,4 +816,3 @@ body {
         width: 100%;
     }
 }
-
