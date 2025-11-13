@@ -1,25 +1,25 @@
 package helpers
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"net/http"
 )
 
-func Render(w http.ResponseWriter, templateFile string,status int, data interface{}) {
-	w.WriteHeader(status)
+func Render(w http.ResponseWriter, templateFile string, status int, data interface{}) {
+
 	tmpl, err := template.ParseFiles("templates/" + templateFile)
 	if err != nil {
 		http.Error(w, "Template parsing error", http.StatusInternalServerError)
 		fmt.Println("error parsing template:", err)
 		return
 	}
-	if err := tmpl.Execute(w, data); err != nil {
-		Errorhandler(w, "Template execution error", http.StatusInternalServerError)
+	var buf bytes.Buffer
+	if err := tmpl.Execute(&buf, data); err != nil {
+		Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+	w.WriteHeader(status)
+	w.Write(buf.Bytes())
 }
-
-// func RenderPage(w http.ResponseWriter, r *http.Request, templateFile string, data interface{}) {
-// 	Render(w, templateFile, data)
-// }
