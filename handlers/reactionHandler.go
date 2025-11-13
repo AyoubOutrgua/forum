@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"forum/database"
+	"forum/helpers"
 	"net/http"
 	"strconv"
 )
@@ -13,13 +14,13 @@ func ReactionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
-	cookie, err := r.Cookie("session")
-	if err != nil {
-		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	cookieValue := helpers.GetCookieValue(w, r)
+	if cookieValue == "" {
 		return
 	}
+
 	var userID int
-	err = database.DataBase.QueryRow("SELECT id FROM users WHERE session = ?", cookie.Value).Scan(&userID)
+	err := database.DataBase.QueryRow("SELECT id FROM users WHERE session = ?", cookieValue).Scan(&userID)
 	if err != nil {
 		http.Redirect(w, r, "/login", http.StatusSeeOther)
 		return

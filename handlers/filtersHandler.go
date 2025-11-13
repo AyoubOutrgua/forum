@@ -63,7 +63,7 @@ func FilterByAuthorHandler(w http.ResponseWriter, r *http.Request) {
 		UserCommentReactions: userCommentReactions,
 	}
 
-	helpers.RenderPage(w, r, "index.html", pageData)
+	helpers.Render(w,"index.html",http.StatusOK, pageData)
 }
 
 func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
@@ -96,22 +96,25 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
 		return
 
 	}
+	for _, id := range ids {
+		if id < 1 || id > 8 {
+			helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+			return
+		}
+	}
 	inList := make([]string, len(ids))
 	for i, id := range ids {
 		inList[i] = strconv.Itoa(id)
 	}
 	in := strings.Join(inList, ",")
-
 	q := fmt.Sprintf(`
-        SELECT p.id, p.title, p.post AS description, COALESCE(p.imageUrl,'') AS imageUrl, u.userName, p.creationDate
+        SELECT DISTINCT p.id, p.title, p.post AS description, COALESCE(p.imageUrl,'') AS imageUrl, u.userName, p.creationDate
         FROM posts p
         INNER JOIN postCategories pc ON p.id = pc.postId
         LEFT JOIN users u ON p.userId = u.id
         WHERE pc.categoryId IN (%s)
-        GROUP BY p.id
-        HAVING COUNT(DISTINCT pc.categoryId) = %d
         ORDER BY p.creationDate DESC
-    `, in, len(ids))
+    `, in)
 
 	posts, err := database.SelectAllPosts(q)
 	if err != nil {
@@ -150,7 +153,7 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
 		UserCommentReactions: userCommentReactions,
 	}
 
-	helpers.RenderPage(w, r, "index.html", pageData)
+	helpers.Render(w,  "index.html",http.StatusOK, pageData)
 }
 
 func FilterByLikedHandler(w http.ResponseWriter, r *http.Request) {
@@ -206,5 +209,5 @@ func FilterByLikedHandler(w http.ResponseWriter, r *http.Request) {
 		UserCommentReactions: userCommentReactions,
 	}
 
-	helpers.RenderPage(w, r, "index.html", pageData)
+	helpers.Render(w,  "index.html",http.StatusOK, pageData)
 }
