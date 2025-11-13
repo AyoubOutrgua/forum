@@ -13,6 +13,7 @@ import (
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		helpers.Errorhandler(w, "page not found", http.StatusNotFound)
+		return
 	}
 	username := strings.TrimSpace(r.FormValue("username"))
 	email := strings.TrimSpace(r.FormValue("email"))
@@ -38,7 +39,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	var existsUsername bool
 	err := database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE userName = ?)", username).Scan(&existsUsername)
 	if err != nil {
-		helpers.Errorhandler(w, "Database  error", http.StatusInternalServerError)
+		helpers.Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	if existsUsername {
@@ -49,7 +50,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	var existsEmail bool
 	err = database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = ?)", email).Scan(&existsEmail)
 	if err != nil {
-		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
+		helpers.Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	if existsEmail {
@@ -65,7 +66,7 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	stmt2 := `INSERT INTO users (userName, email, password) VALUES (?, ?, ?);`
 	_, err = database.DataBase.Exec(stmt2, username, email, string(hashPassword))
 	if err != nil {
-		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
+		helpers.Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 

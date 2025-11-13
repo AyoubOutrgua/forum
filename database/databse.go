@@ -44,7 +44,7 @@ func InitDataBase() error {
 	('Gaming'),
 	('Music'),
 	('Health'),
-	('Food')`)
+	('Other')`)
 	if err != nil {
 		return err
 	}

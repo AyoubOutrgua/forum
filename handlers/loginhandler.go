@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -14,11 +13,11 @@ import (
 )
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	if database.DataBase == nil {
-		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
-	}
+	// if database.DataBase == nil {
+	// 	helpers.Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
+	// 	return
+	// }
 	if r.Method != http.MethodPost {
-		fmt.Println("test")
 		helpers.Errorhandler(w, "page not found", http.StatusNotFound)
 		return
 	}
@@ -38,7 +37,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password", "Username": username})
 		return
 	} else if err != nil {
-		helpers.Errorhandler(w, "Database error", http.StatusInternalServerError)
+		helpers.Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
@@ -49,12 +48,11 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sessionID := uuid.New().String()
-	expireTime := time.Now().Add(1* time.Hour)
+	expireTime := time.Now().Add(1 * time.Hour)
 	stmt2 := `UPDATE users SET dateexpired = ? ,session = ? WHERE userName = ? OR email = ?`
 	_, err = database.DataBase.Exec(stmt2, expireTime, sessionID, username, username)
 	if err != nil {
-		helpers.Errorhandler(w, "Database update error", http.StatusInternalServerError)
-		fmt.Println("test", err)
+		helpers.Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 

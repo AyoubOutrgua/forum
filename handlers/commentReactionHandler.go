@@ -11,7 +11,7 @@ import (
 
 func CommentReactionHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		helpers.Errorhandler(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
@@ -32,19 +32,19 @@ func CommentReactionHandler(w http.ResponseWriter, r *http.Request) {
 	reactionStr := r.FormValue("reaction")
 
 	if commentIDStr == "" || reactionStr == "" {
-		http.Error(w, "Invalid request data", http.StatusBadRequest)
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 
 	commentID, err := strconv.Atoi(commentIDStr)
 	if err != nil || commentID <= 0 {
-		http.Error(w, "Invalid comment ID", http.StatusBadRequest)
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 
 	reaction, err := strconv.Atoi(reactionStr)
 	if err != nil || (reaction != 1 && reaction != -1) {
-		http.Error(w, "Invalid reaction value", http.StatusBadRequest)
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 
@@ -61,7 +61,7 @@ func CommentReactionHandler(w http.ResponseWriter, r *http.Request) {
 			userID, commentID, reaction,
 		)
 		if err != nil {
-			http.Error(w, "Database error", http.StatusInternalServerError)
+			helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 
@@ -72,7 +72,7 @@ func CommentReactionHandler(w http.ResponseWriter, r *http.Request) {
 				userID, commentID,
 			)
 			if err != nil {
-				http.Error(w, "Database error", http.StatusInternalServerError)
+				helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 				return
 			}
 		} else {
@@ -81,13 +81,13 @@ func CommentReactionHandler(w http.ResponseWriter, r *http.Request) {
 				reaction, userID, commentID,
 			)
 			if err != nil {
-				http.Error(w, "Database error", http.StatusInternalServerError)
+				helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 				return
 			}
 		}
 
 	default:
-		http.Error(w, "Database error", http.StatusInternalServerError)
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
