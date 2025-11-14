@@ -52,5 +52,6 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	pageData.ConnectUserName = connectUserName
 	pageData.CommentReactionStats = commentReactionStats
 	pageData.UserCommentReactions = userCommentReactions
-	helpers.RenderPage(w, r, "index.html", pageData)
+	helpers.Render(w, "index.html",http.StatusOK, pageData)
 }
+
