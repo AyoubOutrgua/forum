@@ -18,14 +18,14 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	// 	return
 	// }
 	if r.Method != http.MethodPost {
-		helpers.Errorhandler(w, "page not found", http.StatusNotFound)
+		helpers.Errorhandler(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
 	if username == "" || password == "" {
-		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "All fields are required", "Username": username})
+		helpers.Render(w, "login.html", http.StatusBadRequest, map[string]string{"Error": "All fields are required", "Username": username})
 		return
 	}
 	stmt := `SELECT password FROM users WHERE userName = ? OR email = ?`
@@ -34,15 +34,15 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	var hashPass string
 	err := row.Scan(&hashPass)
 	if err == sql.ErrNoRows {
-		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password", "Username": username})
+		helpers.Render(w, "login.html", http.StatusBadRequest, map[string]string{"Error": "Invalid username or password", "Username": username})
 		return
 	} else if err != nil {
-		helpers.Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(password)) != nil {
-		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "All fields are required", "Username": username})
+		helpers.Render(w, "login.html", http.StatusBadRequest, map[string]string{"Error": "All fields are required", "Username": username})
 
 		return
 	}
@@ -52,7 +52,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	stmt2 := `UPDATE users SET dateexpired = ? ,session = ? WHERE userName = ? OR email = ?`
 	_, err = database.DataBase.Exec(stmt2, expireTime, sessionID, username, username)
 	if err != nil {
-		helpers.Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 

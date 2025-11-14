@@ -42,6 +42,11 @@ func CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if len(commentText) > 200 {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+
 	postID, err := strconv.Atoi(postIDStr)
 	if err != nil || postID <= 0 {
 		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)

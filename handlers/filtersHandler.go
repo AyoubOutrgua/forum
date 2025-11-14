@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"database/sql"
 	"fmt"
 	"net/http"
 	"strconv"
@@ -18,13 +19,25 @@ func FilterByAuthorHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	var userExists bool
-	if err := database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists); err != nil || !userExists {
+	errSelect := database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
+	if errSelect == sql.ErrNoRows {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+		return
+	} else if errSelect != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	} else if !userExists {
 		helpers.Errorhandler(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
+
 	var userID int
-	if err := database.DataBase.QueryRow("SELECT id FROM users WHERE session = ?", cookie.Value).Scan(&userID); err != nil {
-		helpers.Errorhandler(w, "Internal error", http.StatusInternalServerError)
+	errSelect = database.DataBase.QueryRow("SELECT id FROM users WHERE session = ?", cookie.Value).Scan(&userID)
+	if errSelect == sql.ErrNoRows {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+		return
+	} else if errSelect != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
@@ -37,8 +50,11 @@ func FilterByAuthorHandler(w http.ResponseWriter, r *http.Request) {
     `, userID)
 
 	posts, err := database.SelectAllPosts(q)
-	if err != nil {
-		helpers.Errorhandler(w, "internal error", http.StatusInternalServerError)
+	if err == sql.ErrNoRows {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+		return
+	} else if err != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	helpers.GetPostCategories(w, posts)
@@ -49,7 +65,14 @@ func FilterByAuthorHandler(w http.ResponseWriter, r *http.Request) {
 	connectUserName := helpers.GetConnectUserName(w, userID)
 	commentReactionStats := helpers.GetAllCommentReactionStats(w)
 	userCommentReactions := helpers.GetUserCommentReactions(w, userID)
-	categories, _ := database.SelectAllCategories("SELECT id, category FROM categories")
+	categories, err := database.SelectAllCategories("SELECT id, category FROM categories")
+	if err == sql.ErrNoRows {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+		return
+	} else if err != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 
 	pageData := tools.PageData{
 		Posts:                posts,
@@ -63,16 +86,11 @@ func FilterByAuthorHandler(w http.ResponseWriter, r *http.Request) {
 		UserCommentReactions: userCommentReactions,
 	}
 
-	helpers.Render(w,"index.html",http.StatusOK, pageData)
+	helpers.Render(w, "index.html", http.StatusOK, pageData)
 }
 
 func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	catStrs := r.URL.Query()["categories"]
-	if len(catStrs) == 0 {
-		if single := r.URL.Query().Get("category_id"); single != "" {
-			catStrs = []string{single}
-		}
-	}
 	if len(catStrs) == 0 {
 		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
@@ -117,8 +135,11 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
     `, in)
 
 	posts, err := database.SelectAllPosts(q)
-	if err != nil {
-		helpers.Errorhandler(w, "internal error", http.StatusInternalServerError)
+	if err == sql.ErrNoRows {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+		return
+	} else if err != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	helpers.GetPostCategories(w, posts)
@@ -153,7 +174,7 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
 		UserCommentReactions: userCommentReactions,
 	}
 
-	helpers.Render(w,  "index.html",http.StatusOK, pageData)
+	helpers.Render(w, "index.html", http.StatusOK, pageData)
 }
 
 func FilterByLikedHandler(w http.ResponseWriter, r *http.Request) {
@@ -209,5 +230,5 @@ func FilterByLikedHandler(w http.ResponseWriter, r *http.Request) {
 		UserCommentReactions: userCommentReactions,
 	}
 
-	helpers.Render(w,  "index.html",http.StatusOK, pageData)
+	helpers.Render(w, "index.html", http.StatusOK, pageData)
 }
