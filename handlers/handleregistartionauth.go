@@ -13,7 +13,7 @@ import (
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		helpers.Errorhandler(w, "page not found", http.StatusNotFound)
+		helpers.Errorhandler(w, "Method not allowed", http.StatusNotFound)
 		return
 	}
 	username := strings.TrimSpace(r.FormValue("username"))

@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -70,25 +69,7 @@ func CheckLogin(next http.HandlerFunc) http.HandlerFunc {
 				http.Redirect(w, r, "/", http.StatusSeeOther)
 				return
 			}
-			
-			if expiredTime.Before(time.Now()) {
-				_, _ = database.DataBase.Exec(
-					"UPDATE users SET session = NULL, dateexpired = NULL WHERE session = ?", cookie.Value,
-				)
-				expiredCookie := &http.Cookie{
-					Name:     "session",
-					Value:    "",
-					Path:     "/",
-					MaxAge:   -1,
-					Expires:  time.Now().Add(-1 * time.Hour),
-					HttpOnly: true,
-				}
-				http.SetCookie(w, expiredCookie)
-				http.Redirect(w, r, "/login", http.StatusSeeOther)
-			
-				return
-			}
-
+		}
 		next(w, r)
 	}
 }
