@@ -27,7 +27,7 @@
             {{ end }}
         </ul>
     </nav>
-    <main class="main-section">
+    <main class="main-section {{if not .IsLogin.LoggedIn}}logged-out{{end}}">
         <!-- Create Post Section -->
         {{ if .IsLogin.LoggedIn }}
         <section class="create-post">

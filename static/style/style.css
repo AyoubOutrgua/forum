@@ -125,7 +125,7 @@ body {
     color: var(--primary-dark);
 }
 
-/* ==================== MAIN SECTION ==================== */
+ /* ==================== MAIN SECTION ==================== */
 .main-section {
     max-width: 140rem;
     margin: 0 auto;
@@ -134,17 +134,33 @@ body {
     grid-template-columns: 1fr;
     grid-template-areas: 
         "create"
-        "content";
-    gap: var(--space-xl); 
+        "filter"
+        "posts";
+    gap: var(--space-xl);
+}
+.main-section.logged-out {
+    grid-template-areas: 
+        "filter"
+        "posts";
 }
 
+/* --- 3. Desktop (min-width: 992px) --- */
 @media (min-width: 992px) {
+    
+    /* --- 4. Desktop / Logged-In  --- */
     .main-section {
         grid-template-columns: 30rem 1fr;
         grid-template-areas: 
             "filter create"
             "filter posts";
-        gap: var(--space-xl);
+    }
+
+    /* --- 5. Desktop / Logged-Out --- */
+    .main-section.logged-out {
+        grid-template-columns: 30rem 1fr;
+        grid-template-areas: 
+            "filter posts"
+            "filter posts";
     }
 }
 
@@ -375,6 +391,7 @@ body {
     background: rgba(56, 189, 248, 0.2);
     border-color: var(--accent-cyan);
     transform: translateY(-2px);
+    color: var(--white-80);
 }
 
 .buttons {
@@ -687,11 +704,6 @@ body {
     transition: all var(--transition-fast);
 }
 
-/* .comments:hover {
-    background: rgba(30, 41, 59, 0.6);
-    border-color: var(--accent-cyan);
-} */
-
 .comments .username {
     grid-column: 2;
     margin-bottom: 0.4rem;
@@ -702,6 +714,7 @@ body {
     color: var(--white-90);
     font-size: var(--font-size-base);
     line-height: 1.6;
+    word-break: break-all;
 }
 
 .comments .post-time {
@@ -730,30 +743,6 @@ body {
 }
 
 /* ==================== RESPONSIVE ==================== */
-@media (max-width: 992px) {
-    :root {
-        font-size: 9px;
-    }
-    
-    .menu {
-        padding: var(--space-md);
-    }
-    
-    .main-section {
-        grid-template-columns: 1fr;
-        grid-template-areas: 
-            "create"
-            "filter"
-            "posts";
-        padding: var(--space-lg) var(--space-md);
-    }
-    
-    .filter {
-        position: relative;
-        top: 0;
-        max-height: none;
-    }
-}
 
 @media (max-width: 768px) {
     .list {
@@ -776,22 +765,22 @@ body {
     .comment-reactions {
         margin-left: 0;
     }
+
+    .filter {
+        position: relative;
+        top: 0;
+        max-height: none;
+    }
 }
 
 @media (max-width: 480px) {
     .menu {
-        flex-wrap: wrap;
         gap: var(--space-sm);
         padding: var(--space-sm) var(--space-md);
     }
     
     .logo {
         font-size: var(--font-size-xl);
-    }
-    
-    .list {
-        width: 100%;
-        justify-content: center;
     }
     
     .main-section {
@@ -802,7 +791,7 @@ body {
     .filter,
     .post {
         padding: var(--space-md);
-        margin: 0 var(--space-sm);
+        margin: 0; /* <-- HNA FIN KAN LMOCHKIL W T SLL7 */
     }
 }
 
@@ -813,20 +802,14 @@ body {
     
     .menu {
         padding: 1rem 1.5rem;
-        justify-content: center;
-        text-align: center;
     }
     
     .logo {
         font-size: 2rem;
-        width: 100%;
-        text-align: center;
     }
     
     .list {
-        flex-wrap: wrap;
         gap: 0.8rem;
-        justify-content: center;
     }
     
     .link {
@@ -836,18 +819,13 @@ body {
     
     .main-section {
         padding: 1.5rem 1rem;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
     }
-    
     .create-post,
     .filter,
     .post {
         width: 100%;
         max-width: 100%;
         padding: 1.5rem;
-        margin: 0;
     }
     
     .title-create-post {
