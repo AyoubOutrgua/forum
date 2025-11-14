@@ -1,70 +1,283 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* ==================== CSS VARIABLES ==================== */
+:root {
+    font-size: 10px;
+    
+    /* Colors - Matching Login/Register & Home */
+    --primary-dark: #0f172a;
+    --primary-light: #1e293b;
+    --accent-cyan: #38bdf8;
+    --accent-cyan-dark: #0ea5e9;
+    --accent-cyan-glow: rgba(56, 189, 248, 0.3);
+    --white: #f8fafc;
+    --white-90: rgba(248, 250, 252, 0.9);
+    --white-80: rgba(248, 250, 252, 0.8);
+    --white-70: rgba(248, 250, 252, 0.7);
+    
+    /* Spacing */
+    --space-xs: 1rem;
+    --space-sm: 1.5rem;
+    --space-md: 2.5rem;
+    --space-lg: 4rem;
+    --space-xl: 6rem;
+    
+    /* Typography */
+    --font-family: 'Poppins', sans-serif;
+    --font-size-sm: 1.4rem;
+    --font-size-base: 1.6rem;
+    --font-size-lg: 1.8rem;
+    --font-size-xl: 3.2rem;
+    --font-size-2xl: 3.6rem;
+    --font-size-error: 12rem;
+    
+    /* Effects */
+    --border-width: 0.2rem;
+    --border-radius-sm: 0.5rem;
+    --box-shadow-glow: 0 0 2.5rem var(--accent-cyan);
+    --transition-fast: 0.3s;
+    --transition-medium: 0.5s;
 }
 
-:root {
-  --color-primary: #15AB92;
-  --color-secondary: #25898F;
-  --color-dark: #1C6372;
-  --color-light: #EBEBE5;
-  --color-white: #fff;
+/* ==================== RESET ==================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
-  background: linear-gradient(135deg, var(--color-dark), var(--color-secondary));
-  color: var(--color-white);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    font-family: var(--font-family);
+    font-size: var(--font-size-base);
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0a1224 0%, #07101e 100%);
+    color: var(--white);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
 }
 
+/* ==================== ERROR SECTION - GRID ==================== */
 .errorSection {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 40px;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
-  width: 90%;
-  max-width: 600px;
+    display: grid;
+    grid-template-rows: auto auto auto;
+    gap: var(--space-md);
+    justify-items: center;
+    align-content: center;
+    
+    padding: var(--space-xl);
+    background: transparent;
+    border: var(--border-width) solid var(--accent-cyan);
+    box-shadow: var(--box-shadow-glow);
+    border-radius: var(--space-xs);
+    max-width: 70rem;
+    width: 90%;
+    /* z-index: 10; */
+    animation: fadeInScale 0.8s ease-out;
 }
 
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9) translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* ==================== STATUS CODE ==================== */
 .statusCode {
-  font-size: 6rem;
-  font-weight: 800;
-  color: var(--color-primary);
-  margin-bottom: 10px;
+    font-size: var(--font-size-error);
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--white) 0%, var(--accent-cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.5rem;
+    line-height: 1;
+    animation: pulse 2s ease-in-out infinite;
 }
 
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+/* ==================== ERROR TEXT ==================== */
 .errorText {
-  font-size: 1.6rem;
-  color: var(--color-light);
-  margin-bottom: 20px;
+    font-size: var(--font-size-xl);
+    color: var(--white-90);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    text-align: center;
+    animation: slideIn 0.8s ease-out 0.2s backwards;
 }
 
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==================== BACK BUTTON - FLEXBOX ==================== */
 .btnBack {
-  display: inline-block;
-  padding: 12px 25px;
-  background: var(--color-primary);
-  color: var(--color-white);
-  border-radius: 25px;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    
+    padding: 1.8rem 4rem;
+    background: transparent;
+    border: var(--border-width) solid var(--accent-cyan);
+    border-radius: 5rem;
+    color: var(--white);
+    text-decoration: none;
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    overflow: hidden;
+    transition: all var(--transition-fast);
+    animation: slideIn 0.8s ease-out 0.4s backwards;
+}
+
+.btnBack::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, var(--accent-cyan), transparent);
+    transform: translateX(-100%);
+    transition: transform var(--transition-medium);
+}
+
+.btnBack:hover::before {
+    transform: translateX(100%);
 }
 
 .btnBack:hover {
-  background: var(--color-secondary);
-  color: var(--color-light);
-  transform: translateY(-2px);
+    background: var(--accent-cyan);
+    color: var(--primary-dark);
+    box-shadow: 0 0 2rem var(--accent-cyan-glow);
+    transform: translateY(-3px);
+}
+
+/* ==================== RESPONSIVE ==================== */
+@media (max-width: 768px) {
+    :root {
+        font-size: 9px;
+    }
+    
+    .errorSection {
+        padding: var(--space-lg);
+        width: 95%;
+        gap: var(--space-sm);
+    }
+    
+    .statusCode {
+        font-size: 10rem;
+    }
+    
+    .errorText {
+        font-size: var(--font-size-lg);
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        font-size: 8px;
+    }
+    
+    .errorSection {
+        padding: var(--space-md);
+        margin: 0 var(--space-md);
+        width: calc(100% - 5rem);
+    }
+    
+    .statusCode {
+        font-size: 8rem;
+        letter-spacing: 0.3rem;
+    }
+    
+    .errorText {
+        font-size: var(--font-size-base);
+        letter-spacing: 0.1rem;
+    }
+    
+    .btnBack {
+        padding: 1.5rem 3rem;
+        font-size: var(--font-size-sm);
+    }
+}
+
+@media (max-width: 375px) {
+    :root {
+        font-size: 7px;
+    }
+    
+    .errorSection {
+        padding: var(--space-sm) var(--space-md);
+        margin: 0 var(--space-sm);
+        width: calc(100% - 3rem);
+        gap: var(--space-sm);
+        margin: 0 2rem;
+    }
+    
+    .statusCode {
+        font-size: 7rem;
+        letter-spacing: 0.2rem;
+    }
+    
+    .errorText {
+        font-size: var(--font-size-sm);
+        letter-spacing: 0.1rem;
+    }
+    
+    .btnBack {
+        padding: 1.2rem 2.5rem;
+    }
+}
+
+/* Extra small devices - 320px */
+@media (max-width: 320px) {
+    :root {
+        font-size: 6.5px;
+    }
+    
+    .errorSection {
+        padding: var(--space-sm);
+        margin: 0 var(--space-xs);
+        width: calc(100% - 2rem);
+        gap: var(--space-xs);
+        margin: 0 2rem;
+    }
+    
+    .statusCode {
+        font-size: 6rem;
+        letter-spacing: 0.1rem;
+    }
+    
+    .errorText {
+        font-size: var(--font-size-xs);
+        letter-spacing: 0.05rem;
+    }
+    
+    .btnBack {
+        padding: 1rem 2rem;
+        font-size: var(--font-size-xs);
+    }
 }

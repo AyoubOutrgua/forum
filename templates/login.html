@@ -27,7 +27,10 @@
                 <h2 class="slide-in" style="--delay: 0s">Welcome Back!</h2>
                 <p class="slide-in" style="--delay: 0.1s">Sign in to access your account and continue your journey with us.</p>
             </div>
-            <div class="login">
+            
+            <div class="form-box">
+                <h1 class="fade-in" style="--delay: 0.2s">Login</h1>
+                
                 <form action="/loginAuth" method="POST">
                     {{if .Error}}
                     <div class="error-message fade-in" style="--delay: 0.3s">
