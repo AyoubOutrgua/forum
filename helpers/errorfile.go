@@ -1,6 +1,7 @@
 package helpers
 
 import (
+	"bytes"
 	"html/template"
 	"net/http"
 	"strconv"
@@ -18,9 +19,11 @@ func Errorhandler(w http.ResponseWriter, errors string, er int) {
 		http.Error(w, "500 Internal Server Error (parse error)", http.StatusInternalServerError)
 		return
 	}
-
-	w.WriteHeader(er)
-	if execErr := tmpl.Execute(w, myMap); execErr != nil {
+	var buf bytes.Buffer
+	if execErr := tmpl.Execute(&buf, myMap); execErr != nil {
 		http.Error(w, "500 Internal Server Error (exec error)", http.StatusInternalServerError)
+		return
 	}
+	w.WriteHeader(er)
+	w.Write(buf.Bytes())
 }

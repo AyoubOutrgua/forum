@@ -9,7 +9,7 @@ import (
 	"forum/helpers"
 )
 
-type RateLimitLogin struct {
+type RateLimit struct {
 	Count        int
 	BlockedUntil time.Time
 	FirstTime    time.Time
@@ -17,7 +17,7 @@ type RateLimitLogin struct {
 }
 
 type RateLimiterManager struct {
-	limits map[string]*RateLimitLogin
+	limits map[string]*RateLimit
 	mu     sync.Mutex
 	Limit  int
 	Window time.Duration
@@ -25,7 +25,7 @@ type RateLimiterManager struct {
 
 func NewRateLimiterManager(limit int, window time.Duration) *RateLimiterManager {
 	return &RateLimiterManager{
-		limits: make(map[string]*RateLimitLogin),
+		limits: make(map[string]*RateLimit),
 		Limit:  limit,
 		Window: window,
 	}
@@ -40,7 +40,7 @@ func (m *RateLimiterManager) Check(ip string) bool {
 
 	if !exists {
 
-		m.limits[ip] = &RateLimitLogin{
+		m.limits[ip] = &RateLimit{
 			Count:        1,
 			FirstTime:    now,
 			BlockedUntil: time.Time{},
@@ -75,16 +75,13 @@ func GetUserIP(r *http.Request) string {
 	return ip
 }
 
-func RateLimitLoginMiddleware(manager *RateLimiterManager, next http.HandlerFunc) http.HandlerFunc {
+func RateLimitMiddleware(manager *RateLimiterManager, next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodPost {
+		ip := GetUserIP(r)
 
-			ip := GetUserIP(r)
-
-			if !manager.Check(ip) {
-				helpers.Errorhandler(w, "To many requests slow down", http.StatusTooManyRequests)
-				return
-			}
+		if !manager.Check(ip) {
+			helpers.Errorhandler(w, "To many requests slow down", http.StatusTooManyRequests)
+			return
 		}
 		next.ServeHTTP(w, r)
 	}

@@ -8,7 +8,7 @@ import (
 
 func Showregister(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
-		helpers.Errorhandler(w,"bad request",http.StatusBadRequest)
+		helpers.Errorhandler(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
 	catStrs := r.URL.Query()

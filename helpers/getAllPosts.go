@@ -16,7 +16,7 @@ func GetAllPosts(w http.ResponseWriter) []tools.Post {
 			`
 	posts, errSelect := database.SelectAllPosts(postsQuery)
 	if errSelect != nil {
-		http.Error(w, "------------- ERROR --------------!", http.StatusNotFound)
+		Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
 		return nil
 	}
 	GetPostCategories(w, posts)
@@ -32,7 +32,11 @@ func GetPostCategories(w http.ResponseWriter, posts []tools.Post) {
 			FROM postCategories
 			WHERE postId = ?
 			`
-		categoriesID := database.SelectPostCategories(postCategoriesQuery, id)
+		categoriesID, err := database.SelectPostCategories(postCategoriesQuery, id)
+		if err != nil {
+			Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
+			return
+		}
 		categories := GetAllCategories(w)
 		for _, category := range categories {
 			for _, catID := range categoriesID {

@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS users (
     email TEXT NOT NULL UNIQUE,
     password TEXT NOT NULL,
     session TEXT DEFAULT NULL,
-      dateexpired DATETIME DEFAULT NULL
+    dateexpired DATETIME DEFAULT NULL
 );
 CREATE TABLE IF NOT EXISTS posts(
      id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS comments(
     comment TEXT NOT NULL,
     postId INTEGER NOT NULL,
     userId INTEGER NOT NULL,
-    creationDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    creationDate TEXT,
     FOREIGN KEY(userId) REFERENCES users(id),
     FOREIGN KEY(postId) REFERENCES posts(id)
 );

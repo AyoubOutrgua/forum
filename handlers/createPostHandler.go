@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -15,47 +14,51 @@ import (
 
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
-		http.Error(w, "Status Method Not Allowed", http.StatusMethodNotAllowed)
+		helpers.Errorhandler(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
 	errParse := r.ParseMultipartForm(10 << 20)
 	if errParse != nil {
-		http.Error(w, "Status Bad Request 1", http.StatusBadRequest)
+		helpers.Errorhandler(w, "Status Bad Request", http.StatusBadRequest)
 		return
 	}
 
-	cookie, errSession := r.Cookie("session")
-	if errSession != nil || cookie.Value == "" {
-		fmt.Println("Error session makaynach 2")
+	cookieValue := helpers.GetCookieValue(w, r)
+	if cookieValue == "" {
+		return
 	}
-	cookieID := cookie.Value
 
-	userID := helpers.GetUserID(cookieID)
+	userID := helpers.GetUserID(cookieValue)
 
 	title, ok := r.PostForm["title"]
 	if !ok {
-		http.Error(w, "Status Bad Request 2", http.StatusBadRequest)
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 	description, ok := r.PostForm["description"]
 	if !ok {
-		http.Error(w, "Status Bad Request 3", http.StatusBadRequest)
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+	if len(title[0]) == 0 || len(description[0]) == 0 || len(title[0]) > 100 || len(description[0]) > 1000 {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 	categories, ok := r.PostForm["categories"]
 
 	if !ok {
-		http.Error(w, "Status Bad Request 4", http.StatusBadRequest)
+		helpers.Errorhandler(w, "You did not select one of the categories, or you made a bad request", http.StatusBadRequest)
 		return
 	}
+
 	if len(categories) == 0 {
-		http.Error(w, "Status Bad Request !!! madrti hta chi category !!!", http.StatusBadRequest)
+		helpers.Errorhandler(w, "You did not select one of the categories, or you made a bad request", http.StatusBadRequest)
 		return
 	}
 	categoriesID := []string{"1", "2", "3", "4", "5", "6", "7", "8"}
 	for _, catsID := range categories {
 		if !slices.Contains(categoriesID, catsID) {
-			http.Error(w, "Status Bad Request ----- makaynach had categories", http.StatusBadRequest)
+			helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 			return
 		}
 	}
@@ -64,7 +67,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	imageFile, handler, err := r.FormFile("choose-file")
 	if err != nil {
 		if err != http.ErrMissingFile {
-			http.Error(w, "Status Bad Request 5", http.StatusBadRequest)
+			helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 			return
 		}
 	} else {
@@ -72,26 +75,26 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		defer imageFile.Close()
 
 		if !helpers.IsImage(handler.Filename) {
-			http.Error(w, "Status Bad Request Hadi machi image ext!!!", http.StatusBadRequest)
+			helpers.Errorhandler(w, "Bad Request: You used an invalid image extension", http.StatusBadRequest)
 			return
 		}
 
 		const maxSize = 2 * 1024 * 1024
 		if handler.Size > maxSize {
-			http.Error(w, "Image too large (max 2MB)", http.StatusBadRequest)
+			helpers.Errorhandler(w, "Bad Request: The image is greater than 2 MB.", http.StatusBadRequest)
 			return
 		}
 
 		file, errCreate := os.Create("./static/upload/" + handler.Filename)
 		if errCreate != nil {
-			http.Error(w, "Status Bad Request 6", http.StatusBadRequest)
+			helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 		defer file.Close()
 
 		_, errCopy := io.Copy(file, imageFile)
 		if errCopy != nil {
-			http.Error(w, "Status Bad Request 7", http.StatusBadRequest)
+			helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
 		imagePath = "/static/upload/" + handler.Filename
@@ -99,11 +102,15 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 	timeNow := time.Now().Format("2006-01-02 15:04:05")
 	queryInsertPost := "INSERT INTO posts (title, post, imageUrl, userId, creationDate) VALUES (?, ?, ?, ?, ?)"
-	database.ExecuteData(queryInsertPost, title[0], description[0], imagePath, userID, timeNow)
+	errEx := database.ExecuteData(queryInsertPost, title[0], description[0], imagePath, userID, timeNow)
+	if errEx != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 
 	lastPostID, err := database.SelectLastIdOfPosts("SELECT id FROM posts ORDER BY creationDate DESC LIMIT 1;")
 	if err != nil {
-		fmt.Println("ERROR : ", err)
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
@@ -112,10 +119,14 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	for _, catID := range categories {
 		categoryID, err := strconv.Atoi(catID)
 		if err != nil {
-			fmt.Println("ERROR ATOI : ", err)
+			helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 			return
 		}
-		database.ExecuteData(queryInsertCategory, lastPostID, categoryID)
+		errExec := database.ExecuteData(queryInsertCategory, lastPostID, categoryID)
+		if errExec != nil {
+			helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
 	}
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)
