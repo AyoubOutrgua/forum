@@ -5,34 +5,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="static/style/login.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
-        rel="stylesheet">
+    <link href='https://cdn.boxicons.com/3.0.3/fonts/basic/boxicons.min.css' rel='stylesheet'>
+    <link href='https://cdn.boxicons.com/3.0.3/fonts/brands/boxicons-brands.min.css' rel='stylesheet'>
     <title>Login</title>
 </head>
 
 <body>
     <nav class="navbar">
-        <a href="/"><img src="/static/images/home.png" alt="Home" class="icon"></a>
+        <a href="/" class="home-link">
+            <i class='bx bx-home-alt'></i>
+            <span>Home</span>
+        </a>
     </nav>
-    <main>
-        <section class="container">
-            <div class="welcome-text">
-                <p>Please enter your details</p>
-                <h1>Welcome back</h1>
+    
+    <main class="container">
+        <span class="bg-animate" aria-hidden="true"></span>
+        <span class="bg-animate2" aria-hidden="true"></span>
+        
+        <section class="form-wrapper">
+            <div class="info-text">
+                <h2 class="slide-in" style="--delay: 0s">Welcome Back!</h2>
+                <p class="slide-in" style="--delay: 0.1s">Sign in to access your account and continue your journey with us.</p>
             </div>
             <div class="login">
                 <form action="/loginAuth" method="POST">
                     {{if .Error}}
-                     <p style="color:red; margin-bottom:10px;font-size: large;">{{.Error}}</p>
-                      {{end}}
-                    <label class="labels" type="username">Usename Or Email:</label>
-                    <input class="inputs input-text" type="text" name="username" value="{{ .Username }}" required>
-                    <label class="labels" type="password">Password:</label>
-                    <input class="inputs input-password" type="password" name="password"  required>
-                    <button class="btn" type="submit">Login</button>
-                    <span>Don't have an Account? <a href="/register">Sign-Up Here!</a></span>
+                    <div class="error-message fade-in" style="--delay: 0.3s">
+                        <i class='bx bx-error-circle'></i>
+                        <span>{{.Error}}</span>
+                    </div>
+                    {{end}}
+                    
+                    <div class="input-box fade-in" style="--delay: 0.4s">
+                        <input type="text" id="username" name="username" value="{{.Username}}" required>
+                        <label for="username">Username Or Email</label>
+                         <i class='bx bx-user'></i> 
+                    </div>
+                    
+                    <div class="input-box fade-in" style="--delay: 0.5s">
+                        <input type="password" id="password" name="password" required>
+                        <label for="password">Password</label>
+                        <i class='bx  bx-lock'></i>
+                    </div>
+                    
+                    <button class="btn fade-in" style="--delay: 0.6s" type="submit">
+                        <span>Login</span>
+                        <i class='bx bx-right-arrow-alt'></i>
+                    </button>
+                    
+                    <div class="logreg-link fade-in" style="--delay: 0.7s">
+                        <p>Don't have an account? <a href="/register">Sign Up Here!</a></p>
+                    </div>
                 </form>
             </div>
         </section>
