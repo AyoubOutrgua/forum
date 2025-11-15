@@ -13,24 +13,23 @@ import (
 )
 
 func FilterByAuthorHandler(w http.ResponseWriter, r *http.Request) {
+	// getting session from cookies
 	cookie, err := r.Cookie("session")
 	if err != nil || cookie.Value == "" {
 		helpers.Errorhandler(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
+	// checking if the session exists in db
 	var userExists bool
 	errSelect := database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
-	if errSelect == sql.ErrNoRows {
-		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
-		return
-	} else if errSelect != nil {
+	if errSelect != nil {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	} else if !userExists {
 		helpers.Errorhandler(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
-
+	// getting the userId from db
 	var userID int
 	errSelect = database.DataBase.QueryRow("SELECT id FROM users WHERE session = ?", cookie.Value).Scan(&userID)
 	if errSelect == sql.ErrNoRows {
