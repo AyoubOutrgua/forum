@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"database/sql"
 	"net/http"
 	"strings"
 
@@ -39,35 +38,30 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	var existsUsername bool
 	err := database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE userName = ?)", username).Scan(&existsUsername)
-	if err == sql.ErrNoRows {
-		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
-		return
-	} else if err != nil {
+	if err != nil {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	if existsUsername {
-		helpers.Render(w, "register.html", http.StatusBadRequest, map[string]string{"Error": "Username already taken", "Username": username, "email": email})
+		helpers.Render(w, "register.html", http.StatusConflict, map[string]string{"Error": "Username already taken", "Username": "", "email": email})
 		return
 	}
 
 	var existsEmail bool
 	err = database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE email = ?)", email).Scan(&existsEmail)
-	if err == sql.ErrNoRows {
-		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
-		return
-	} else if err != nil {
+	if err != nil {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	if existsEmail {
-		helpers.Render(w, "register.html", http.StatusBadRequest, map[string]string{"Error": "Email already used", "Username": username, "email": email})
+		helpers.Render(w, "register.html", http.StatusConflict, map[string]string{"Error": "Email already used", "Username": username, "email": ""})
 		return
 	}
 
 	hashPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
 	if err != nil {
-		helpers.Render(w, "register.html", http.StatusBadRequest, map[string]string{"Error": "Unexpected error please try again", "Username": username, "email": email})
+		helpers.Errorhandler(w,"Internal server Error",http.StatusInternalServerError)
+		return
 	}
 
 	stmt2 := `INSERT INTO users (userName, email, password) VALUES (?, ?, ?);`

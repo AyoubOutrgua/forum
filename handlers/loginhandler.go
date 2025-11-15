@@ -3,6 +3,7 @@ package handlers
 import (
 	"database/sql"
 	"net/http"
+	"strings"
 	"time"
 
 	"forum/database"
@@ -21,9 +22,9 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		helpers.Errorhandler(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
-	
-	username := r.FormValue("username")
-	password := r.FormValue("password")
+
+	username := strings.TrimSpace(r.FormValue("username"))
+	password := strings.TrimSpace(r.FormValue("password"))
 
 	if username == "" || password == "" {
 		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
