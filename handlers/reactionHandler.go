@@ -31,7 +31,7 @@ func ReactionHandler(w http.ResponseWriter, r *http.Request) {
 	postIDStr := r.FormValue("postId")
 	reactionStr := r.FormValue("reaction")
 	if postIDStr == "" || reactionStr == "" {
-		http.Error(w, "Invalid request data", http.StatusBadRequest)
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 
