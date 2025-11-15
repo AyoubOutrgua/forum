@@ -21,20 +21,20 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		helpers.Errorhandler(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
 	}
+	
 	username := r.FormValue("username")
 	password := r.FormValue("password")
 
 	if username == "" || password == "" {
-		helpers.Render(w, "login.html", http.StatusBadRequest, map[string]string{"Error": "All fields are required", "Username": username})
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
-	if len(username)>50 || len(username)<4{
-		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password", "Username": username})
+	if len(username) > 50 || len(username) < 4 {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
-	if len(password)>20 || len(password)<6{
-		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password", "Username": username})
-		return
+	if len(password) > 20 || len(password) < 6 {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 	}
 	stmt := `SELECT password FROM users WHERE userName = ? OR email = ?`
 	row := database.DataBase.QueryRow(stmt, username, username)
@@ -50,16 +50,15 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(password)) != nil {
-	helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password", "Username": username})
-
+		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password", "Username": username})
 		return
 	}
 
-	sessionID ,err := uuid.NewV4()
-	if err != nil{
-		helpers.Errorhandler(w,"internal server Error",http.StatusInternalServerError)
+	sessionID, err := uuid.NewV4()
+	if err != nil {
+		helpers.Errorhandler(w, "internal server Error", http.StatusInternalServerError)
 	}
-	strsessionID :=sessionID.String()
+	strsessionID := sessionID.String()
 	expireTime := time.Now().Add(1 * time.Hour)
 	stmt2 := `UPDATE users SET dateexpired = ? ,session = ? WHERE userName = ? OR email = ?`
 	_, err = database.DataBase.Exec(stmt2, expireTime, strsessionID, username, username)

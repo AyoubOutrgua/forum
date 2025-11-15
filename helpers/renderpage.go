@@ -2,17 +2,15 @@ package helpers
 
 import (
 	"bytes"
-	"fmt"
 	"html/template"
 	"net/http"
 )
 
 func Render(w http.ResponseWriter, templateFile string, status int, data interface{}) {
-
 	tmpl, err := template.ParseFiles("templates/" + templateFile)
 	if err != nil {
-		http.Error(w, "Template parsing error", http.StatusInternalServerError)
-		fmt.Println("error parsing template:", err)
+		Errorhandler(w, "Template parsing error", http.StatusInternalServerError)
+
 		return
 	}
 	var buf bytes.Buffer

@@ -27,13 +27,13 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	if password == "" || email == "" || firstpassword == "" || username == "" {
 
-		helpers.Render(w, "register.html", http.StatusBadRequest, map[string]string{"Error": "All fields are required", "Username": username, "email": email})
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 
 	errreg := helpers.ValidateInfo(username, email, password)
-	if errreg != "" {
-		helpers.Render(w, "register.html", http.StatusBadRequest, map[string]string{"Error": errreg, "Username": username, "email": email})
+	if !errreg{
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 

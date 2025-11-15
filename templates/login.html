@@ -40,13 +40,13 @@
                     {{end}}
                     
                     <div class="input-box fade-in" style="--delay: 0.4s">
-                        <input type="text" id="username" name="username" value="{{.Username}}" required maxlength="50">
+                        <input type="text" id="username" name="username" value="{{.Username}}" required maxlength="50" minlength="4">
                         <label for="username">Username Or Email</label>
                          <i class='bx bx-user'></i> 
                     </div>
                     
                     <div class="input-box fade-in" style="--delay: 0.5s">
-                        <input type="password" id="password" name="password" required maxlength="20">
+                        <input type="password" id="password" name="password" required maxlength="20" minlength="6">
                         <label for="password">Password</label>
                         <i class='bx  bx-lock'></i>
                     </div>
