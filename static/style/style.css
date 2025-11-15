@@ -791,7 +791,32 @@ body {
     .filter,
     .post {
         padding: var(--space-md);
-        margin: 0; /* <-- HNA FIN KAN LMOCHKIL W T SLL7 */
+        margin: 0;
+    }
+    .comments-form form {
+        grid-template-columns: auto 1fr;
+        gap: var(--space-sm);
+    }
+
+    .profile-comment {
+        grid-row: 1;
+        grid-column: 1;
+    }
+
+    .username {
+        grid-row: 1;
+        grid-column: 2;
+        align-self: center;
+    }
+
+    .input-comment {
+        grid-row: 2;
+        grid-column: 1 / span 2;
+    }
+
+    .btn-comment {
+        grid-row: 3;
+        grid-column: 1 / span 2;
     }
 }
 
@@ -823,8 +848,8 @@ body {
     .create-post,
     .filter,
     .post {
-        width: 100%;
-        max-width: 100%;
+        width: 98%;
+        max-width: 98%;
         padding: 1.5rem;
     }
     
