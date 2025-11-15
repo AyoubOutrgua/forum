@@ -43,6 +43,9 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
+	description[0] = strings.ReplaceAll(description[0], "\r", "")
+	description[0] = strings.TrimSpace(description[0])
+	title[0] = strings.TrimSpace(title[0])
 	if len(title[0]) == 0 || len(description[0]) == 0 || len(title[0]) > 100 || len(description[0]) > 1000 {
 		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
