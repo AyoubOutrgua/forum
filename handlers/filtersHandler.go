@@ -147,23 +147,22 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
 	var userID int
 
 	cookie, err := r.Cookie("session")
-	if err != nil || cookie.Value == "" {
-		helpers.Errorhandler(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
+	if err == nil && cookie.Value != "" {
 
-	err = database.DataBase.QueryRow(
-		"SELECT id FROM users WHERE session = ?", cookie.Value,
-	).Scan(&userID)
+		err = database.DataBase.QueryRow(
+			"SELECT id FROM users WHERE session = ?", cookie.Value,
+		).Scan(&userID)
 
-	if err == sql.ErrNoRows {
-		helpers.Errorhandler(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	} else if err != nil {
-		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	} else {
-		loggedIn = true
+		if err == sql.ErrNoRows {
+
+			helpers.Errorhandler(w, "Status Bad Request", http.StatusBadRequest)
+			return
+		} else if err != nil {
+			helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		} else {
+			loggedIn = true
+		}
 	}
 	reactionStats := helpers.GetAllReactionStats(w)
 	userReactions := helpers.GetUserPostReactions(w, userID)
