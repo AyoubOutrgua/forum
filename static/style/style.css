@@ -226,7 +226,29 @@ body {
 .description {
     min-height: 10rem;
     resize: vertical;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-cyan) rgba(15, 23, 42, 0.7);
 }
+
+.description::-webkit-scrollbar {
+    width: 10px;
+}
+
+.description::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: var(--border-radius-sm);
+}
+
+.description::-webkit-scrollbar-thumb {
+    background-color: var(--accent-cyan);
+    border-radius: var(--border-radius-pill);
+    border: 2px solid rgba(15, 23, 42, 0.5); /* Kaydir espace sghir bin thumb w track */
+}
+
+.description::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent-cyan-dark);
+}
+
 
 /* CREATE POST CATEGORIES  */
 .categories {
@@ -497,6 +519,7 @@ body {
     font-weight: 600;
     margin-bottom: var(--space-sm);
     color: var(--white);
+    word-break: break-all;
 }
 
 .body-image {
@@ -523,6 +546,7 @@ body {
     font-size: var(--font-size-base);
     color: var(--white-90);
     line-height: 1.8;
+    word-break: break-all;
 }
 
 /* Category Section */
@@ -842,6 +866,7 @@ body {
         font-size: 1.3rem;
     }
     
+    /* === HNA FIN RJE3NA L-CODE DYALEK === */
     .main-section {
         padding: 1.5rem 1rem;
     }
@@ -852,6 +877,7 @@ body {
         max-width: 98%;
         padding: 1.5rem;
     }
+    /* === NIHAYAT L-ISLAH === */
     
     .title-create-post {
         font-size: 2rem;
