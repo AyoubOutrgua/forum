@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"database/sql"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -35,7 +34,6 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	errreg := helpers.ValidateInfo(username, email, password)
 	if !errreg {
 		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
-		fmt.Println("test")
 		return
 	}
 

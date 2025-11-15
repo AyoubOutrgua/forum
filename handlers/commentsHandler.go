@@ -34,6 +34,11 @@ func CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	errParse := r.ParseForm()
+	if errParse != nil {
+		helpers.Errorhandler(w, "Status Bad Request", http.StatusBadRequest)
+		return
+	}
 	commentText := r.FormValue("comment")
 	postIDStr := r.FormValue("postId")
 
