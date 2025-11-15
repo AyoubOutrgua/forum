@@ -2,7 +2,7 @@
 
 /* ==================== CSS VARIABLES ==================== */
 :root {
-    font-size: 10px;
+    font-size: 62.5%;
     
     /* Colors - Matching Login/Register & Home */
     --primary-dark: #0f172a;

@@ -2,7 +2,7 @@
 
 /* ==================== CSS VARIABLES ==================== */
 :root {
-    font-size: 10px;
+    font-size: 62.5%;
     
     /* Colors - Matching Login/Register */
     --primary-dark: #0f172a;
@@ -162,6 +162,11 @@ body {
             "filter posts"
             "filter posts";
     }
+    .filter {
+        position: sticky;
+        top: calc(10rem + var(--space-md));
+        align-self: start;
+    }
 }
 
 /* ==================== CREATE POST SECTION  ==================== */
@@ -242,7 +247,7 @@ body {
 .description::-webkit-scrollbar-thumb {
     background-color: var(--accent-cyan);
     border-radius: var(--border-radius-pill);
-    border: 2px solid rgba(15, 23, 42, 0.5); /* Kaydir espace sghir bin thumb w track */
+    border: 2px solid rgba(15, 23, 42, 0.5);
 }
 
 .description::-webkit-scrollbar-thumb:hover {
@@ -358,9 +363,8 @@ body {
     border-radius: var(--border-radius-lg);
     padding: var(--space-lg);
     animation: fadeIn 0.6s ease-out 0.2s backwards;
-    position: sticky;
-    top: calc(10rem + var(--space-md));
-    align-self: start;
+    position: relative; 
+    top: 0;
 }
 
 .filter h3 {
@@ -789,12 +793,6 @@ body {
     .comment-reactions {
         margin-left: 0;
     }
-
-    .filter {
-        position: relative;
-        top: 0;
-        max-height: none;
-    }
 }
 
 @media (max-width: 480px) {
@@ -865,8 +863,6 @@ body {
         padding: 0.6rem 1.2rem;
         font-size: 1.3rem;
     }
-    
-    /* === HNA FIN RJE3NA L-CODE DYALEK === */
     .main-section {
         padding: 1.5rem 1rem;
     }
@@ -877,7 +873,6 @@ body {
         max-width: 98%;
         padding: 1.5rem;
     }
-    /* === NIHAYAT L-ISLAH === */
     
     .title-create-post {
         font-size: 2rem;
