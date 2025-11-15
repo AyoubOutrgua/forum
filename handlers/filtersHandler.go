@@ -136,24 +136,34 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
 
 	posts, err := database.SelectAllPosts(q)
 	if err == sql.ErrNoRows {
-		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+		helpers.Errorhandler(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	} else if err != nil {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	helpers.GetPostCategories(w, posts)
-
 	loggedIn := false
 	var userID int
-	if cookie, err := r.Cookie("session"); err == nil && cookie.Value != "" {
-		var exists bool
-		if scanErr := database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&exists); scanErr == nil && exists {
+
+	cookie, err := r.Cookie("session")
+	if err == nil && cookie.Value != "" {
+
+		err = database.DataBase.QueryRow(
+			"SELECT id FROM users WHERE session = ?", cookie.Value,
+		).Scan(&userID)
+
+		if err == sql.ErrNoRows {
+
+			helpers.Errorhandler(w, "Status Bad Request", http.StatusBadRequest)
+			return
+		} else if err != nil {
+			helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		} else {
 			loggedIn = true
-			_ = database.DataBase.QueryRow("SELECT id FROM users WHERE session = ?", cookie.Value).Scan(&userID)
 		}
 	}
-
 	reactionStats := helpers.GetAllReactionStats(w)
 	userReactions := helpers.GetUserPostReactions(w, userID)
 	comments := helpers.GetAllComments(w)

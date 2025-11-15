@@ -1,11 +1,14 @@
 package handlers
 
 import (
+	"database/sql"
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"slices"
 	"strconv"
+	"strings"
 	"time"
 
 	"forum/database"
@@ -85,7 +88,31 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		file, errCreate := os.Create("./static/upload/" + handler.Filename)
+		query := `SELECT imageUrl
+				FROM posts
+				ORDER BY creationDate DESC
+				LIMIT 1;`
+		imgName := ""
+		err := database.DataBase.QueryRow(query).Scan(&imgName)
+		if err != nil && err != sql.ErrNoRows {
+			helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+		if imgName == "" {
+			imgName = "image1" + strings.ToLower(filepath.Ext(handler.Filename))
+		} else {
+			numWithExt := imgName[len("/static/upload/image"):]
+			nb := numWithExt[:len(numWithExt)-len(filepath.Ext(numWithExt))]
+			num, errConv := strconv.Atoi(nb)
+			if errConv != nil {
+				helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+				return
+			}
+			num++
+			imgName = "image" + strconv.Itoa(num) + filepath.Ext(handler.Filename)
+		}
+
+		file, errCreate := os.Create("./static/upload/" + imgName)
 		if errCreate != nil {
 			helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 			return
@@ -97,7 +124,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 			helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 			return
 		}
-		imagePath = "/static/upload/" + handler.Filename
+		imagePath = "/static/upload/" + imgName
 	}
 
 	timeNow := time.Now().Format("2006-01-02 15:04:05")
