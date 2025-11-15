@@ -40,25 +40,25 @@
                     {{end}}
                     
                     <div class="input-box fade-in" style="--delay: 0.4s">
-                        <input type="text" id="username" name="username" value="{{.Username}}" required>
+                        <input type="text" id="username" name="username" value="{{.Username}}" required maxlength="15">
                         <label for="username">Username</label>
                         <i class='bx bx-user'></i>
                     </div>
                     
                     <div class="input-box fade-in" style="--delay: 0.5s">
-                        <input type="email" id="email" name="email" value="{{.Email}}" required>
+                        <input type="email" id="email" name="email" value="{{.Email}}" required maxlength="50">
                         <label for="email">Email</label>
                         <i class='bx bx-envelope'></i>
                     </div>
                     
                     <div class="input-box fade-in" style="--delay: 0.6s">
-                        <input type="password" id="firstpass" name="firstpass" required>
+                        <input type="password" id="firstpass" name="firstpass" required maxlength="20">
                         <label for="firstpass">Password</label>
                         <i class='bx  bx-lock'></i>
                     </div>
                     
                     <div class="input-box fade-in" style="--delay: 0.7s">
-                        <input type="password" id="secondpass" name="secondpass" required>
+                        <input type="password" id="secondpass" name="secondpass" required maxlength="20">
                         <label for="secondpass">Confirm Password</label>
                         <i class='bx  bx-lock'></i>
                     </div>

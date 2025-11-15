@@ -8,7 +8,7 @@ import (
 	"forum/database"
 	"forum/helpers"
 
-	"github.com/google/uuid"
+	"github.com/gofrs/uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -28,13 +28,21 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		helpers.Render(w, "login.html", http.StatusBadRequest, map[string]string{"Error": "All fields are required", "Username": username})
 		return
 	}
+	if len(username)>50 || len(username)<4{
+		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password", "Username": username})
+		return
+	}
+	if len(password)>20 || len(password)<6{
+		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password", "Username": username})
+		return
+	}
 	stmt := `SELECT password FROM users WHERE userName = ? OR email = ?`
 	row := database.DataBase.QueryRow(stmt, username, username)
 
 	var hashPass string
 	err := row.Scan(&hashPass)
 	if err == sql.ErrNoRows {
-		helpers.Render(w, "login.html", http.StatusBadRequest, map[string]string{"Error": "Invalid username or password", "Username": username})
+		helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password", "Username": username})
 		return
 	} else if err != nil {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
@@ -42,15 +50,19 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if bcrypt.CompareHashAndPassword([]byte(hashPass), []byte(password)) != nil {
-		helpers.Render(w, "login.html", http.StatusBadRequest, map[string]string{"Error": "All fields are required", "Username": username})
+	helpers.Render(w, "login.html", http.StatusUnauthorized, map[string]string{"Error": "Invalid username or password", "Username": username})
 
 		return
 	}
 
-	sessionID := uuid.New().String()
+	sessionID ,err := uuid.NewV4()
+	if err != nil{
+		helpers.Errorhandler(w,"internal server Error",http.StatusInternalServerError)
+	}
+	strsessionID :=sessionID.String()
 	expireTime := time.Now().Add(1 * time.Hour)
 	stmt2 := `UPDATE users SET dateexpired = ? ,session = ? WHERE userName = ? OR email = ?`
-	_, err = database.DataBase.Exec(stmt2, expireTime, sessionID, username, username)
+	_, err = database.DataBase.Exec(stmt2, expireTime, strsessionID, username, username)
 	if err != nil {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
@@ -58,7 +70,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	http.SetCookie(w, &http.Cookie{
 		Name:     "session",
-		Value:    sessionID,
+		Value:    strsessionID,
 		HttpOnly: true,
 		Path:     "/",
 		MaxAge:   3600,
