@@ -34,7 +34,7 @@
             <form action="/createpost" method="POST" enctype="multipart/form-data">
                 <h1 class="title-create-post">Create New Post</h1>
                 <input type="text" name="title" placeholder="Title" class="inputs title" maxlength="100" required>
-                <input type="text" name="description" placeholder="Description" class="inputs description" maxlength="1000" required>
+                <textarea type="text" name="description" placeholder="Description" class="inputs description" maxlength="1000" required></textarea>
                 <div class="categories">
                     {{ range .Categories }}
                     <input type="checkbox" name="categories" id="create-{{ .Category }}" value="{{ .ID }}"
