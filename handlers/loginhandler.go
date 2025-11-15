@@ -14,10 +14,6 @@ import (
 )
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	// if database.DataBase == nil {
-	// 	helpers.Errorhandler(w, "Status Internal Server Error", http.StatusInternalServerError)
-	// 	return
-	// }
 	if r.Method != http.MethodPost {
 		helpers.Errorhandler(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 		return
@@ -60,7 +56,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		helpers.Errorhandler(w, "internal server Error", http.StatusInternalServerError)
 	}
 	strsessionID := sessionID.String()
-	expireTime := time.Now().Add(1 * time.Hour)
+	expireTime := time.Now().Add(10 * time.Second)
 	stmt2 := `UPDATE users SET dateexpired = ? ,session = ? WHERE userName = ? OR email = ?`
 	_, err = database.DataBase.Exec(stmt2, expireTime, strsessionID, username, username)
 	if err != nil {
@@ -73,7 +69,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		Value:    strsessionID,
 		HttpOnly: true,
 		Path:     "/",
-		MaxAge:   3600,
+		MaxAge:   10,
 	})
 
 	http.Redirect(w, r, "/", http.StatusSeeOther)

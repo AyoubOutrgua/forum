@@ -1,7 +1,9 @@
 package handlers
 
 import (
+	"database/sql"
 	"net/http"
+	"time"
 
 	"forum/database"
 	"forum/helpers"
@@ -24,13 +26,45 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	cookie, errSession := r.Cookie("session")
 	if errSession == nil && cookie.Value != "" {
 		var userExists bool
+		var expiredTime time.Time
 		err := database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
 		if err == nil && userExists {
+
 			loggedIn = true
-			database.DataBase.QueryRow("SELECT id FROM users WHERE session = ?", cookie.Value).Scan(&userID)
+			err = database.DataBase.QueryRow("SELECT id, dateexpired FROM users WHERE session = ?", cookie.Value).Scan(&userID, &expiredTime)
+			if err == nil {
+				if expiredTime.After(time.Now()) {
+					loggedIn = true
+				} else {
+					_, err = database.DataBase.Exec(
+						"UPDATE users SET session = NULL, dateexpired = NULL WHERE session = ?", cookie.Value)
+						if err != nil{
+							helpers.Errorhandler(w,"internal server error",http.StatusInternalServerError)
+						}
+
+					expiredCookie := &http.Cookie{
+						Name:     "session",
+						Value:    "",
+						Path:     "/",
+						MaxAge:   -1,
+						Expires:  time.Now().Add(-1 * time.Hour),
+						HttpOnly: true,
+					}
+					http.SetCookie(w, expiredCookie)
+					loggedIn = false
+				}
+			} else if err == sql.ErrNoRows {
+				http.Redirect(w, r, "/login", http.StatusSeeOther)
+				return
+			} else {
+				helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+				return
+			}
+
 		}
 	}
 
+	
 	dataIsLogin := tools.IsLogin{LoggedIn: loggedIn, UserID: userID}
 
 	posts := helpers.GetAllPosts(w)
@@ -52,6 +86,5 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	pageData.ConnectUserName = connectUserName
 	pageData.CommentReactionStats = commentReactionStats
 	pageData.UserCommentReactions = userCommentReactions
-	helpers.Render(w, "index.html",http.StatusOK, pageData)
+	helpers.Render(w, "index.html", http.StatusOK, pageData)
 }
-
