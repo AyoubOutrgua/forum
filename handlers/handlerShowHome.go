@@ -47,8 +47,7 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	}
 	comments := helpers.GetAllComments(w)
 	connectUserName := helpers.GetConnectUserName(w, userID)
-	// commentReactionStats := helpers.GetAllCommentReactionStats(w)
-	// userCommentReactions := helpers.GetUserCommentReactions(w, userID)
+	
 	commentReactionStats, err := helpers.GetAllCommentReactionStats() 
 	if err != nil {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
