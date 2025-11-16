@@ -35,12 +35,30 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 
 	posts := helpers.GetAllPosts(w)
 	categories := helpers.GetAllCategories(w)
-	reactionStats := helpers.GetAllReactionStats(w)
-	userReactions := helpers.GetUserPostReactions(w, userID)
+	reactionStats, err := helpers.GetAllReactionStats()
+	if err != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	userReactions, err := helpers.GetUserPostReactions(userID)
+	if err != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 	comments := helpers.GetAllComments(w)
 	connectUserName := helpers.GetConnectUserName(w, userID)
-	commentReactionStats := helpers.GetAllCommentReactionStats(w)
-	userCommentReactions := helpers.GetUserCommentReactions(w, userID)
+	// commentReactionStats := helpers.GetAllCommentReactionStats(w)
+	// userCommentReactions := helpers.GetUserCommentReactions(w, userID)
+	commentReactionStats, err := helpers.GetAllCommentReactionStats() 
+	if err != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+		return 
+	}
+	userCommentReactions, err := helpers.GetUserCommentReactions(userID) 
+	if err != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+		return 
+	}
 
 	var pageData tools.PageData
 	pageData.Posts = posts
@@ -52,6 +70,5 @@ func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	pageData.ConnectUserName = connectUserName
 	pageData.CommentReactionStats = commentReactionStats
 	pageData.UserCommentReactions = userCommentReactions
-	helpers.Render(w, "index.html",http.StatusOK, pageData)
+	helpers.Render(w, "index.html", http.StatusOK, pageData)
 }
-
