@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	"forum/database"
@@ -41,7 +42,7 @@ func CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	commentText := r.FormValue("comment")
 	postIDStr := r.FormValue("postId")
-
+	commentText = strings.TrimSpace(commentText)
 	if commentText == "" || postIDStr == "" {
 		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return

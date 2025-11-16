@@ -59,12 +59,13 @@ func FilterByAuthorHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
+	// getting categories from the query
 	catStrs := r.URL.Query()["categories"]
 	if len(catStrs) == 0 {
 		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
-
+	// checking the validity of categories
 	ids := []int{}
 	for _, s := range catStrs {
 		s = strings.TrimSpace(s)
@@ -104,10 +105,7 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
     `, in)
 
 	posts, err := database.SelectAllPosts(q)
-	if err == sql.ErrNoRows {
-		helpers.Errorhandler(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	} else if err != nil {
+	if err != nil {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -117,9 +115,8 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
 
 	cookie, err := r.Cookie("session")
 	if err == nil && cookie.Value != "" {
-
 		err = database.DataBase.QueryRow(
-			"SELECT id FROM users WHERE session = ?", cookie.Value,
+		"SELECT id FROM users WHERE session = ?", cookie.Value,
 		).Scan(&userID)
 
 		if err == sql.ErrNoRows {
@@ -170,7 +167,7 @@ func FilterByLikedHandler(w http.ResponseWriter, r *http.Request) {
 	helpers.GetPostCategories(w, posts)
 	RenderPostsPage(w, posts, true, userID)
 }
-
+//getting post informations and rendering the page
 func RenderPostsPage(w http.ResponseWriter, posts []tools.Post, loggedIn bool, userID int) {
 	reactionStats := helpers.GetAllReactionStats(w)
 	userReactions := helpers.GetUserPostReactions(w, userID)
@@ -183,7 +180,6 @@ func RenderPostsPage(w http.ResponseWriter, posts []tools.Post, loggedIn bool, u
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-
 	pageData := tools.PageData{
 		Posts:                posts,
 		Categories:           categories,
