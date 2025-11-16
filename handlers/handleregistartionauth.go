@@ -9,7 +9,7 @@ import (
 
 	"golang.org/x/crypto/bcrypt"
 )
-
+// RegisterHandler processes user registration by validating input, checking for existing users, hashing the password, and storing the new user in the database.
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		helpers.Errorhandler(w, "Method not allowed", http.StatusNotFound)

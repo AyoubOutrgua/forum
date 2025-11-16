@@ -7,6 +7,7 @@ import (
 	"forum/database"
 	"forum/helpers"
 )
+// LogOutHandler handles user logout by invalidating the session and clearing the cookie from the client side and server side.
 
 func LogOutHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {

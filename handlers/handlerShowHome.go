@@ -9,7 +9,7 @@ import (
 	"forum/helpers"
 	"forum/tools"
 )
-
+// HanldlerShowHome handles the home page display, checking user session and rendering posts, categories, and reactions.
 func HanldlerShowHome(w http.ResponseWriter, r *http.Request) {
 	loggedIn := false
 	var userID int
