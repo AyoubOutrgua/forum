@@ -15,6 +15,11 @@ import (
 	"forum/helpers"
 )
 
+/*
+CreatePostHandler handles the creation of a new post. It processes a
+multipart/form-data request, validates the input, saves an optional image,
+and inserts the post and its associated categories into the database.
+*/
 func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		helpers.Errorhandler(w, "Method Not Allowed", http.StatusMethodNotAllowed)
@@ -43,6 +48,9 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
+	description[0] = strings.ReplaceAll(description[0], "\r", "")
+	description[0] = strings.TrimSpace(description[0])
+	title[0] = strings.TrimSpace(title[0])
 	if len(title[0]) == 0 || len(description[0]) == 0 || len(title[0]) > 100 || len(description[0]) > 1000 {
 		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
@@ -70,6 +78,10 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	imageFile, handler, err := r.FormFile("choose-file")
 	if err != nil {
 		if err != http.ErrMissingFile {
+			helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
+		if len(r.MultipartForm.File) > 0 {
 			helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 			return
 		}

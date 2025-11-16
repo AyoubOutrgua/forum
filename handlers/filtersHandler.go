@@ -13,24 +13,23 @@ import (
 )
 
 func FilterByAuthorHandler(w http.ResponseWriter, r *http.Request) {
+	// getting session from cookies
 	cookie, err := r.Cookie("session")
 	if err != nil || cookie.Value == "" {
 		helpers.Errorhandler(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
+	// checking if the session exists in db
 	var userExists bool
 	errSelect := database.DataBase.QueryRow("SELECT EXISTS(SELECT 1 FROM users WHERE session = ?)", cookie.Value).Scan(&userExists)
-	if errSelect == sql.ErrNoRows {
-		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
-		return
-	} else if errSelect != nil {
+	if errSelect != nil {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	} else if !userExists {
 		helpers.Errorhandler(w, "Unauthorized", http.StatusUnauthorized)
 		return
 	}
-
+	// getting the userId from db
 	var userID int
 	errSelect = database.DataBase.QueryRow("SELECT id FROM users WHERE session = ?", cookie.Value).Scan(&userID)
 	if errSelect == sql.ErrNoRows {
@@ -50,70 +49,23 @@ func FilterByAuthorHandler(w http.ResponseWriter, r *http.Request) {
     `, userID)
 
 	posts, err := database.SelectAllPosts(q)
-	if err == sql.ErrNoRows {
-		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
-		return
-	} else if err != nil {
+	if err != nil {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 	helpers.GetPostCategories(w, posts)
 
-	reactionStats, err := helpers.GetAllReactionStats()
-	if err != nil {
-		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-	userReactions, err := helpers.GetUserPostReactions(userID)
-	if err != nil {
-		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-	comments := helpers.GetAllComments(w)
-	connectUserName := helpers.GetConnectUserName(w, userID)
-	// commentReactionStats := helpers.GetAllCommentReactionStats(w)
-	// userCommentReactions := helpers.GetUserCommentReactions(w, userID)
-	commentReactionStats, err := helpers.GetAllCommentReactionStats() 
-	if err != nil {
-		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
-		return 
-	}
-	userCommentReactions, err := helpers.GetUserCommentReactions(userID) 
-	if err != nil {
-		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
-		return 
-	}
-	categories, err := database.SelectAllCategories("SELECT id, category FROM categories")
-	if err == sql.ErrNoRows {
-		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
-		return
-	} else if err != nil {
-		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-
-	pageData := tools.PageData{
-		Posts:                posts,
-		Categories:           categories,
-		IsLogin:              tools.IsLogin{LoggedIn: true, UserID: userID},
-		ReactionStats:        reactionStats,
-		UserReactions:        userReactions,
-		Comment:              comments,
-		ConnectUserName:      connectUserName,
-		CommentReactionStats: commentReactionStats,
-		UserCommentReactions: userCommentReactions,
-	}
-
-	helpers.Render(w, "index.html", http.StatusOK, pageData)
+	RenderPostsPage(w, posts, true, userID)
 }
 
 func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
+	// getting categories from the query
 	catStrs := r.URL.Query()["categories"]
 	if len(catStrs) == 0 {
 		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
-
+	// checking the validity of categories
 	ids := []int{}
 	for _, s := range catStrs {
 		s = strings.TrimSpace(s)
@@ -153,10 +105,7 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
     `, in)
 
 	posts, err := database.SelectAllPosts(q)
-	if err == sql.ErrNoRows {
-		helpers.Errorhandler(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	} else if err != nil {
+	if err != nil {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -166,9 +115,8 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
 
 	cookie, err := r.Cookie("session")
 	if err == nil && cookie.Value != "" {
-
 		err = database.DataBase.QueryRow(
-			"SELECT id FROM users WHERE session = ?", cookie.Value,
+		"SELECT id FROM users WHERE session = ?", cookie.Value,
 		).Scan(&userID)
 
 		if err == sql.ErrNoRows {
@@ -182,45 +130,7 @@ func FilterByCategoryHandler(w http.ResponseWriter, r *http.Request) {
 			loggedIn = true
 		}
 	}
-	reactionStats, err := helpers.GetAllReactionStats()
-	if err != nil {
-		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-	userReactions, err := helpers.GetUserPostReactions(userID)
-	if err != nil {
-		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
-		return
-	}
-	comments := helpers.GetAllComments(w)
-	connectUserName := helpers.GetConnectUserName(w, userID)
-	// commentReactionStats := helpers.GetAllCommentReactionStats(w)
-	// userCommentReactions := helpers.GetUserCommentReactions(w, userID)
-	commentReactionStats, err := helpers.GetAllCommentReactionStats() 
-	if err != nil {
-		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
-		return 
-	}
-	userCommentReactions, err := helpers.GetUserCommentReactions(userID) 
-	if err != nil {
-		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
-		return 
-	}
-	categories, _ := database.SelectAllCategories("SELECT id, category FROM categories")
-
-	pageData := tools.PageData{
-		Posts:                posts,
-		Categories:           categories,
-		IsLogin:              tools.IsLogin{LoggedIn: loggedIn, UserID: userID},
-		ReactionStats:        reactionStats,
-		UserReactions:        userReactions,
-		Comment:              comments,
-		ConnectUserName:      connectUserName,
-		CommentReactionStats: commentReactionStats,
-		UserCommentReactions: userCommentReactions,
-	}
-
-	helpers.Render(w, "index.html", http.StatusOK, pageData)
+	RenderPostsPage(w, posts, loggedIn, userID)
 }
 
 func FilterByLikedHandler(w http.ResponseWriter, r *http.Request) {
@@ -255,7 +165,10 @@ func FilterByLikedHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	helpers.GetPostCategories(w, posts)
-
+	RenderPostsPage(w, posts, true, userID)
+}
+//getting post informations and rendering the page
+func RenderPostsPage(w http.ResponseWriter, posts []tools.Post, loggedIn bool, userID int) {
 	reactionStats, err := helpers.GetAllReactionStats()
 	if err != nil {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
@@ -268,8 +181,6 @@ func FilterByLikedHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	comments := helpers.GetAllComments(w)
 	connectUserName := helpers.GetConnectUserName(w, userID)
-	// commentReactionStats := helpers.GetAllCommentReactionStats(w)
-	// userCommentReactions := helpers.GetUserCommentReactions(w, userID)
 	commentReactionStats, err := helpers.GetAllCommentReactionStats() 
 	if err != nil {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
@@ -280,12 +191,15 @@ func FilterByLikedHandler(w http.ResponseWriter, r *http.Request) {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
 		return 
 	}
-	categories, _ := database.SelectAllCategories("SELECT id, category FROM categories")
-
+	categories, err := database.SelectAllCategories("SELECT id, category FROM categories")
+	if err != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 	pageData := tools.PageData{
 		Posts:                posts,
 		Categories:           categories,
-		IsLogin:              tools.IsLogin{LoggedIn: true, UserID: userID},
+		IsLogin:              tools.IsLogin{LoggedIn: loggedIn, UserID: userID},
 		ReactionStats:        reactionStats,
 		UserReactions:        userReactions,
 		Comment:              comments,
