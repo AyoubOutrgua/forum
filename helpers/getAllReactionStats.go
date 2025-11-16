@@ -1,46 +1,45 @@
 package helpers
 
 import (
-	"net/http"
-
 	"forum/database"
 	"forum/tools"
 )
 
-func GetAllReactionStats(w http.ResponseWriter) map[int]tools.ReactionStats {
+func GetAllReactionStats() (map[int]tools.ReactionStats, error) {
 	stats := make(map[int]tools.ReactionStats)
 
 	query := `
-		SELECT 
-			postId,
-			COALESCE(SUM(CASE WHEN reaction = 1 THEN 1 ELSE 0 END), 0) as likes,
-			COALESCE(SUM(CASE WHEN reaction = -1 THEN 1 ELSE 0 END), 0) as dislikes
-		FROM postReactions
-		GROUP BY postId
-	`
+        SELECT 
+            postId,
+            COALESCE(SUM(CASE WHEN reaction = 1 THEN 1 ELSE 0 END), 0) as likes,
+            COALESCE(SUM(CASE WHEN reaction = -1 THEN 1 ELSE 0 END), 0) as dislikes
+        FROM postReactions
+        GROUP BY postId
+    `
 
 	rows, err := database.DataBase.Query(query)
 	if err != nil {
-		return stats
+		return nil, err
 	}
 	defer rows.Close()
 
 	for rows.Next() {
 		var stat tools.ReactionStats
+
 		if err := rows.Scan(&stat.PostID, &stat.LikesCount, &stat.DislikesCount); err != nil {
 			continue
 		}
 		stats[stat.PostID] = stat
 	}
 
-	return stats
+	return stats, nil
 }
 
-func GetUserPostReactions(w http.ResponseWriter, userID int) map[int]int {
+func GetUserPostReactions(userID int) (map[int]int, error) {
 	reactions := make(map[int]int)
 
 	if userID == 0 {
-		return reactions
+		return reactions, nil
 	}
 
 	rows, err := database.DataBase.Query(
@@ -48,7 +47,7 @@ func GetUserPostReactions(w http.ResponseWriter, userID int) map[int]int {
 		userID,
 	)
 	if err != nil {
-		return reactions
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -60,5 +59,5 @@ func GetUserPostReactions(w http.ResponseWriter, userID int) map[int]int {
 		reactions[postID] = reaction
 	}
 
-	return reactions
+	return reactions, nil
 }
