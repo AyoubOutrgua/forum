@@ -1,5 +1,5 @@
 # Build stage
-FROM golang:1.23 AS builder
+FROM golang:1.24.0 AS builder
 WORKDIR /app
 
 COPY go.mod go.sum ./
@@ -8,7 +8,7 @@ COPY cmd ./cmd
 COPY handlers ./handlers
 COPY helpers ./helpers
 COPY middleware ./middleware
-COPY routes ./routing
+COPY routing ./routing
 COPY tools ./tools
 COPY database ./database
 
