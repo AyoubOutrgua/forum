@@ -8,7 +8,7 @@ import (
 	"forum/database"
 	"forum/helpers"
 )
-
+// Checksession is a middleware that verifies the user's session cookie and its validity before allowing access to protected routes.
 func Checksession(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("session")
@@ -58,6 +58,7 @@ func Checksession(next http.HandlerFunc) http.HandlerFunc {
 		next(w, r)
 	}
 }
+// CheckLogin is a middleware that prevents logged-in users from accessing routes meant for unauthenticated users, such as login or registration pages.
 
 func CheckLogin(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
