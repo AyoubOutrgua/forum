@@ -75,7 +75,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	imagePath := ""
-	imageFile, handler, err := r.FormFile("choose-file")
+	imageFile, fileHeader, err := r.FormFile("choose-file")
 	if err != nil {
 		if err != http.ErrMissingFile {
 			helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
@@ -89,13 +89,13 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 		defer imageFile.Close()
 
-		if !helpers.IsImage(handler.Filename) {
+		if !helpers.IsImage(fileHeader.Filename) {
 			helpers.Errorhandler(w, "Bad Request: You used an invalid image extension", http.StatusBadRequest)
 			return
 		}
 
 		const maxSize = 2 * 1024 * 1024
-		if handler.Size > maxSize {
+		if fileHeader.Size > maxSize {
 			helpers.Errorhandler(w, "Bad Request: The image is greater than 2 MB.", http.StatusBadRequest)
 			return
 		}
@@ -111,7 +111,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if imgName == "" {
-			imgName = "image1" + strings.ToLower(filepath.Ext(handler.Filename))
+			imgName = "image1" + strings.ToLower(filepath.Ext(fileHeader.Filename))
 		} else {
 			numWithExt := imgName[len("/static/upload/image"):]
 			nb := numWithExt[:len(numWithExt)-len(filepath.Ext(numWithExt))]
@@ -121,7 +121,7 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 			num++
-			imgName = "image" + strconv.Itoa(num) + filepath.Ext(handler.Filename)
+			imgName = "image" + strconv.Itoa(num) + filepath.Ext(fileHeader.Filename)
 		}
 
 		file, errCreate := os.Create("./static/upload/" + imgName)
