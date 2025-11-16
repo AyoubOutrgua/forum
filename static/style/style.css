@@ -2,7 +2,7 @@
 
 /* ==================== CSS VARIABLES ==================== */
 :root {
-    font-size: 10px;
+    font-size: 62.5%;
     
     /* Colors - Matching Login/Register */
     --primary-dark: #0f172a;
@@ -162,6 +162,11 @@ body {
             "filter posts"
             "filter posts";
     }
+    .filter {
+        position: sticky;
+        top: calc(10rem + var(--space-md));
+        align-self: start;
+    }
 }
 
 /* ==================== CREATE POST SECTION  ==================== */
@@ -226,7 +231,29 @@ body {
 .description {
     min-height: 10rem;
     resize: vertical;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-cyan) rgba(15, 23, 42, 0.7);
 }
+
+.description::-webkit-scrollbar {
+    width: 10px;
+}
+
+.description::-webkit-scrollbar-track {
+    background: rgba(15, 23, 42, 0.5);
+    border-radius: var(--border-radius-sm);
+}
+
+.description::-webkit-scrollbar-thumb {
+    background-color: var(--accent-cyan);
+    border-radius: var(--border-radius-pill);
+    border: 2px solid rgba(15, 23, 42, 0.5);
+}
+
+.description::-webkit-scrollbar-thumb:hover {
+    background-color: var(--accent-cyan-dark);
+}
+
 
 /* CREATE POST CATEGORIES  */
 .categories {
@@ -336,9 +363,8 @@ body {
     border-radius: var(--border-radius-lg);
     padding: var(--space-lg);
     animation: fadeIn 0.6s ease-out 0.2s backwards;
-    position: sticky;
-    top: calc(10rem + var(--space-md));
-    align-self: start;
+    position: relative; 
+    top: 0;
 }
 
 .filter h3 {
@@ -497,6 +523,7 @@ body {
     font-weight: 600;
     margin-bottom: var(--space-sm);
     color: var(--white);
+    word-break: break-all;
 }
 
 .body-image {
@@ -523,6 +550,7 @@ body {
     font-size: var(--font-size-base);
     color: var(--white-90);
     line-height: 1.8;
+    word-break: break-all;
 }
 
 /* Category Section */
@@ -765,12 +793,6 @@ body {
     .comment-reactions {
         margin-left: 0;
     }
-
-    .filter {
-        position: relative;
-        top: 0;
-        max-height: none;
-    }
 }
 
 @media (max-width: 480px) {
@@ -791,7 +813,32 @@ body {
     .filter,
     .post {
         padding: var(--space-md);
-        margin: 0; /* <-- HNA FIN KAN LMOCHKIL W T SLL7 */
+        margin: 0;
+    }
+    .comments-form form {
+        grid-template-columns: auto 1fr;
+        gap: var(--space-sm);
+    }
+
+    .profile-comment {
+        grid-row: 1;
+        grid-column: 1;
+    }
+
+    .username {
+        grid-row: 1;
+        grid-column: 2;
+        align-self: center;
+    }
+
+    .input-comment {
+        grid-row: 2;
+        grid-column: 1 / span 2;
+    }
+
+    .btn-comment {
+        grid-row: 3;
+        grid-column: 1 / span 2;
     }
 }
 
@@ -816,15 +863,14 @@ body {
         padding: 0.6rem 1.2rem;
         font-size: 1.3rem;
     }
-    
     .main-section {
         padding: 1.5rem 1rem;
     }
     .create-post,
     .filter,
     .post {
-        width: 100%;
-        max-width: 100%;
+        width: 98%;
+        max-width: 98%;
         padding: 1.5rem;
     }
     

@@ -27,11 +27,16 @@ func ReactionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	r.ParseForm()
+	errParse := r.ParseForm()
+	if errParse != nil {
+		helpers.Errorhandler(w, "Status Bad Request", http.StatusBadRequest)
+		return
+	}
+
 	postIDStr := r.FormValue("postId")
 	reactionStr := r.FormValue("reaction")
 	if postIDStr == "" || reactionStr == "" {
-		http.Error(w, "Invalid request data", http.StatusBadRequest)
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
 

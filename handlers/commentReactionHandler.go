@@ -27,7 +27,12 @@ func CommentReactionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	r.ParseForm()
+	errParse := r.ParseForm()
+	if errParse != nil {
+		helpers.Errorhandler(w, "Status Bad Request", http.StatusBadRequest)
+		return
+	}
+
 	commentIDStr := r.FormValue("commentId")
 	reactionStr := r.FormValue("reaction")
 
