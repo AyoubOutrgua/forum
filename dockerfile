@@ -8,8 +8,6 @@ COPY go.mod ./
 RUN go mod download
 
 COPY . .
-
-ENV CGO_ENABLED=0
 RUN GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o /app/forum ./cmd
 
 FROM alpine:3.18
