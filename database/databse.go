@@ -15,12 +15,12 @@ var DataBase *sql.DB
 
 func InitDataBase() error {
 	var err error
-	DataBase, err = sql.Open("sqlite3", "./database/forum.db")
+	DataBase, err = sql.Open("sqlite3", "./db/forum.db")
 	if err != nil {
 		log.Fatal("can't open/create forum.db ", err)
 	}
 
-	schema, err := os.ReadFile("database/schema.sql")
+	schema, err := os.ReadFile("./db/schema.sql")
 	if err != nil {
 		log.Fatal("can't read schema", err)
 	}
