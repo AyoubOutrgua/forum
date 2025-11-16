@@ -13,6 +13,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+// LoginHandler processes user login by validating credentials, creating a session, and setting a session cookie.
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		helpers.Errorhandler(w, "Method Not Allowed", http.StatusMethodNotAllowed)

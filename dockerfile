@@ -1,30 +1,33 @@
-
-FROM golang:1.21-alpine AS builder
-RUN apk add --no-cache git
-
-WORKDIR /src
-
-COPY go.mod ./
-RUN go mod download
-
-COPY . .
-RUN GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o /app/forum ./cmd
-
-FROM alpine:3.18
-RUN addgroup -S app && adduser -S -G app app
-COPY --from=builder /app/forum /usr/local/bin/forum
-COPY --from=builder /src/templates /app/templates
-COPY --from=builder /src/static /app/static
-COPY --from=builder /src/upload /app/upload
-COPY --from=builder /src/database/schema.sql /app/schema.sql
-
-RUN chown -R app:app /app /usr/local/bin/forum
-USER app
+# Build stage
+FROM golang:1.23 AS builder
 WORKDIR /app
 
-ENV PORT=8080
+COPY go.mod go.sum ./
+RUN go mod download
+COPY cmd ./cmd
+COPY handlers ./handlers
+COPY helpers ./helpers
+COPY middleware ./middleware
+COPY routes ./routing
+COPY tools ./tools
+COPY database ./database
+
+RUN go build -o main ./cmd/main.go
 
 
+# Final stage
+FROM ubuntu:24.04
+WORKDIR /app
+
+COPY --from=builder /app/main ./main
+COPY templates/ ./templates/
+COPY static/ ./static/
+COPY db/ ./db/
+# Metadata
+LABEL maintainers="mhilli, boulhaj, melghama, aoutrgua, btoumana"
+LABEL version="1.0"
+LABEL description="forum"
+# Expose port 8080
 EXPOSE 8080
-
-CMD ["/usr/local/bin/forum"]
+# Command to run the application
+CMD ["./main"]

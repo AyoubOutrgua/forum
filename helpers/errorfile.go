@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"strconv"
 )
-
+// Errorhandler renders a custom error page with the provided error message and status code.
 func Errorhandler(w http.ResponseWriter, errors string, er int) {
 	const filePath = "templates/error.html"
 

@@ -5,6 +5,7 @@ import (
 
 	"forum/helpers"
 )
+// show login page with render func 
 
 func Showloginhandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {

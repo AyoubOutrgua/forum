@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"net/http"
 )
+// Render renders the specified template with the provided data and writes it to the http.ResponseWriter.
 
 func Render(w http.ResponseWriter, templateFile string, status int, data interface{}) {
 	tmpl, err := template.ParseFiles("templates/" + templateFile)

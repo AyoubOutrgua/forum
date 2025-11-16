@@ -30,7 +30,7 @@ func NewRateLimiterManager(limit int, window time.Duration) *RateLimiterManager 
 		Window: window,
 	}
 }
-
+// Check checks if the given IP address has exceeded the rate limit.
 func (m *RateLimiterManager) Check(ip string) bool {
 	m.mu.Lock()
 	defer m.mu.Unlock()
@@ -74,7 +74,7 @@ func GetUserIP(r *http.Request) string {
 	ip := strings.Split(ipPort, ":")[0]
 	return ip
 }
-
+// RateLimitMiddleware is a middleware that limits the number of requests from a single IP address within a specified time window.
 func RateLimitMiddleware(manager *RateLimiterManager, next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		ip := GetUserIP(r)

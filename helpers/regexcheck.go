@@ -3,7 +3,7 @@ package helpers
 import (
 	"regexp"
 )
-
+// ValidateInfo checks if the provided username, email, and password meet the required format and length constraints.
 func ValidateInfo(username, email, password string) bool {
 
 	emailRegex := regexp.MustCompile(`^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$`)
