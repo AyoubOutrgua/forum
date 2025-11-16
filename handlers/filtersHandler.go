@@ -169,12 +169,28 @@ func FilterByLikedHandler(w http.ResponseWriter, r *http.Request) {
 }
 //getting post informations and rendering the page
 func RenderPostsPage(w http.ResponseWriter, posts []tools.Post, loggedIn bool, userID int) {
-	reactionStats := helpers.GetAllReactionStats(w)
-	userReactions := helpers.GetUserPostReactions(w, userID)
+	reactionStats, err := helpers.GetAllReactionStats()
+	if err != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	userReactions, err := helpers.GetUserPostReactions(userID)
+	if err != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
 	comments := helpers.GetAllComments(w)
 	connectUserName := helpers.GetConnectUserName(w, userID)
-	commentReactionStats := helpers.GetAllCommentReactionStats(w)
-	userCommentReactions := helpers.GetUserCommentReactions(w, userID)
+	commentReactionStats, err := helpers.GetAllCommentReactionStats() 
+	if err != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+		return 
+	}
+	userCommentReactions, err := helpers.GetUserCommentReactions(userID) 
+	if err != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+		return 
+	}
 	categories, err := database.SelectAllCategories("SELECT id, category FROM categories")
 	if err != nil {
 		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)

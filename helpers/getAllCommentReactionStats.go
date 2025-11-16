@@ -3,10 +3,10 @@ package helpers
 import (
 	"forum/database"
 	"forum/tools"
-	"net/http"
 )
 
-func GetAllCommentReactionStats(w http.ResponseWriter) map[int]tools.CommentReactionStats {
+// GetAllCommentReactionStats: Daba kat rajja3 (map, error)
+func GetAllCommentReactionStats() (map[int]tools.CommentReactionStats, error) { // BEDDELNAHA
 	stats := make(map[int]tools.CommentReactionStats)
 	
 	query := `
@@ -20,7 +20,7 @@ func GetAllCommentReactionStats(w http.ResponseWriter) map[int]tools.CommentReac
 	
 	rows, err := database.DataBase.Query(query)
 	if err != nil {
-		return stats
+		return nil, err 
 	}
 	defer rows.Close()
 	
@@ -33,14 +33,14 @@ func GetAllCommentReactionStats(w http.ResponseWriter) map[int]tools.CommentReac
 		stats[stat.CommentID] = stat
 	}
 	
-	return stats
+	return stats, nil 
 }
 
-func GetUserCommentReactions(w http.ResponseWriter, userID int) map[int]int {
+func GetUserCommentReactions(userID int) (map[int]int, error) { 
 	reactions := make(map[int]int)
 	
 	if userID == 0 {
-		return reactions
+		return reactions, nil 
 	}
 	
 	rows, err := database.DataBase.Query(
@@ -48,7 +48,7 @@ func GetUserCommentReactions(w http.ResponseWriter, userID int) map[int]int {
 		userID,
 	)
 	if err != nil {
-		return reactions
+		return nil, err 
 	}
 	defer rows.Close()
 	
@@ -61,5 +61,5 @@ func GetUserCommentReactions(w http.ResponseWriter, userID int) map[int]int {
 		reactions[commentID] = reaction
 	}
 	
-	return reactions
+	return reactions, nil 
 }
