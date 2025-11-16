@@ -64,7 +64,6 @@ body {
     gap: var(--space-md);
     justify-items: center;
     align-content: center;
-    
     padding: var(--space-xl);
     background: transparent;
     border: var(--border-width) solid var(--accent-cyan);
