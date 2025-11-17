@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS posts(
      post TEXT NOT NULL,
      imageUrl TEXT,
      userId INTEGER NOT NULL,
-     creationDate TEXT,
+     creationDate TEXT NOT NULL,
      FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE  
 );
 CREATE TABLE IF NOT EXISTS categories(
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS comments(
     comment TEXT NOT NULL,
     postId INTEGER NOT NULL,
     userId INTEGER NOT NULL,
-    creationDate TEXT,
+    creationDate TEXT NOT NULL,
     FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY(postId) REFERENCES posts(id) ON DELETE CASCADE
 );
