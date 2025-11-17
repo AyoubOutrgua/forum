@@ -89,8 +89,14 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 
 		defer imageFile.Close()
 
-		if !helpers.IsImage(fileHeader.Filename) {
+		if !helpers.IsImageExtension(fileHeader.Filename) {
 			helpers.Errorhandler(w, "Bad Request: You used an invalid image extension", http.StatusBadRequest)
+			return
+		}
+
+		checkImage, errCheck := helpers.IsImageContent(imageFile)
+		if !checkImage || errCheck != nil {
+			helpers.Errorhandler(w, "Bad Request: You used an invalid image content", http.StatusBadRequest)
 			return
 		}
 
