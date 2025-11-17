@@ -149,8 +149,7 @@ body {
 /* ==================== CREATE POST SECTION  ==================== */
 .create-post {
     grid-area: create;
-    background: rgba(30, 41, 59, 0.6);
-    backdrop-filter: blur(10px);
+    background: var(--primary-light); 
     border: 1px solid rgba(56, 189, 248, 0.3);
     border-radius: var(--border-radius-lg);
     padding: var(--space-xl);
@@ -336,8 +335,7 @@ body {
 /* ==================== FILTER SECTION  ==================== */
 .filter {
     grid-area: filter;
-    background: rgba(30, 41, 59, 0.6);
-    backdrop-filter: blur(10px);
+    background: var(--primary-light);
     border: 1px solid rgba(56, 189, 248, 0.2);
     border-radius: var(--border-radius-lg);
     padding: var(--space-lg);
@@ -793,6 +791,7 @@ body {
         animation: none; 
         will-change: transform; 
         z-index: 10; 
+        background: var(--primary-light); 
     }
     
     /* Custom scrollbar filter in desktop */
