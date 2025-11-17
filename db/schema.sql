@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS posts(
      imageUrl TEXT,
      userId INTEGER NOT NULL,
      creationDate TEXT,
-     FOREIGN KEY(userId) REFERENCES users(id)  
+     FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE  
 );
 CREATE TABLE IF NOT EXISTS categories(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS postCategories (
     postId INTEGER NOT NULL,
     categoryId INTEGER NOT NULL,
     PRIMARY KEY (postId, categoryId),
-    FOREIGN KEY (postId) REFERENCES posts(id),
-    FOREIGN KEY (categoryId) REFERENCES categories(id)
+    FOREIGN KEY (postId) REFERENCES posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (categoryId) REFERENCES categories(id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS comments(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,16 +32,16 @@ CREATE TABLE IF NOT EXISTS comments(
     postId INTEGER NOT NULL,
     userId INTEGER NOT NULL,
     creationDate TEXT,
-    FOREIGN KEY(userId) REFERENCES users(id),
-    FOREIGN KEY(postId) REFERENCES posts(id)
+    FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY(postId) REFERENCES posts(id) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS postReactions(
     userId INTEGER NOT NULL,
     postId INTEGER NOT NULL,
     reaction INTEGER NOT NULL,
     PRIMARY KEY(userId,postId),
-    FOREIGN KEY(userId) REFERENCES users(id),
-    FOREIGN KEY(postId) REFERENCES posts(id)
+    FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY(postId) REFERENCES posts(id) ON DELETE CASCADE
 ); 
 
 CREATE TABLE IF NOT EXISTS commentReactions(
@@ -49,6 +49,6 @@ CREATE TABLE IF NOT EXISTS commentReactions(
     commentId INTEGER NOT NULL,
     reaction INTEGER NOT NULL,
     PRIMARY KEY(userId,commentId),
-    FOREIGN KEY(userId) REFERENCES users(id),
-    FOREIGN KEY(commentId) REFERENCES comments(id)
+    FOREIGN KEY(userId) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY(commentId) REFERENCES comments(id) ON DELETE CASCADE
 );
