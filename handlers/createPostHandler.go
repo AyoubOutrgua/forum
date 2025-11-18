@@ -66,6 +66,12 @@ func CreatePostHandler(w http.ResponseWriter, r *http.Request) {
 		helpers.Errorhandler(w, "You did not select one of the categories, or you made a bad request", http.StatusBadRequest)
 		return
 	}
+
+	if helpers.HasDuplicates(categories) {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+
 	categoriesID := []string{"1", "2", "3", "4", "5", "6", "7", "8"}
 	for _, catsID := range categories {
 		if !slices.Contains(categoriesID, catsID) {
