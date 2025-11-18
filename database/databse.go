@@ -13,6 +13,7 @@ import (
 
 var DataBase *sql.DB
 
+// function for initialaize the database and set the driver
 func InitDataBase() error {
 	var err error
 	DataBase, err = sql.Open("sqlite3", "./db/forum.db")
@@ -34,7 +35,7 @@ func InitDataBase() error {
 	if err != nil {
 		return err
 	}
-
+	// inserting categories into db
 	_, err = DataBase.Exec(`INSERT INTO categories (category)
 	VALUES 
 	('Technology'),
