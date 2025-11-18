@@ -5,6 +5,9 @@ import (
 	"forum/tools"
 )
 
+// GetAllReactionStats returns a map with the total likes and dislikes for each post
+// by aggregating all reactions stored in the database.
+
 func GetAllReactionStats() (map[int]tools.ReactionStats, error) {
 	stats := make(map[int]tools.ReactionStats)
 
@@ -34,6 +37,9 @@ func GetAllReactionStats() (map[int]tools.ReactionStats, error) {
 
 	return stats, nil
 }
+
+// GetUserPostReactions returns all reactions made by a specific user on posts,
+// with the post ID as the key and the reaction value (1 or -1) as the value.
 
 func GetUserPostReactions(userID int) (map[int]int, error) {
 	reactions := make(map[int]int)

@@ -9,6 +9,11 @@ import (
 	"forum/helpers"
 )
 
+// ReactionHandler manages like/dislike reactions on posts: it checks the request method,
+// verifies the user session, validates the post and reaction data, confirms that the post
+// exists, and then inserts, updates, or removes the user's reaction accordingly.
+
+
 func ReactionHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		helpers.Errorhandler(w, "Method not allowed", http.StatusMethodNotAllowed)

@@ -5,7 +5,8 @@ import (
 	"forum/tools"
 )
 
-// GetAllCommentReactionStats: Daba kat rajja3 (map, error)
+// GetAllCommentReactionStats returns a map containing the total likes and dislikes
+// for each comment by aggregating all comment reactions from the database.
 func GetAllCommentReactionStats() (map[int]tools.CommentReactionStats, error) { // BEDDELNAHA
 	stats := make(map[int]tools.CommentReactionStats)
 	
@@ -35,6 +36,11 @@ func GetAllCommentReactionStats() (map[int]tools.CommentReactionStats, error) { 
 	
 	return stats, nil 
 }
+
+
+// GetUserCommentReactions returns a map of the user's reactions on comments,
+// where the key is the comment ID and the value is the reaction (1 or -1).
+
 
 func GetUserCommentReactions(userID int) (map[int]int, error) { 
 	reactions := make(map[int]int)
