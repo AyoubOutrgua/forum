@@ -9,6 +9,10 @@ import (
 	"forum/helpers"
 )
 
+// CommentReactionHandler handles like/dislike reactions for comments: it checks the request,
+// verifies the user session, validates the form data, and then inserts, updates, or deletes
+// the reaction depending on the user's previous action.
+
 func CommentReactionHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		helpers.Errorhandler(w, "Method Not Allowed", http.StatusMethodNotAllowed)

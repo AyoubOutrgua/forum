@@ -11,6 +11,11 @@ import (
 	"forum/helpers"
 )
 
+// CreateCommentHandler handles adding a new comment: it checks the request method,
+// verifies the user session, validates the form data, inserts the comment into the
+// database, and then redirects to the homepage.
+
+
 func CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		helpers.Errorhandler(w, "Method Not Allowed", http.StatusMethodNotAllowed)
