@@ -51,6 +51,20 @@ func CommentReactionHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	var commentExists int
+	selectError := database.DataBase.QueryRow("SELECT COUNT(*) FROM comments WHERE id = ?", commentID).Scan(&commentExists)
+	if selectError == sql.ErrNoRows {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+		return
+	} else if selectError != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	if commentExists == 0 {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+
 	reaction, err := strconv.Atoi(reactionStr)
 	if err != nil || (reaction != 1 && reaction != -1) {
 		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
