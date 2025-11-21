@@ -15,7 +15,6 @@ import (
 // verifies the user session, validates the form data, inserts the comment into the
 // database, and then redirects to the homepage.
 
-
 func CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		helpers.Errorhandler(w, "Method Not Allowed", http.StatusMethodNotAllowed)
@@ -49,6 +48,26 @@ func CreateCommentHandler(w http.ResponseWriter, r *http.Request) {
 	postIDStr := r.FormValue("postId")
 	commentText = strings.TrimSpace(commentText)
 	if commentText == "" || postIDStr == "" {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+
+	postID, errAtoi := strconv.Atoi(postIDStr)
+	if errAtoi != nil {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+		return
+	}
+
+	var postExists int
+	selectError := database.DataBase.QueryRow("SELECT COUNT(*) FROM posts WHERE id = ?", postID).Scan(&postExists)
+	if selectError == sql.ErrNoRows {
+		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
+		return
+	} else if selectError != nil {
+		helpers.Errorhandler(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	if postExists == 0 {
 		helpers.Errorhandler(w, "Bad Request", http.StatusBadRequest)
 		return
 	}
